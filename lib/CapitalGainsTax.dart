@@ -588,7 +588,9 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
       );
     }
     if(_stage<6){
-      return Container();
+      return Container(
+        child: Text('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'),
+      );
     }
     else {
       List<List<dynamic>> csv = originCSV.where((element) => (element[0] == _dropDownMenuForTypeOfTransfer) && (element[1] == _dropDownMenuForReasonOfAquistition) && (element[2] == _dropDownMenuForTypeOfAcquisition)).toList();
