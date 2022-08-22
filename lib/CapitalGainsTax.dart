@@ -96,89 +96,93 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        body:  Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 1200,
-            ),
-            child: FutureBuilder(
-                future: getCSVonce(),
-                builder: (context, snapshot){
-                  if(snapshot.connectionState == ConnectionState.waiting){
-                    return CircularProgressIndicator();
-                  }else if(snapshot.hasError){
-                    return Text(snapshot.error.toString());
-                  }else {
-                    List<List<dynamic>> res = snapshot.data as List<List<dynamic>>;
-                    return ListView(
-                      children: <Widget>[
-                        largeTitle(),
-                        firstDivider(),
-                        Row(
-                          children: [
-                            _smallTitle('주소'),
-                            Expanded(
-                                child: GestureDetector(
-                                  onTap: ()async{
-                                    var a = await _findingAddressDialog(_findingAddressTC);
+    return Scaffold(
+        body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 1200,
+        ),
+        child: FutureBuilder(
+            future: getCSVonce(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              } else {
+                List<List<dynamic>> res = snapshot.data as List<List<dynamic>>;
+                return ListView(
+                  children: <Widget>[
+                    largeTitle(),
+                    firstDivider(),
+                    Row(
+                      children: [
+                        _smallTitle('주소'),
+                        Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                var a = await _findingAddressDialog(_findingAddressTC);
 
-                                    setState(() {
-                                      sampleAddress = a;
-                                      _color = Colors.black;
-                                      _stage = 2;
-                                    });
-                                  },
-                                  child: Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color:  Colors.black,
-                                          ),
-                                          borderRadius: const BorderRadius.all(Radius.circular(10))
+                                setState(() {
+                                  sampleAddress = a;
+                                  _color = Colors.black;
+                                  _stage = 2;
+                                });
+                              },
+                              child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.black,
                                       ),
-                                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children:  [
-                                          Text(
-                                            sampleAddress,
-                                            style:  TextStyle(fontSize: 17,color: _color),
-                                          ),
-                                        ],
-                                      )
-                                  ),
-                                )
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            _smallTitle('양도시 종류'),
-                            Expanded(
-                                child: Container(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10))),
                                   margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                  child:GestureDetector(
-                                    child:  LayoutBuilder(
-                                      builder: (BuildContext context, BoxConstraints constraints){
-                                        return DropdownButtonHideUnderline(
-                                          child: DropdownButton2(
-                                            isExpanded: true,
-                                            items: ((){
-                                              if(_stage >= 2){
-                                                List<List<dynamic>> temp = firstFilterCSV;
-                                                currentCSV = temp;
-                                                _typeOfTransfer.clear();
-                                                for(int i = 0 ; i < res.length ; i++){
-                                                  _typeOfTransfer.add(res[i][2]);
-                                                }
-                                                _typeOfTransfer = _typeOfTransfer.toSet().toList();
-                                                return _typeOfTransfer;
-                                              }else {
-                                                return [];
-                                              }})().map((item) => DropdownMenuItem<String>(
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        sampleAddress,
+                                        style:
+                                        TextStyle(fontSize: 17, color: _color),
+                                      ),
+                                    ],
+                                  )),
+                            ))
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        _smallTitle('양도시 종류'),
+                        Expanded(
+                            child: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          child: GestureDetector(
+                            child: LayoutBuilder(
+                              builder: (BuildContext context,
+                                  BoxConstraints constraints) {
+                                return DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    items: (() {
+                                      if (_stage >= 2) {
+                                        List<List<dynamic>> temp =
+                                            firstFilterCSV;
+                                        currentCSV = temp;
+                                        _typeOfTransfer.clear();
+                                        for (int i = 0; i < res.length; i++) {
+                                          _typeOfTransfer.add(res[i][2]);
+                                        }
+                                        _typeOfTransfer =
+                                            _typeOfTransfer.toSet().toList();
+                                        return _typeOfTransfer;
+                                      } else {
+                                        return [];
+                                      }
+                                    })()
+                                        .map((item) => DropdownMenuItem<String>(
                                               value: item,
                                               child: Text(
                                                 item,
