@@ -9,13 +9,6 @@
             </list>
           </value>
         </entry>
-        <entry key="badges">
-          <value>
-            <list>
-              <option value="C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/badges-2.0.3/lib" />
-            </list>
-          </value>
-        </entry>
         <entry key="boolean_selector">
           <value>
             <list>
@@ -223,7 +216,6 @@
     </properties>
     <CLASSES>
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.2/lib" />
-      <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/badges-2.0.3/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.3.1/lib" />

@@ -31,6 +31,9 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   final TextEditingController _findingAddressTC = TextEditingController();
   final TextEditingController _transferPriceTC = TextEditingController();
   final TextEditingController _acquisitionPriceTC = TextEditingController();
+  final TextEditingController _manageDateTC = TextEditingController();
+  final TextEditingController _businessStartDateTC = TextEditingController();
+  final TextEditingController _rightPriceTC = TextEditingController();
 
   List acquisitionETCTCList = List.generate(5, (index) => TextEditingController());
 
@@ -98,91 +101,91 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 1200,
-        ),
-        child: FutureBuilder(
-            future: getCSVonce(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              } else {
-                List<List<dynamic>> res = snapshot.data as List<List<dynamic>>;
-                return ListView(
-                  children: <Widget>[
-                    largeTitle(),
-                    firstDivider(),
-                    Row(
-                      children: [
-                        _smallTitle('주소'),
-                        Expanded(
-                            child: GestureDetector(
-                              onTap: () async {
-                                var a = await _findingAddressDialog(_findingAddressTC);
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 1200,
+            ),
+            child: FutureBuilder(
+                future: getCSVonce(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  } else {
+                    List<List<dynamic>> res = snapshot.data as List<List<dynamic>>;
+                    return ListView(
+                      children: <Widget>[
+                        largeTitle(),
+                        firstDivider(),
+                        Row(
+                          children: [
+                            _smallTitle('주소'),
+                            Expanded(
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    var a = await _findingAddressDialog(_findingAddressTC);
 
-                                setState(() {
-                                  sampleAddress = a;
-                                  _color = Colors.black;
-                                  _stage = 2;
-                                });
-                              },
-                              child: Container(
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black,
-                                      ),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(10))),
+                                    setState(() {
+                                      sampleAddress = a;
+                                      _color = Colors.black;
+                                      _stage = 2;
+                                    });
+                                  },
+                                  child: Container(
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10))),
+                                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            sampleAddress,
+                                            style:
+                                            TextStyle(fontSize: 17, color: _color),
+                                          ),
+                                        ],
+                                      )),
+                                ))
+                          ],
+                        ),//주소
+                        Row(
+                          children: [
+                            _smallTitle('양도시 종류'),
+                            Expanded(
+                                child: Container(
                                   margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        sampleAddress,
-                                        style:
-                                        TextStyle(fontSize: 17, color: _color),
-                                      ),
-                                    ],
-                                  )),
-                            ))
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        _smallTitle('양도시 종류'),
-                        Expanded(
-                            child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          child: GestureDetector(
-                            child: LayoutBuilder(
-                              builder: (BuildContext context,
-                                  BoxConstraints constraints) {
-                                return DropdownButtonHideUnderline(
-                                  child: DropdownButton2(
-                                    isExpanded: true,
-                                    items: (() {
-                                      if (_stage >= 2) {
-                                        List<List<dynamic>> temp =
-                                            firstFilterCSV;
-                                        currentCSV = temp;
-                                        _typeOfTransfer.clear();
-                                        for (int i = 0; i < res.length; i++) {
-                                          _typeOfTransfer.add(res[i][2]);
-                                        }
-                                        _typeOfTransfer =
-                                            _typeOfTransfer.toSet().toList();
-                                        return _typeOfTransfer;
-                                      } else {
-                                        return [];
-                                      }
-                                    })()
-                                        .map((item) => DropdownMenuItem<String>(
+                                  child: GestureDetector(
+                                    child: LayoutBuilder(
+                                      builder: (BuildContext context,
+                                          BoxConstraints constraints) {
+                                        return DropdownButtonHideUnderline(
+                                          child: DropdownButton2(
+                                            isExpanded: true,
+                                            items: (() {
+                                              if (_stage >= 2) {
+                                                List<List<dynamic>> temp =
+                                                    firstFilterCSV;
+                                                currentCSV = temp;
+                                                _typeOfTransfer.clear();
+                                                for (int i = 0; i < res.length; i++) {
+                                                  _typeOfTransfer.add(res[i][2]);
+                                                }
+                                                _typeOfTransfer =
+                                                    _typeOfTransfer.toSet().toList();
+                                                return _typeOfTransfer;
+                                              } else {
+                                                return [];
+                                              }
+                                            })()
+                                                .map((item) => DropdownMenuItem<String>(
                                               value: item,
                                               child: Text(
                                                 item,
@@ -239,14 +242,14 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                                 )
                             ),
                           ],
-                        ),
+                        ),//양도시 종류
                         Row(
                           children: [
                             _smallTitle('양도예정일'),
                             _expectedTransferDate(_transferDateTC, '20220725',((){
                               if(_stage >=3 ){return true;} else {return false;}})())
                           ],
-                        ),
+                        ),//양도예정일
                         Row(
                           children: [
                             _smallTitle('취득 원인'),
@@ -328,7 +331,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                                 )
                             ),
                           ],
-                        ),
+                        ),//취득원인
                         Row(
                           children: [
                             _smallTitle('취득시 종류'),
@@ -410,9 +413,9 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                             )
                             )
                           ],
-                        ),
+                        ),//취득시 종류
                         const Divider(),
-                        AcquisitionDateETC(),
+                        AcquisitionDateETC(),//조건에 맞는 추가 선택란 1
                         const Divider(),
                         Row(
                           children: [
@@ -486,19 +489,20 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                                 )
                             ),
                           ],
-                        ),
+                        ),//취득 후 거주기간
                         Row(
                           children: [
                             _smallTitle('양도가액'),
                             _transferPrice(_transferPriceTC, '700000000',_stage >= 7)
                           ],
-                        ),
+                        ),//양도가액
                         Row(
                           children: [
                             _smallTitle('취득가액 및 필요경비'),
                             _acquisitionPrice(_acquisitionPriceTC, '10000000',_stage >= 8)
                           ],
-                        ),
+                        ),//취득가액 및 필요경비
+                        preReconstructionHouse(),
                         Container(
                           height: 50,
                           margin: const EdgeInsets.fromLTRB(0, 50, 0, 10),
@@ -526,6 +530,40 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
         )
     );
   }
+
+  Widget preReconstructionHouse(){
+    if(_dropDownMenuForTypeOfAcquisition == '재건축전 주택'){
+      return ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          const Divider(),
+          Row(
+            children: [
+              _smallTitle('관리처분계획인가일'),
+              _textField2(_manageDateTC, '20160304', true)
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('사업시행인가일'),
+              _textField2(_businessStartDateTC, '19980218', true)
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('입주권 가치'),
+              _textField2(_rightPriceTC, '17000000', true)
+            ],
+          ),
+          const Divider(),
+        ],
+      );
+    }else {
+      return Container();
+    }
+  }
+
 
   Widget AcquisitionDateETC(){
     Widget whetherHavingHome(){
@@ -592,9 +630,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
       );
     }
     if(_stage<6){
-      return Container(
-        child: Text('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'),
-      );
+      return Container();
     }
     else {
       List<List<dynamic>> csv = originCSV.where((element) => (element[0] == _dropDownMenuForTypeOfTransfer) && (element[1] == _dropDownMenuForReasonOfAquistition) && (element[2] == _dropDownMenuForTypeOfAcquisition)).toList();
