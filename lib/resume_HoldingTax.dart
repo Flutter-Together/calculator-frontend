@@ -21,8 +21,18 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
   final List select_holdig_period = ['5년 미만', '5년 이상', '10년 이상', '15년 이상'];
   List<bool> _is_selected_holding_period = [false, false, false, false];
   final List select_age = ['60세 미만', '60세 이상', '65세 이상', '70세 이상'];
-  List<bool> _is_selected_owner = [false, false, false, false];
-  final List select_owner = ['A', 'B', 'C', 'D'];
+  List<bool> _is_selected_owner_1 = [false, false, false, false, false];
+  List<bool> _is_selected_owner_2 = [false, false, false, false, false];
+  List<bool> _is_selected_owner_3 = [false, false, false, false, false];
+  List<bool> _is_selected_owner_4 = [false, false, false, false, false];
+  List<bool> _is_selected_owner_5 = [false, false, false, false, false];
+  final List select_owner = [
+    '본인',
+    '가족 구성원 A',
+    '가족 구성원 B',
+    '가족 구성원 C',
+    '가족 구성원 D'
+  ];
   List<bool> _is_selected_age = [false, false, false, false];
   final Color mainColor = Color(0xff80cfd5);
   String sampleaddr = '서울특별시 서초구 반포대로4(서초동)';
@@ -88,7 +98,17 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Label('주소'),
+                            index_selected >= 1
+                                ? Column(
+                                    children: [
+                                      Label('주소'),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      LabelwithBadge_2('소유주'),
+                                    ],
+                                  )
+                                : Label('주소'),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -146,6 +166,10 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                 children: [
                                   SizedBox(
                                     height: 10,
+                                  ),
+                                  Owenr_Row(1),
+                                  const SizedBox(
+                                    height: 25,
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -212,6 +236,10 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                       ),
                                     ],
                                   ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Owenr_Row(2),
                                 ],
                               )
                             : SizedBox(),
@@ -220,6 +248,10 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                 children: [
                                   SizedBox(
                                     height: 10,
+                                  ),
+                                  Owenr_Row(1),
+                                  const SizedBox(
+                                    height: 25,
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -288,6 +320,10 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                   ),
                                   SizedBox(
                                     height: 10,
+                                  ),
+                                  Owenr_Row(2),
+                                  const SizedBox(
+                                    height: 25,
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -357,6 +393,10 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                   SizedBox(
                                     height: 10,
                                   ),
+                                  Owenr_Row(3),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -425,6 +465,10 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                   SizedBox(
                                     height: 10,
                                   ),
+                                  Owenr_Row(4),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -490,6 +534,10 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                       ),
                                     ],
                                   ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Owenr_Row(5),
                                 ],
                               )
                             : SizedBox(),
@@ -497,15 +545,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                           height: 40,
                         ),
                         index_selected >= 1
-                            ? Row(
-                                children: [
-                                  LabelwithBadge_2('소유주'),
-                                  CheckBox_owner(0),
-                                  CheckBox_owner(1),
-                                  CheckBox_owner(2),
-                                  CheckBox_owner(3),
-                                ],
-                              )
+                            ? SizedBox()
                             : Column(
                                 children: [
                                   Row(
@@ -526,12 +566,21 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                       CheckBox_age(2),
                                       CheckBox_age(3),
                                     ],
-                                  )
+                                  ),
+                                  const SizedBox(
+                                    height: 40,
+                                  ),
                                 ],
                               ),
-                        const SizedBox(height: 40,),
-                        Row(
-                          children: [Label('공시가격')],
+                        Column(
+                          children: [
+                            Row(
+                              children: [Label('공시가격')],
+                            ),
+                            SizedBox(
+                              height: 60,
+                            )
+                          ],
                         ),
                       ],
                     ))
@@ -543,13 +592,98 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
     );
   }
 
-  SizedBox CheckBox_owner(int idx) {
+  Widget Owenr_Row(int idx) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 120),
+          child: Text('소유주$idx'),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        idx == 1
+            ? Row(
+                children: [
+                  SizedBox(
+                    width: 120,
+                  ),
+                  CheckBox_owner_1(0),
+                  CheckBox_owner_1(1),
+                  CheckBox_owner_1(2),
+                  CheckBox_owner_1(3),
+                  CheckBox_owner_1(4)
+                ],
+              )
+            : SizedBox(),
+        idx == 2
+            ? Row(
+                children: [
+                  SizedBox(
+                    width: 120,
+                  ),
+                  CheckBox_owner_2(0),
+                  CheckBox_owner_2(1),
+                  CheckBox_owner_2(2),
+                  CheckBox_owner_2(3),
+                  CheckBox_owner_2(4)
+                ],
+              )
+            : SizedBox(),
+        idx == 3
+            ? Row(
+                children: [
+                  SizedBox(
+                    width: 120,
+                  ),
+                  CheckBox_owner_3(0),
+                  CheckBox_owner_3(1),
+                  CheckBox_owner_3(2),
+                  CheckBox_owner_3(3),
+                  CheckBox_owner_3(4)
+                ],
+              )
+            : SizedBox(),
+        idx == 4
+            ? Row(
+                children: [
+                  SizedBox(
+                    width: 120,
+                  ),
+                  CheckBox_owner_4(0),
+                  CheckBox_owner_4(1),
+                  CheckBox_owner_4(2),
+                  CheckBox_owner_4(3),
+                  CheckBox_owner_4(4)
+                ],
+              )
+            : SizedBox(),
+        idx == 5
+            ? Row(
+                children: [
+                  SizedBox(
+                    width: 120,
+                  ),
+                  CheckBox_owner_5(0),
+                  CheckBox_owner_5(1),
+                  CheckBox_owner_5(2),
+                  CheckBox_owner_5(3),
+                  CheckBox_owner_5(4)
+                ],
+              )
+            : SizedBox(),
+      ],
+    );
+  }
+
+  SizedBox CheckBox_owner_1(int idx) {
     int count_selected_owner =
-        _is_selected_owner.where((element) => element == true).length;
+        _is_selected_owner_1.where((element) => element == true).length;
     int index_selected_owner =
-        _is_selected_owner.indexWhere((element) => element == true);
+        _is_selected_owner_1.indexWhere((element) => element == true);
     return SizedBox(
-      width: 140,
+      width: idx == 0 ? 70 : 175,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -562,14 +696,190 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                 side: BorderSide(width: 1, color: mainColor),
                 checkColor: Colors.white,
                 activeColor: mainColor,
-                value: _is_selected_owner[idx],
+                value: _is_selected_owner_1[idx],
                 onChanged: (bool? value) {
                   setState(() {
                     if (count_selected_owner == 0) {
-                      _is_selected_owner[idx] = value!;
+                      _is_selected_owner_1[idx] = value!;
                     } else if (count_selected_owner == 1) {
                       if (index_selected_owner == idx) {
-                        _is_selected_owner[idx] = !_is_selected_owner[idx];
+                        _is_selected_owner_1[idx] = !_is_selected_owner_1[idx];
+                      }
+                    }
+                  });
+                }),
+          ),
+          const SizedBox(
+            width: 1,
+          ),
+          Text(
+            select_owner[idx],
+            style: TextStyle(fontSize: 19),
+          )
+        ],
+      ),
+    );
+  }
+
+  SizedBox CheckBox_owner_2(int idx) {
+    int count_selected_owner =
+        _is_selected_owner_2.where((element) => element == true).length;
+    int index_selected_owner =
+        _is_selected_owner_2.indexWhere((element) => element == true);
+    return SizedBox(
+      width: idx == 0 ? 70 : 175,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Transform.scale(
+            scale: 1.1,
+            child: Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(35),
+                ),
+                side: BorderSide(width: 1, color: mainColor),
+                checkColor: Colors.white,
+                activeColor: mainColor,
+                value: _is_selected_owner_2[idx],
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (count_selected_owner == 0) {
+                      _is_selected_owner_2[idx] = value!;
+                    } else if (count_selected_owner == 1) {
+                      if (index_selected_owner == idx) {
+                        _is_selected_owner_2[idx] = !_is_selected_owner_2[idx];
+                      }
+                    }
+                  });
+                }),
+          ),
+          const SizedBox(
+            width: 1,
+          ),
+          Text(
+            select_owner[idx],
+            style: TextStyle(fontSize: 19),
+          )
+        ],
+      ),
+    );
+  }
+
+  SizedBox CheckBox_owner_3(int idx) {
+    int count_selected_owner =
+        _is_selected_owner_3.where((element) => element == true).length;
+    int index_selected_owner =
+        _is_selected_owner_3.indexWhere((element) => element == true);
+    return SizedBox(
+      width: idx == 0 ? 70 : 175,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Transform.scale(
+            scale: 1.1,
+            child: Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(35),
+                ),
+                side: BorderSide(width: 1, color: mainColor),
+                checkColor: Colors.white,
+                activeColor: mainColor,
+                value: _is_selected_owner_3[idx],
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (count_selected_owner == 0) {
+                      _is_selected_owner_3[idx] = value!;
+                    } else if (count_selected_owner == 1) {
+                      if (index_selected_owner == idx) {
+                        _is_selected_owner_3[idx] = !_is_selected_owner_3[idx];
+                      }
+                    }
+                  });
+                }),
+          ),
+          const SizedBox(
+            width: 1,
+          ),
+          Text(
+            select_owner[idx],
+            style: TextStyle(fontSize: 19),
+          )
+        ],
+      ),
+    );
+  }
+
+  SizedBox CheckBox_owner_4(int idx) {
+    int count_selected_owner =
+        _is_selected_owner_4.where((element) => element == true).length;
+    int index_selected_owner =
+        _is_selected_owner_4.indexWhere((element) => element == true);
+    return SizedBox(
+      width: idx == 0 ? 70 : 175,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Transform.scale(
+            scale: 1.1,
+            child: Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(35),
+                ),
+                side: BorderSide(width: 1, color: mainColor),
+                checkColor: Colors.white,
+                activeColor: mainColor,
+                value: _is_selected_owner_4[idx],
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (count_selected_owner == 0) {
+                      _is_selected_owner_4[idx] = value!;
+                    } else if (count_selected_owner == 1) {
+                      if (index_selected_owner == idx) {
+                        _is_selected_owner_4[idx] = !_is_selected_owner_4[idx];
+                      }
+                    }
+                  });
+                }),
+          ),
+          const SizedBox(
+            width: 1,
+          ),
+          Text(
+            select_owner[idx],
+            style: TextStyle(fontSize: 19),
+          )
+        ],
+      ),
+    );
+  }
+
+  SizedBox CheckBox_owner_5(int idx) {
+    int count_selected_owner =
+        _is_selected_owner_5.where((element) => element == true).length;
+    int index_selected_owner =
+        _is_selected_owner_5.indexWhere((element) => element == true);
+    return SizedBox(
+      width: idx == 0 ? 70 : 175,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Transform.scale(
+            scale: 1.1,
+            child: Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(35),
+                ),
+                side: BorderSide(width: 1, color: mainColor),
+                checkColor: Colors.white,
+                activeColor: mainColor,
+                value: _is_selected_owner_5[idx],
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (count_selected_owner == 0) {
+                      _is_selected_owner_5[idx] = value!;
+                    } else if (count_selected_owner == 1) {
+                      if (index_selected_owner == idx) {
+                        _is_selected_owner_5[idx] = !_is_selected_owner_5[idx];
                       }
                     }
                   });
