@@ -7,7 +7,7 @@ class NavigationBox extends StatefulWidget {
   final String title_2;
   final Color boxColor;
   final Color borderColor;
-  final IconData? icon;
+  final String imagepath;
   final Color? iconColor;
   final bool isMedium;
 
@@ -17,9 +17,9 @@ class NavigationBox extends StatefulWidget {
       required this.pushNamed,
       required this.title_1,
       required this.title_2,
+      required this.imagepath,
       this.boxColor = Colors.white,
       this.borderColor = Colors.black,
-      this.icon = Icons.add_box_rounded,
       this.iconColor = Colors.black})
       : super(key: key);
 
@@ -34,19 +34,45 @@ class _NavigationBoxState extends State<NavigationBox> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if(widget.pushNamed == '/'){
-          return;
-        }else{
+        if (widget.pushNamed == '/') {
+          return showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  title: Text('AI 컨설팅'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('추후 공개 예정입니다.'),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          '확인',
+                          style: TextStyle(
+                              color: Color(mainColor),
+                              fontWeight: FontWeight.bold),
+                        ))
+                  ],
+                );
+              });
+        } else {
           final res = await Navigator.pushNamed(context, widget.pushNamed);
         }
-
       },
       child: Container(
         width: widget.isMedium == true
             ? MediaQuery.of(context).size.width / 2.5
             : MediaQuery.of(context).size.width / 5,
         height: widget.isMedium == true
-            ? MediaQuery.of(context).size.width / 3.7
+            ? MediaQuery.of(context).size.width / 4.3
             : MediaQuery.of(context).size.width / 8,
         decoration: BoxDecoration(
           color: widget.boxColor,
@@ -54,33 +80,30 @@ class _NavigationBoxState extends State<NavigationBox> {
         ),
         padding: widget.isMedium == true
             ? EdgeInsets.only(
-                left: MediaQuery.of(context).size.width / 80,
-                right: MediaQuery.of(context).size.width / 80,
-                top: MediaQuery.of(context).size.height / 100,
-                bottom: MediaQuery.of(context).size.height / 130)
+                left: MediaQuery.of(context).size.width / 55,
+              )
             : EdgeInsets.only(
                 left: MediaQuery.of(context).size.width / 90,
-                right: MediaQuery.of(context).size.width / 90,
-                top: MediaQuery.of(context).size.height / 100,
-                bottom: MediaQuery.of(context).size.height / 110),
+              ),
         //padding 안쪽 여백
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Icon(
-                    widget.icon,
-                    size: widget.isMedium == true
-                        ? MediaQuery.of(context).size.width / 10
-                        : MediaQuery.of(context).size.width / 20,
-                    color: widget.iconColor,
-                  ),
-                )
-              ],
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height / 130,
+                  bottom: MediaQuery.of(context).size.height / 160),
+              child: Image.asset(
+                widget.imagepath,
+                fit: BoxFit.cover,
+                width: widget.isMedium == true
+                    ? MediaQuery.of(context).size.width / 18
+                    : MediaQuery.of(context).size.width / 28,
+                height: widget.isMedium == true
+                    ? MediaQuery.of(context).size.width / 18
+                    : MediaQuery.of(context).size.width / 28,
+                color: widget.iconColor,
+              ),
             ),
             LargeText(
               text: widget.title_1,

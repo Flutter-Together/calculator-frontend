@@ -105,36 +105,6 @@ class _HoldingTaxPageState extends State<HoldingTaxPage>
                   size: 25,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: 15,
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Color(mainColor), width: 1),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                        icon: Icon(Icons.arrow_drop_down_outlined),
-                        iconSize: 40,
-                        style: TextStyle(color: Colors.black87, fontSize: 15),
-                        isExpanded: true,
-                        hint: Text('주소를 입력하세요'),
-                        items: item_list
-                            .map((item) => DropdownMenuItem(
-                                child: Text(item), value: item))
-                            .toList(),
-                        value: selected_item,
-                        onChanged: (newItem) {
-                          setState(() {
-                            selected_item = newItem as String;
-                          });
-                        }),
-                  ),
-                ),
-              ),
               Top_Container(context),
               const SizedBox(
                 height: 70,
@@ -143,17 +113,13 @@ class _HoldingTaxPageState extends State<HoldingTaxPage>
               const SizedBox(
                 height: 20,
               ),
-              Year(),
-              const SizedBox(
-                height: 30,
-              ),
               Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: Row(
                   children: [
-                    MediumText(text: '기본정보'),
+                    MediumText(text: '주택수 선택'),
                     const SizedBox(
-                      width: 70,
+                      width: 50,
                     ),
                     Checkbox(
                         shape: RoundedRectangleBorder(
@@ -183,7 +149,20 @@ class _HoldingTaxPageState extends State<HoldingTaxPage>
                             _isChecked2 = value!;
                           });
                         }),
-                    _optionText('1세대 1주택자'),
+                    _optionText('1세대 2주택'),
+                    Checkbox(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(35),
+                        ),
+                        side: BorderSide(width: 1, color: Color(mainColor)),
+                        checkColor: Colors.white,
+                        value: _isChecked3,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _isChecked3 = value!;
+                          });
+                        }),
+                    _optionText('1세대 3주택 이상'),
                   ],
                 ),
               ),
@@ -350,30 +329,30 @@ class _HoldingTaxPageState extends State<HoldingTaxPage>
                     ),
                     Expanded(
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        focusNode: _focusNode,
+                        controller: _amountController,
+                        cursorColor: Colors.black,
+                        textInputAction: TextInputAction.search,
+                        style: const TextStyle(fontSize: 17),
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
                           ),
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            focusNode: _focusNode,
-                            controller: _amountController,
-                            cursorColor: Colors.black,
-                            textInputAction: TextInputAction.search,
-                            style: const TextStyle(fontSize: 17),
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                              ),
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, right: 10, top: 10, bottom: 10),
-                              hintText: '금액 입력',
-                              hintStyle: const TextStyle(color: Colors.black38),
-                            ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
                           ),
-                        )),
+                          contentPadding: EdgeInsets.only(
+                              left: 15, right: 10, top: 10, bottom: 10),
+                          hintText: '금액 입력',
+                          hintStyle: const TextStyle(color: Colors.black38),
+                        ),
+                      ),
+                    )),
                   ],
                 ),
               ),

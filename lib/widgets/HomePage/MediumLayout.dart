@@ -30,154 +30,148 @@ class _MediumLayoutState extends State<MediumLayout> {
         ),
         leadingWidth: 220,
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-              automaticallyImplyLeading: false,
-              actions: <Widget>[Container()],
-              backgroundColor: Colors.white38,
-              expandedHeight: widgetSize.height * .55,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Padding(
-                  padding: EdgeInsets.only(
-                      left: widgetSize.width / 10,
-                      right: widgetSize.width / 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      LargeText(
-                        text: '세금 AI 계산기',
-                      ),
-                      SizedBox(
-                        height: widgetSize.height / 40,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(width: 1),
-                        ),
-                        height: widgetSize.height * .25,
-                        width: widgetSize.width * .8,
-                        child: Center(child: Text('프로그램 설명')),
-                      ),
-                      SizedBox(
-                        height: widgetSize.height / 40,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(width: 1),
-                        ),
-                        height: widgetSize.height * .05,
-                        width: widgetSize.width * .8,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text('개인정보처리방침/이용약관/제휴문의'),
-                            Text('특허출원 정보')
-                          ],
-                        ),
-                      ),
-                    ],
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+                left: widgetSize.width / 10,
+                right: widgetSize.width / 10,
+                bottom: 100),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                LargeText(
+                  text: '세금 AI 계산기',
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(width: 0.1),
+                  ),
+                  height: widgetSize.height * .25,
+                  width: widgetSize.width * .8,
+                  child: Center(child: Text('프로그램 설명')),
+                ),
+                SizedBox(
+                  height: widgetSize.height / 40,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(width: 0.1),
+                  ),
+                  height: widgetSize.height * .05,
+                  width: widgetSize.width * .8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [Text('개인정보처리방침/이용약관/제휴문의'), Text('특허출원 정보')],
                   ),
                 ),
-              )),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: widgetSize.width / 20,
-                  right: widgetSize.width / 20,
-                  bottom: widgetSize.height / 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  LargeText(
-                    text: 'AI 세금 계산',
-                  ),
-                  SizedBox(
-                    height: widgetSize.height / 25,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      NavigationBox(
-                          isMedium: true,
-                          pushNamed: '/capgain',
-                          title_1: '양도소득세',
-                          title_2: 'AI 판단 계산기'),
-                      NavigationBox(
-                          isMedium: true,
-                          pushNamed: '/holding',
-                          title_1: '보유세(종부세, 재산세)',
-                          title_2: 'AI 판단 계산기'),
-                    ],
-                  )
-                ],
-              ),
+              ],
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: widgetSize.width / 20,
-                  right: widgetSize.width / 20,
-                  bottom: widgetSize.width / 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  LargeText(
-                    text: 'TAXAI 컨설팅',
-                  ),
-                  SizedBox(
-                    height: widgetSize.height / 25,
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          NavigationBox(
-                              isMedium: true,
-                              pushNamed: '/',
-                              title_1: '양도소득세 AI',
-                              title_2: '컨설팅'),
-                          NavigationBox(
-                              isMedium: true,
-                              pushNamed: '/',
-                              title_1: '매도 관련',
-                              title_2: 'AI 컨설팅'),
-                        ],
-                      ),
-                      SizedBox(
-                        height: widgetSize.height / 45,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          NavigationBox(
-                              isMedium: true,
-                              pushNamed: '/',
-                              title_1: '양도소득세 AI',
-                              title_2: '컨설팅'),
-                          NavigationBox(
-                              isMedium: true,
-                              pushNamed: '/',
-                              title_1: '매도 관련',
-                              title_2: 'AI 컨설팅'),
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
+          Padding(
+            padding: EdgeInsets.only(
+                left: widgetSize.width / 20,
+                right: widgetSize.width / 20,
+                bottom: 60),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LargeText(
+                  text: 'AI 세금 계산',
+                ),
+                SizedBox(
+                  height: widgetSize.height / 25,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    NavigationBox(
+                        imagepath: 'assets/images/calculate.png',
+                        isMedium: true,
+                        pushNamed: '/capgain',
+                        title_1: '양도소득세',
+                        title_2: 'AI 판단 계산기'),
+                    NavigationBox(
+                        imagepath: 'assets/images/calculate.png',
+                        isMedium: true,
+                        pushNamed: '/holding',
+                        title_1: '보유세(종부세, 재산세)',
+                        title_2: 'AI 판단 계산기'),
+                  ],
+                )
+              ],
             ),
-          )
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                left: widgetSize.width / 20,
+                right: widgetSize.width / 20,
+                bottom: 60),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LargeText(
+                  text: 'TAXAI 컨설팅',
+                ),
+                SizedBox(
+                  height: widgetSize.height / 25,
+                ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        NavigationBox(
+                            imagepath: 'assets/images/psychology.png',
+                            isMedium: true,
+                            pushNamed: '/',
+                            title_1: '양도소득세 AI',
+                            title_2: '컨설팅'),
+                        NavigationBox(
+                            imagepath: 'assets/images/psychology.png',
+                            isMedium: true,
+                            pushNamed: '/',
+                            title_1: '매도 관련',
+                            title_2: 'AI 컨설팅'),
+                      ],
+                    ),
+                    SizedBox(
+                      height: widgetSize.height / 45,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        NavigationBox(
+                            imagepath: 'assets/images/psychology.png',
+                            isMedium: true,
+                            pushNamed: '/',
+                            title_1: '양도소득세 AI',
+                            title_2: '컨설팅'),
+                        NavigationBox(
+                            imagepath: 'assets/images/psychology.png',
+                            isMedium: true,
+                            pushNamed: '/',
+                            title_1: '매도 관련',
+                            title_2: 'AI 컨설팅'),
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
         ],
       ),
       endDrawer: Drawer(
+        width: 250,
         child: ListView(
           children: [
             DrawerHeader(
@@ -277,7 +271,10 @@ class _MediumLayoutState extends State<MediumLayout> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('확인'))
+                  child: Text('확인',
+                      style: TextStyle(
+                          color: Color(0xff80cfd5),
+                          fontWeight: FontWeight.bold)))
             ],
           );
         });

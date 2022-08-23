@@ -1,9 +1,9 @@
 import 'package:calculator_frontend/CapitalGainsTax.dart';
-import 'package:calculator_frontend/HoldingTax.dart';
+import 'package:calculator_frontend/resume_HoldingTax.dart';
 import 'package:calculator_frontend/widgets/HomePage/LargeLayout.dart';
 import 'package:calculator_frontend/widgets/HomePage/MediumLayout.dart';
 import 'package:flutter/material.dart';
-
+//2022월 08월 16일 22시 22분
 void main() {
   runApp(const MyApp());
 }
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           MediumLayout: const MediumLayout(), LargeLayout: const LargeLayout()),
       routes: {
         '/capgain': (context) => CapitalGainsTaxPage(),
-        '/holding': (context) => HoldingTaxPage()
+        '/holding': (context) => Resume_HoldingTaxPage()
       },
     );
   }
