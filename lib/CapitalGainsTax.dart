@@ -27,6 +27,24 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   Color _color = Colors.black38;
   final backgroundColor = 0xfffafafa;
 
+  final List<List<String>> _reduceTaxHouseList = [
+    ['19000101','20001231','취득일','1986.1.1~2000.12.31 신축된 5호 이상의 주택을 5년이상 임대한 국민주택 또는 세액감면대상 주택, 86년이전 신축 공동주택(입주사실 없는)'],
+    ['19990101','20991231','취득일','1999.8.20~2001.12.31 신축된 1호이상의 주택을 포함한 2호이상의 주택을 5년이상 임대한 신축임대주택, 세액감면대상 주택'],
+    ['19951101','19981231','계약일','1995.11.1~1997.12.31 1998.3.1~1998.12.31 서울외 지방의 미분양 국민주택 취득후 5년이상 임대한후에 양도'],
+    ['20081103','20101231','계약일','2008.11.3~2010.12.31 수도권 미분양주택 취득분'],
+    ['20090212','20100211','계약일','2009.2.12(비거주자 3.16)~2010.2.11 취득 서울시 밖에 미분양주택, 자기건설신축주택'],
+    ['20100211','20110430','계약일','2010.2.11~2011.4.30 취득분 수도권밖 미분양주택'],
+    ['20110329','20111231','계약일','2011.3.29현재 준공후 미분양주택을 2011년까지 취득하고 5년이상 임대하고 양도'],
+    ['20120924','20121231','계약일','2012.9.24 현재 미분양주택을 2012년안에 취득한 9억원 이하의 주택'],
+    ['20150101','20151231','계약일','2015.1.1~12.31 까지 취득(취득가액 6억원 이하, 연면적 135m이하)하여 5년이상 임대한 주택'],
+    ['20130401','20131231','계약일','2013.4.1~2013.12.31 신축주택(취득가 6억원 이하 or 85m이하) 미분양주택']
+  ];
+
+  List<String?> _reduceTaxHouseChecklist = List.generate(10, (index) => null);
+
+  DateTime? buyDate;
+  DateTime? contractDate;
+
   final TextEditingController _transferDateTC = TextEditingController();
   final TextEditingController _findingAddressTC = TextEditingController();
   final TextEditingController _transferPriceTC = TextEditingController();
@@ -34,6 +52,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   final TextEditingController _manageDateTC = TextEditingController();
   final TextEditingController _businessStartDateTC = TextEditingController();
   final TextEditingController _rightPriceTC = TextEditingController();
+  final TextEditingController _rentalHouseRegistrationDateTC = TextEditingController();
 
   List acquisitionETCTCList = List.generate(5, (index) => TextEditingController());
 
@@ -62,6 +81,10 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   List<String> _reasonOfAquistition = [];
   String? _dropDownMenuForReasonOfAquistition;
   String? _dropDownMenuHavingHome;
+  String? _dropDownMenuHavingHome_RentalHouse;
+
+  bool? _shortRent;
+  bool? _under85;
 
   late CustomDropDown _customDropdown;
 
@@ -503,6 +526,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                           ],
                         ),//취득가액 및 필요경비
                         preReconstructionHouse(),
+                        residentialOfficetel(),
                         Container(
                           height: 50,
                           margin: const EdgeInsets.fromLTRB(0, 50, 0, 10),
@@ -527,6 +551,320 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                 }
             ),
           ),
+        )
+    );
+  }
+
+  Widget residentialOfficetel(){
+    Widget rentalHouse(){
+      return ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          Row(
+            children: [
+              _smallTitle('계약일&취득일 당시 무주택 여부'),
+              Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints){
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            items: ['O','X'].map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  //color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )).toList(),
+                            value: _dropDownMenuHavingHome_RentalHouse,
+                            onChanged: (value) {
+                              setState(() {
+                                _dropDownMenuHavingHome_RentalHouse = value as String;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                            ),
+                            iconSize: 30,
+                            buttonHeight: 50,
+                            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                            buttonDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(),
+                              color: Color(backgroundColor),
+                            ),
+                            buttonElevation: 2,
+                            itemHeight: 40,
+                            itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                            dropdownMaxHeight: 200,
+                            dropdownWidth: constraints.maxWidth,
+                            dropdownPadding: null,
+                            dropdownDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              // color: Colors.redAccent,
+                            ),
+                            dropdownElevation: 8,
+                            scrollbarRadius: const Radius.circular(40),
+                            scrollbarThickness: 6,
+                            scrollbarAlwaysShow: true,
+                            offset: const Offset(0, 0),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+              )
+
+            ],
+          ),//계약일&취득일 당시 무주택 여부
+          Row(
+            children: [
+              _smallTitle('임대주택 등록일'),
+              _textField2(_rentalHouseRegistrationDateTC, '20160304', true)
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('임대주택 유형'),
+              shortRentCheckBox( )
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('전용면적'),
+              myOwnArea()
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('등록시 공시가격'),
+              const Text('자동파악(추후 추가)')
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('수도권 유무'),
+              const Text('자동파악(추후 추가)')
+            ],
+          ),
+        ],
+      );
+    }
+    Widget ruralHouse(){
+      return ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          Row(
+            children: [
+              _smallTitle('조특법 농어촌주택'),
+              const Text('추후 추가'),
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('소득세법 농어촌주택'),
+              const Text('추후 추가'),
+            ],
+          ),
+        ],
+      );
+    }
+    Widget reduceTaxHouse(){
+      return ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _reduceTaxHouseList.length + 1,
+          itemBuilder: (context, index){
+            if(index == 0){
+              return const Divider();
+            }else {
+              int _idx = index - 1;
+              return Row(
+                children: [
+                  Expanded(
+                      child: Text('$index. ${_reduceTaxHouseList[_idx][3]}',style: const TextStyle(fontSize: 17),)
+                  ),
+                  Container(
+                    width: 150,
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints){
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            items: ['O','X'].map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  //color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )).toList(),
+                            value: _reduceTaxHouseChecklist[_idx],
+                            onChanged: (value) {
+                              setState(() {
+                                _reduceTaxHouseChecklist[_idx] = value as String;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                            ),
+                            iconSize: 30,
+                            buttonHeight: 50,
+                            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                            buttonDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(),
+                              color: Color(backgroundColor),
+                            ),
+                            buttonElevation: 2,
+                            itemHeight: 40,
+                            itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                            dropdownMaxHeight: 200,
+                            dropdownWidth: constraints.maxWidth,
+                            dropdownPadding: null,
+                            dropdownDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              // color: Colors.redAccent,
+                            ),
+                            dropdownElevation: 8,
+                            scrollbarRadius: const Radius.circular(40),
+                            scrollbarThickness: 6,
+                            scrollbarAlwaysShow: true,
+                            offset: const Offset(0, 0),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              );
+            }
+          }
+      );
+    }
+
+    if(_dropDownMenuForTypeOfTransfer == '주택(주거용 오피스텔 포함)'){
+      return ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          const Divider(),
+          rentalHouse(),
+          ruralHouse(),
+          reduceTaxHouse(),
+        ],
+      );
+    }else {
+      return Container();
+    }
+  }
+
+  Widget myOwnArea(){
+    List<String> option = ['85㎡이하','85㎡초과'];
+    bool a;
+    bool b;
+    if(_under85 == null){
+      a=false;
+      b=false;
+    }else if(_under85 == true){
+      a=true;
+      b=false;
+    }else{
+      a=false;
+      b=true;
+    }
+    return Expanded(
+        child: Row(
+          children: [
+            Checkbox(
+                value: a,
+                onChanged: (value){
+                  setState(() {
+                    if(a==true && b==false){
+                      _under85 = null;
+                    }else{
+                      _under85 = value;
+                    }
+                  });
+                }
+            ),
+            Text(option[0],style: const TextStyle(fontSize: 17),),
+            const SizedBox(width: 20,),
+            Checkbox(
+                value: b,
+                onChanged: (value){
+                  setState(() {
+                    if(a==false && b==true){
+                      _under85 = null;
+                    }else{
+                      _under85 = !value!;
+                    }
+                  });
+                }
+            ),
+            Text(option[1],style: const TextStyle(fontSize: 17)),
+          ],
+        )
+    );
+  }
+
+  Widget shortRentCheckBox(){
+    List<String> option = ['단기','장기일반'];
+    bool a;
+    bool b;
+    if(_shortRent == null){
+      a=false;
+      b=false;
+    }else if(_shortRent == true){
+      a=true;
+      b=false;
+    }else{
+      a=false;
+      b=true;
+    }
+    return Expanded(
+        child: Row(
+          children: [
+            Checkbox(
+                value: a,
+                onChanged: (value){
+                  setState(() {
+                    if(a==true && b==false){
+                      _shortRent = null;
+                    }else{
+                      _shortRent = value;
+                    }
+                  });
+                }
+            ),
+            Text(option[0],style: const TextStyle(fontSize: 17),),
+            const SizedBox(width: 20,),
+            Checkbox(
+                value: b,
+                onChanged: (value){
+                  setState(() {
+                    if(a==false && b==true){
+                      _shortRent = null;
+                    }else{
+                      _shortRent = !value!;
+                    }
+                  });
+                }
+            ),
+            Text(option[1],style: const TextStyle(fontSize: 17)),
+          ],
         )
     );
   }
@@ -570,61 +908,62 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
       return Row(
         children: [
           _smallTitle('계약일 당시 무주택 여부 (o,x)'),
-          Expanded(child: Container(
-            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints){
-                return DropdownButtonHideUnderline(
-                  child: DropdownButton2(
-                    isExpanded: true,
-                    items: ['O','X'].map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          //color: Colors.white,
+          Expanded(
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints){
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        items: ['O','X'].map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              //color: Colors.white,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )).toList(),
+                        value: _dropDownMenuHavingHome,
+                        onChanged: (value) {
+                          setState(() {
+                            _dropDownMenuHavingHome = value as String;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
                         ),
-                        overflow: TextOverflow.ellipsis,
+                        iconSize: 30,
+                        buttonHeight: 50,
+                        buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                        buttonDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(),
+                          color: Color(backgroundColor),
+                        ),
+                        buttonElevation: 2,
+                        itemHeight: 40,
+                        itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                        dropdownMaxHeight: 200,
+                        dropdownWidth: constraints.maxWidth,
+                        dropdownPadding: null,
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          // color: Colors.redAccent,
+                        ),
+                        dropdownElevation: 8,
+                        scrollbarRadius: const Radius.circular(40),
+                        scrollbarThickness: 6,
+                        scrollbarAlwaysShow: true,
+                        offset: const Offset(0, 0),
                       ),
-                    )).toList(),
-                    value: _dropDownMenuHavingHome,
-                    onChanged: (value) {
-                      setState(() {
-                        _dropDownMenuHavingHome = value as String;
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down,
-                    ),
-                    iconSize: 30,
-                    buttonHeight: 50,
-                    buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-                    buttonDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(),
-                      color: Color(backgroundColor),
-                    ),
-                    buttonElevation: 2,
-                    itemHeight: 40,
-                    itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                    dropdownMaxHeight: 200,
-                    dropdownWidth: constraints.maxWidth,
-                    dropdownPadding: null,
-                    dropdownDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      // color: Colors.redAccent,
-                    ),
-                    dropdownElevation: 8,
-                    scrollbarRadius: const Radius.circular(40),
-                    scrollbarThickness: 6,
-                    scrollbarAlwaysShow: true,
-                    offset: const Offset(0, 0),
-                  ),
-                );
-              },
-            ),
-          )
+                    );
+                  },
+                ),
+              )
           )
         ],
       );
