@@ -16,13 +16,27 @@ class Address {
     this.dong = parsedJson['dong'];
   }
 
-// Map toJson() {
-//   return {
-//     'roadAddr': roadAddr,
-//     'oldAddr': oldAddr,
-//     'pnu': pnu,
-//     'isIndividualHouse': isIndividualHouse,
-//     'dong': dong,
-//   };
-// }
+  Map toJson() {
+    return {
+      'roadAddr': roadAddr,
+      'oldAddr': oldAddr,
+      'pnu': pnu,
+      'isIndividualHouse': isIndividualHouse,
+      'dong': dong,
+    };
+  }
+
+  @override
+  String toString() => toJson().toString();
+
+  // @override
+  // toMap() {
+  //   return {
+  //     'roadAddr': '$roadAddr',
+  //     'oldAddr': '$oldAddr',
+  //     'pnu': '$pnu',
+  //     'isIndividualHouse': '$isIndividualHouse',
+  //     'dong': '$dong'
+  //   };
+  // }
 }

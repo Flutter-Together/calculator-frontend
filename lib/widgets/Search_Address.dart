@@ -214,7 +214,7 @@ class _Search_AddressState extends State<Search_Address> {
                 return Center(child: Text(snapshot.error.toString()));
               }
               var res = snapshot.data!;
-              return Text('$res');
+              return Text(res[]);
             }));
   }
 
