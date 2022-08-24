@@ -20,14 +20,14 @@ class CapitalGainsTaxPage extends StatefulWidget {
 class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   final mainColor = 0xff80cfd5;
 
-  bool _isSearchedDong = false; //flase 이면 주소 검색을 아직 안한 상태, 1이면 검색을 한 상태
+  bool _isSearchedAddress = false; //flase 이면 주소 검색을 아직 안한 상태, 1이면 검색을 한 상태
 
-  String sampleDong = '서울특별시 서초구 반포대로 4(서초동)';
+  String sampleAddress = '서울특별시 서초구 반포대로 4(서초동)';
   Color _color = Colors.black38;
   final backgroundColor = 0xfffafafa;
 
   final TextEditingController _transferDateTC = TextEditingController();
-  final TextEditingController _findingDongTC = TextEditingController();
+  final TextEditingController _findingAddressTC = TextEditingController();
   final TextEditingController _transferPriceTC = TextEditingController();
   final TextEditingController _acquisitionPriceTC = TextEditingController();
 
@@ -128,10 +128,11 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                         Expanded(
                             child: GestureDetector(
                           onTap: () async {
-                            var a = await _findingDongDialog(_findingDongTC);
+                            var a =
+                                await _findingAddressDialog(_findingAddressTC);
 
                             setState(() {
-                              sampleDong = a;
+                              sampleAddress = a;
                               _color = Colors.black;
                               _stage = 2;
                             });
@@ -151,7 +152,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    sampleDong,
+                                    sampleAddress,
                                     style:
                                         TextStyle(fontSize: 17, color: _color),
                                   ),
@@ -683,9 +684,9 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
     return true;
   }
 
-  Future<String> _findingDongDialog(TextEditingController tc) async {
+  Future<String> _findingAddressDialog(TextEditingController tc) async {
     setState(() {
-      _isSearchedDong = false;
+      _isSearchedAddress = false;
     });
     var res = await showDialog(
         context: context,
@@ -712,7 +713,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                             autofocus: true,
                             onSubmitted: (value) {
                               setState(() {
-                                _isSearchedDong = true;
+                                _isSearchedAddress = true;
                               });
                             },
                             cursorColor: Colors.black,
@@ -730,14 +731,14 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                                     color: Colors.black,
                                     onPressed: () {
                                       setState(() {
-                                        _isSearchedDong = true;
+                                        _isSearchedAddress = true;
                                       });
                                     },
                                   ),
                                 ))),
                       ),
-                      _isSearchedDong
-                          ? _DongList(tc.text)
+                      _isSearchedAddress
+                          ? _addressList(tc.text)
                           : const Center(
                               child: Text('검색어를 입력해주세요'),
                             )
@@ -749,10 +750,10 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
     return res;
   }
 
-  Widget _DongList(String keyword) {
+  Widget _addressList(String keyword) {
     return Expanded(
         child: FutureBuilder(
-            future: fetchDong(keyword),
+            future: fetchAddress(keyword),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -768,13 +769,13 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                 itemCount: res.length,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return _selectDongBox(res[index][0], res[index][1], index);
+                  return _selectAddressBox(res[index][0], res[index][1], index);
                 },
               );
             }));
   }
 
-  Widget _selectDongBox(String newDong, String oldDong, int index) {
+  Widget _selectAddressBox(String newAddress, String oldAddress, int index) {
     Color backgrouundColor;
     if (index.isEven) {
       backgrouundColor = Colors.white;
@@ -784,19 +785,19 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
 
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context, newDong);
+        Navigator.pop(context, newAddress);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
         decoration: BoxDecoration(color: backgrouundColor),
         child: Column(
-          children: [Text(newDong), Text(oldDong)],
+          children: [Text(newAddress), Text(oldAddress)],
         ),
       ),
     );
   }
 
-  Future<List> fetchDong(String keyword) async {
+  Future<List> fetchAddress(String keyword) async {
     String baseURL =
         "https://wu26xy8cqj.execute-api.ap-northeast-2.amazonaws.com/default/juso_api?keyword=";
 
@@ -807,7 +808,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
 
       return res;
     } else {
-      throw Exception("Fail to fetch Dong data");
+      throw Exception("Fail to fetch address data");
     }
   }
 
