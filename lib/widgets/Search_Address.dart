@@ -7,7 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class Search_Address extends StatefulWidget {
-  const Search_Address({Key? key}) : super(key: key);
+  String? address;
+  Search_Address({Key? key, this.address}) : super(key: key);
 
   @override
   State<Search_Address> createState() => _Search_AddressState();
@@ -213,8 +214,28 @@ class _Search_AddressState extends State<Search_Address> {
               } else if (snapshot.hasError) {
                 return Center(child: Text(snapshot.error.toString()));
               }
-              var res = snapshot.data!;
-              return Text(res[]);
+              var res = snapshot.data! as List;
+              return StatefulBuilder(builder: (context, setState) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    itemCount: res.length,
+                    itemBuilder: (BuildContext context, int idx) {
+                      String roadAddr = res[idx].roadAddr;
+                      String oldAddr = res[idx].oldAddr;
+                      List<dynamic> dong_list = res[idx].dong_list;
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context, roadAddr);
+                          widget.address = roadAddr;
+                        },
+                        child: ListTile(
+                          title: Text(roadAddr),
+                          subtitle: Text(oldAddr),
+                        ),
+                      );
+                    });
+              });
             }));
   }
 
