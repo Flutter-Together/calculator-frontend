@@ -1,19 +1,19 @@
 class Address {
-  Address(
-      this.roadAddr, this.oldAddr, this.pnu, this.isIndividualHouse, this.dong);
+  Address(this.roadAddr, this.oldAddr, this.pnu, this.isIndividualHouse,
+      this.dong_list);
 
   String? roadAddr;
   String? oldAddr;
-  int? pnu;
+  String? pnu;
   int? isIndividualHouse;
-  List? dong;
+  List? dong_list;
 
   Address.fromJson(Map<String, dynamic> parsedJson) {
     this.roadAddr = parsedJson['roadAddr'];
     this.oldAddr = parsedJson['oldAddr'];
-    this.pnu = int.parse(parsedJson['pnu']);
+    this.pnu = parsedJson['pnu'];
     this.isIndividualHouse = int.parse(parsedJson['isIndividualHouse']);
-    this.dong = parsedJson['dong'];
+    this.dong_list = parsedJson['dong'];
   }
 
   Map toJson() {
@@ -22,21 +22,21 @@ class Address {
       'oldAddr': oldAddr,
       'pnu': pnu,
       'isIndividualHouse': isIndividualHouse,
-      'dong': dong,
+      'dong_list': dong_list,
     };
   }
 
-  @override
-  String toString() => toJson().toString();
+// @override
+// String toString() => toJson().toString();
 
-  // @override
-  // toMap() {
-  //   return {
-  //     'roadAddr': '$roadAddr',
-  //     'oldAddr': '$oldAddr',
-  //     'pnu': '$pnu',
-  //     'isIndividualHouse': '$isIndividualHouse',
-  //     'dong': '$dong'
-  //   };
-  // }
+// @override
+// toMap() {
+//   return {
+//     'roadAddr': '$roadAddr',
+//     'oldAddr': '$oldAddr',
+//     'pnu': '$pnu',
+//     'isIndividualHouse': '$isIndividualHouse',
+//     'dong': '$dong'
+//   };
+// }
 }
