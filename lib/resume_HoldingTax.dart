@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:badges/badges.dart';
 import 'package:calculator_frontend/widgets/LargeText.dart';
 import 'package:calculator_frontend/widgets/MediumText.dart';
+import 'package:calculator_frontend/widgets/Search_Address.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 
 class Resume_HoldingTaxPage extends StatefulWidget {
   const Resume_HoldingTaxPage({Key? key}) : super(key: key);
@@ -35,33 +32,6 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
   ];
   List<bool> _is_selected_age = [false, false, false, false];
   final Color mainColor = Color(0xff80cfd5);
-  String sampleaddr = '서울특별시 서초구 반포대로4(서초동)';
-  Color samplecolor = Colors.black38;
-  late int _stage;
-  bool _isSearchedAddress = false;
-  final TextEditingController _findingAddressTC = TextEditingController();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _stage = 1;
-  }
-
-  void _clearText() {
-    _findingAddressTC.clear();
-  }
-
-  void _back(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _findingAddressTC.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,53 +81,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                 : Label('주소'),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('주소1'),
-                                GestureDetector(
-                                  onTap: () async {
-                                    var a = await _findingAddressDialog(
-                                        _findingAddressTC);
-
-                                    setState(() {
-                                      sampleaddr != a;
-                                      samplecolor = Colors.black;
-                                      _stage = 2;
-                                    });
-                                  },
-                                  child: Container(
-                                      height: 40,
-                                      width: 550,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: mainColor.withOpacity(.7),
-                                              blurRadius: 2.0,
-                                              spreadRadius: 1.0,
-                                            )
-                                          ],
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(10))),
-                                      margin: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 10),
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 0, 0, 0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            sampleaddr,
-                                            style: TextStyle(
-                                                fontSize: 17,
-                                                color: samplecolor),
-                                          ),
-                                        ],
-                                      )),
-                                ),
-                              ],
+                              children: [Text('주소1'), Search_Address()],
                             ),
                           ],
                         ),
@@ -183,55 +107,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소2'),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              var a =
-                                                  await _findingAddressDialog(
-                                                      _findingAddressTC);
-
-                                              setState(() {
-                                                sampleaddr != a;
-                                                samplecolor = Colors.black;
-                                                _stage = 2;
-                                              });
-                                            },
-                                            child: Container(
-                                                height: 40,
-                                                width: 550,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: mainColor
-                                                            .withOpacity(.7),
-                                                        blurRadius: 2.0,
-                                                        spreadRadius: 1.0,
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius
-                                                                .circular(10))),
-                                                margin: const EdgeInsets
-                                                    .fromLTRB(0, 10, 0, 10),
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 0, 0, 0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      sampleaddr,
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: samplecolor),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
+                                          Search_Address()
                                         ],
                                       ),
                                     ],
@@ -265,55 +141,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소2'),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              var a =
-                                                  await _findingAddressDialog(
-                                                      _findingAddressTC);
-
-                                              setState(() {
-                                                sampleaddr != a;
-                                                samplecolor = Colors.black;
-                                                _stage = 2;
-                                              });
-                                            },
-                                            child: Container(
-                                                height: 40,
-                                                width: 550,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: mainColor
-                                                            .withOpacity(.7),
-                                                        blurRadius: 2.0,
-                                                        spreadRadius: 1.0,
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius
-                                                                .circular(10))),
-                                                margin: const EdgeInsets
-                                                    .fromLTRB(0, 10, 0, 10),
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 0, 0, 0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      sampleaddr,
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: samplecolor),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
+                                          Search_Address()
                                         ],
                                       ),
                                     ],
@@ -337,55 +165,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소3'),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              var a =
-                                                  await _findingAddressDialog(
-                                                      _findingAddressTC);
-
-                                              setState(() {
-                                                sampleaddr != a;
-                                                samplecolor = Colors.black;
-                                                _stage = 2;
-                                              });
-                                            },
-                                            child: Container(
-                                                height: 40,
-                                                width: 550,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: mainColor
-                                                            .withOpacity(.7),
-                                                        blurRadius: 2.0,
-                                                        spreadRadius: 1.0,
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius
-                                                                .circular(10))),
-                                                margin: const EdgeInsets
-                                                    .fromLTRB(0, 10, 0, 10),
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 0, 0, 0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      sampleaddr,
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: samplecolor),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
+                                          Search_Address()
                                         ],
                                       ),
                                     ],
@@ -409,55 +189,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소4'),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              var a =
-                                                  await _findingAddressDialog(
-                                                      _findingAddressTC);
-
-                                              setState(() {
-                                                sampleaddr != a;
-                                                samplecolor = Colors.black;
-                                                _stage = 2;
-                                              });
-                                            },
-                                            child: Container(
-                                                height: 40,
-                                                width: 550,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: mainColor
-                                                            .withOpacity(.7),
-                                                        blurRadius: 2.0,
-                                                        spreadRadius: 1.0,
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius
-                                                                .circular(10))),
-                                                margin: const EdgeInsets
-                                                    .fromLTRB(0, 10, 0, 10),
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 0, 0, 0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      sampleaddr,
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: samplecolor),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
+                                          Search_Address()
                                         ],
                                       ),
                                     ],
@@ -481,55 +213,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소5'),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              var a =
-                                                  await _findingAddressDialog(
-                                                      _findingAddressTC);
-
-                                              setState(() {
-                                                sampleaddr != a;
-                                                samplecolor = Colors.black;
-                                                _stage = 2;
-                                              });
-                                            },
-                                            child: Container(
-                                                height: 40,
-                                                width: 550,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: mainColor
-                                                            .withOpacity(.7),
-                                                        blurRadius: 2.0,
-                                                        spreadRadius: 1.0,
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius
-                                                                .circular(10))),
-                                                margin: const EdgeInsets
-                                                    .fromLTRB(0, 10, 0, 10),
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 0, 0, 0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      sampleaddr,
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          color: samplecolor),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
+                                          Search_Address()
                                         ],
                                       ),
                                     ],
@@ -1160,197 +844,6 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
               fontWeight: FontWeight.w500,
               fontSize: 17),
         ));
-  }
-
-  OutlineInputBorder _outlineInputBorder() {
-    return const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.black),
-        borderRadius: BorderRadius.all(Radius.circular(10)));
-  }
-
-  Future<String> _findingAddressDialog(TextEditingController tc) async {
-    setState(() {
-      _isSearchedAddress = false;
-    });
-    var res = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                title: Text('주소 검색'),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: IconButton(
-                        onPressed: () {
-                          _back(context);
-                        },
-                        icon: Icon(
-                          Icons.cancel_outlined,
-                          color: mainColor,
-                          size: 35,
-                        )),
-                  )
-                ],
-                content: Container(
-                  color: Colors.grey[60],
-                  width: 600,
-                  constraints: const BoxConstraints(
-                    minHeight: 500,
-                    maxHeight: 800,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: mainColor.withOpacity(.7),
-                                    blurRadius: 2.0,
-                                    spreadRadius: 1.0,
-                                  )
-                                ],
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10))),
-                            width: 540,
-                            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: TextField(
-                                controller: tc,
-                                autofocus: true,
-                                onSubmitted: (value) {
-                                  setState(() {
-                                    _isSearchedAddress = true;
-                                  });
-                                },
-                                cursorColor: mainColor,
-                                textInputAction: TextInputAction.search,
-                                style: const TextStyle(fontSize: 17),
-                                decoration: InputDecoration(
-                                    hintText: '반포대로',
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: mainColor),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.transparent),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    suffixIcon: Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(0, 0, 15, 10),
-                                      child: IconButton(
-                                        icon:
-                                            const Icon(Icons.search, size: 35),
-                                        color: Colors.grey,
-                                        onPressed: () {
-                                          setState(() {
-                                            _isSearchedAddress = true;
-                                          });
-                                        },
-                                      ),
-                                    ))),
-                          ),
-                          TextButton(
-                              style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                  alignment: Alignment.center),
-                              onPressed: _clearText,
-                              child: const Text(
-                                '취소',
-                                style: TextStyle(
-                                    fontSize: 17, color: Color(0xff80cfd5)),
-                              ))
-                        ],
-                      ),
-                      _isSearchedAddress
-                          ? _addressList(tc.text)
-                          : SizedBox(
-                              height: 100,
-                              child: const Center(
-                                child: Text(
-                                  '주소를 입력해주세요',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            )
-                    ],
-                  ),
-                ));
-          });
-        });
-
-    return res;
-  }
-
-  Widget _addressList(String keyword) {
-    return Expanded(
-        child: FutureBuilder(
-            future: fetchAddress(keyword),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(mainColor),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
-              }
-              List res = snapshot.data as List;
-              return ListView.builder(
-                itemCount: res.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return _selectAddressBox(res[index][0], res[index][1], index);
-                },
-              );
-            }));
-  }
-
-  Future<List> fetchAddress(String keyword) async {
-    String baseURL =
-        "https://wu26xy8cqj.execute-api.ap-northeast-2.amazonaws.com/default/juso_api?keyword=";
-
-    final response = await http.get(Uri.parse(baseURL + keyword));
-
-    if (response.statusCode == 200) {
-      List res = List.from(jsonDecode(utf8.decode(response.bodyBytes)));
-
-      return res;
-    } else {
-      throw Exception("Fail to fetch address data");
-    }
-  }
-
-  Widget _selectAddressBox(String newAddress, String oldAddress, int index) {
-    Color backgrouundColor;
-    if (index.isEven) {
-      backgrouundColor = Colors.white;
-    } else {
-      backgrouundColor = Colors.black26;
-    }
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.pop(context, newAddress);
-      },
-      child: Container(
-        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-        decoration: BoxDecoration(color: backgrouundColor),
-        child: Column(
-          children: [Text(newAddress), Text(oldAddress)],
-        ),
-      ),
-    );
   }
 
   Widget Diver_Title() {
