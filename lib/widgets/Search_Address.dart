@@ -220,7 +220,7 @@ class _Search_AddressState extends State<Search_Address> {
           });
         });
 
-    return widget.roadAddr.toString() + ' ' + widget.roadAddr.toString();
+    return widget.roadAddr.toString() + ' ' + widget.dongho.toString();
   }
 
   Widget Search_Total_Address(String keyword) {
