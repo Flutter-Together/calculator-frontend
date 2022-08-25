@@ -92,6 +92,7 @@ class _Search_AddressState extends State<Search_Address> {
   Future<String> Search_Address_Dialog(TextEditingController tc) async {
     setState(() {
       isSearchedAddress = false;
+      isSearchedDong = false;
     });
     var res = await showDialog(
         context: context,
@@ -101,7 +102,7 @@ class _Search_AddressState extends State<Search_Address> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                title: isSearchedDong ? Text('동/호수 검색') : Text('주소 검색'),
+                title: Text('주소 검색'),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.all(5),
@@ -337,18 +338,18 @@ class _Search_AddressState extends State<Search_Address> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text(snapshot.error.toString()));
                 }
-                List? ho_list = snapshot.data! as List;
+                List ho_list = snapshot.data! as List;
                 return StatefulBuilder(builder: (context, setState) {
                   return ListView.builder(
                       shrinkWrap: true,
                       physics: ScrollPhysics(),
-                      itemCount: ho_list?.length,
+                      itemCount: ho_list.length,
                       itemBuilder: (BuildContext context, int idx) {
-                       widget.dongho = ho_list?[idx].toString();
+                       widget.dongho = ho_list[idx];
                         return ListTile(
                           title: Text(widget.dongho.toString()),
                           onTap: () {
-                            widget.dongho = ho_list?[idx].toString();
+                            widget.dongho = ho_list[idx];
                             Navigator.pop(context);
                           },
                         );
