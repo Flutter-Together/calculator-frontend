@@ -21,14 +21,13 @@ class Search_Address extends StatefulWidget {
 
 class _Search_AddressState extends State<Search_Address> {
   final Color mainColor = const Color(0xff80cfd5);
-  String addr_hinttext = '서울특별시 서초구 반포대로4(서초동)';
-  String dongho_hinttext = '101동 206호';
+  String addr_hinttext = '서울특별시 서초구 반포대로4(서초동) 101동 206호';
   Color samplecolor = Colors.black38;
   bool isSearchedAddress = false;
   bool isSearchedDong = false;
   bool isSearchedHo = false;
   final TextEditingController _address_keywordEditingController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void initState() {
@@ -55,7 +54,7 @@ class _Search_AddressState extends State<Search_Address> {
                 _address_keywordEditingController.clear();
               });
             },
-            child: Address_Container_Design(addr_hinttext + dongho_hinttext)),
+            child: Address_Container_Design(addr_hinttext)),
       ],
     );
   }
@@ -102,7 +101,7 @@ class _Search_AddressState extends State<Search_Address> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                title: const Text('주소 검색'),
+                title: isSearchedDong ? Text('동/호수 검색') : Text('주소 검색'),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.all(5),
@@ -158,7 +157,7 @@ class _Search_AddressState extends State<Search_Address> {
                                     hintText: '예) 반포대로',
                                     focusedBorder: OutlineInputBorder(
                                         borderSide:
-                                            BorderSide(color: mainColor),
+                                        BorderSide(color: mainColor),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     enabledBorder: const OutlineInputBorder(
@@ -171,7 +170,7 @@ class _Search_AddressState extends State<Search_Address> {
                                           0, 0, 15, 10),
                                       child: IconButton(
                                         icon:
-                                            const Icon(Icons.search, size: 35),
+                                        const Icon(Icons.search, size: 35),
                                         color: Colors.grey,
                                         onPressed: () {
                                           setState(() {
@@ -206,82 +205,80 @@ class _Search_AddressState extends State<Search_Address> {
                       isSearchedAddress
                           ? Search_Total_Address(tc.text)
                           : const SizedBox(
-                              height: 100,
-                              child: Center(
-                                child: Text(
-                                  '주소를 입력해주세요',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            )
+                        height: 100,
+                        child: Center(
+                          child: Text(
+                            '주소를 입력해주세요',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ));
           });
         });
-
-    return widget.roadAddr.toString() + ' ' + widget.dongho.toString();
+    return '${widget.roadAddr.toString()} ${widget.dongho.toString()}';
   }
 
   Widget Search_Total_Address(String keyword) {
     return isSearchedHo
         ? Search_Ho()
         : Expanded(
-            child: FutureBuilder(
-                future: fetchAddress(keyword),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(mainColor),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text(snapshot.error.toString()));
-                  }
-                  var res = snapshot.data! as List;
-                  return isSearchedDong
-                      ? Search_Dong2()
-                      : StatefulBuilder(builder: (context, setState) {
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ScrollPhysics(),
-                              itemCount: res.length,
-                              itemBuilder: (BuildContext context, int idx) {
-                                widget.roadAddr = res[idx].roadAddr;
-                                String oldAddr = res[idx].oldAddr;
-                                int isIndividualHouse =
-                                    res[idx].isIndividualHouse;
-                                widget.dong_list = res[idx].dong_list;
-                                return Card(
-                                  color: Colors.white,
-                                  elevation: 2.5,
-                                  child: ListTile(
-                                    title: Text(widget.roadAddr.toString()),
-                                    subtitle: Text(oldAddr),
-                                    onTap: () {
-                                      if (isIndividualHouse == 1) {
-                                        widget.roadAddr = res[idx].roadAddr;
-                                        widget.dongho = '';
-                                        Navigator.pop(context, widget.roadAddr);
-                                        dongho_hinttext = '';
-                                      }else {
-                                        Navigator.of(context).pop();
-                                        Search_Address_Dialog(
-                                            _address_keywordEditingController);
-                                        isSearchedAddress = true;
-                                        isSearchedDong = true;
-                                        widget.roadAddr = res[idx].roadAddr;
-                                        widget.pnu = res[idx].pnu;
-                                        widget.dong_list = res[idx].dong_list;
-                                        widget.dongho = '';
-                                      }
-                                    },
-                                  ),
-                                );
-                              });
-                        });
-                }));
+        child: FutureBuilder(
+            future: fetchAddress(keyword),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(mainColor),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text(snapshot.error.toString()));
+              }
+              var res = snapshot.data! as List;
+              return isSearchedDong
+                  ? Search_Dong2()
+                  : StatefulBuilder(builder: (context, setState) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemCount: res.length,
+                    itemBuilder: (BuildContext context, int idx) {
+                      widget.roadAddr = res[idx].roadAddr;
+                      String oldAddr = res[idx].oldAddr;
+                      int isIndividualHouse =
+                          res[idx].isIndividualHouse;
+                      widget.dong_list = res[idx].dong_list;
+                      return Card(
+                        color: Colors.white,
+                        elevation: 2.5,
+                        child: ListTile(
+                          title: Text(widget.roadAddr.toString()),
+                          subtitle: Text(oldAddr),
+                          onTap: () {
+                            if (isIndividualHouse == 1) {
+                              widget.roadAddr = res[idx].roadAddr;
+                              widget.dongho = '';
+                              Navigator.pop(context, widget.roadAddr);
+                            }else {
+                              Navigator.of(context).pop();
+                              Search_Address_Dialog(
+                                  _address_keywordEditingController);
+                              isSearchedAddress = true;
+                              isSearchedDong = true;
+                              widget.roadAddr = res[idx].roadAddr;
+                              widget.pnu = res[idx].pnu;
+                              widget.dong_list = res[idx].dong_list;
+                              widget.dongho = '';
+                            }
+                          },
+                        ),
+                      );
+                    });
+              });
+            }));
   }
 
   Future fetchAddress(String keyword) async {
@@ -340,25 +337,20 @@ class _Search_AddressState extends State<Search_Address> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text(snapshot.error.toString()));
                 }
-                var ho_list = snapshot.data! as List;
+                List? ho_list = snapshot.data! as List;
                 return StatefulBuilder(builder: (context, setState) {
                   return ListView.builder(
                       shrinkWrap: true,
                       physics: ScrollPhysics(),
-                      itemCount: ho_list.length,
+                      itemCount: ho_list?.length,
                       itemBuilder: (BuildContext context, int idx) {
-                        String ho = ho_list[idx];
-                        return GestureDetector(
+                       widget.dongho = ho_list?[idx].toString();
+                        return ListTile(
+                          title: Text(widget.dongho.toString()),
                           onTap: () {
-                            Navigator.pop(context, ho);
+                            widget.dongho = ho_list?[idx].toString();
+                            Navigator.pop(context);
                           },
-                          child: ListTile(
-                            title: Text(ho),
-                            onTap: () {
-                              widget.dongho = ho_list[idx];
-                              Navigator.pop(context);
-                            },
-                          ),
                         );
                       });
                 });
