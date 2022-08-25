@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Search_Dong extends StatefulWidget {
-  String? road_arr;
+  String? roadAddr;
   String? pnu;
   List? dong_list;
   Search_Dong(
       {Key? key,
-      @required this.road_arr,
+      @required this.roadAddr,
       @required this.pnu,
       @required this.dong_list})
       : super(key: key);
@@ -31,9 +31,9 @@ class _Search_DongState extends State<Search_Dong> {
         itemBuilder: (BuildContext context, int idx) {
           String dong = widget.dong_list?[idx];
           return ListTile(
-            visualDensity: VisualDensity(horizontal: 0, vertical: 4),
             title: Text(dong),
             onTap: () {
+              Navigator.of(context).pop();
               isSearchedDongHo = true;
               _donghoList(dong);
             },
