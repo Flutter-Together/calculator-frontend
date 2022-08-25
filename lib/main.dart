@@ -1,5 +1,5 @@
 import 'package:calculator_frontend/CapitalGainsTax.dart';
-import 'package:calculator_frontend/resume_HoldingTax.dart';
+import 'package:calculator_frontend/New_HoldingTax.dart';
 import 'package:calculator_frontend/widgets/HomePage/LargeLayout.dart';
 import 'package:calculator_frontend/widgets/HomePage/MediumLayout.dart';
 import 'package:flutter/material.dart';
