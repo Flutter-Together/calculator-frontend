@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 import 'dart:convert';
 import 'dart:html';
+import 'package:calculator_frontend/widgets/HomePage/Search%20Address%20Api.dart';
 import 'package:calculator_frontend/widgets/LargeText.dart';
 import 'package:csv/csv.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -1002,6 +1003,99 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   }
 
   Future<String> _findingAddressDialog(TextEditingController tc)async{
+    int searchStage = 0;
+
+    Widget _addressList(String keyword){
+
+
+      Address? pickedAddress;
+
+      Widget _selectAddressBox(Address address, int index){
+        Color backgrouundColor;
+        if(index.isEven){
+          backgrouundColor = Colors.white;
+        }else {backgrouundColor = Colors.black26;}
+
+        return GestureDetector(
+          onTap: (){
+            if(address.isIndividualHouse == '1'){
+              Navigator.pop(context, address.roadAddr);
+            }
+            else if(address.isIndividualHouse == '0' && address.dong.isNotEmpty && address.dong != ['']){
+              setState(() {
+                pickedAddress = address;
+                searchStage = 1;
+              });
+            }else{
+              setState(() {
+                searchStage = 2;
+              });
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+            decoration: BoxDecoration(
+                color: backgrouundColor
+            ),
+            child: Column(
+              children: [
+                Text(address.roadAddr),
+                Text(address.oldAddr),
+              ],
+            ),
+          ),
+        );
+      }
+
+      if(searchStage == 0){
+        return Expanded(
+            child: FutureBuilder(
+                future: fetchAddressList(keyword),
+                builder: (context, snapshot){
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Color(mainColor)),
+                      ),
+                    );
+                  }else if(snapshot.hasError){
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  List<Address> res = snapshot.data as List<Address>;
+                  return ListView.builder(
+                    itemCount: res.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index){
+                      return _selectAddressBox(res[index],index);
+                    },
+                  );
+                }
+            )
+        );
+      }
+      else if(searchStage == 1){
+        return ListView.builder(
+            shrinkWrap: true,
+            itemCount: pickedAddress?.dong.length,
+            itemBuilder: (context, index){
+              Color backgrouundColor = index.isEven? Colors.white : Colors.black26;
+
+              return GestureDetector(
+                onTap: (){},
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  decoration: BoxDecoration(color: backgrouundColor),
+                  child: Text(pickedAddress?.dong[index]),
+                ),
+              );
+            }
+        );
+      }
+      else {
+        return Container();
+      }
+    }
+
     setState((){
       _isSearchedAddress = false;
     });
@@ -1073,54 +1167,8 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
 
 
 
-  Widget _addressList(String keyword){
 
-    return Expanded(child: FutureBuilder(
-        future: fetchAddress(keyword),
-        builder: (context, snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Color(mainColor)),
-              ),
-            );
-          }else if(snapshot.hasError){
-            return Center(child: Text(snapshot.error.toString()));
-          }
-          List res = snapshot.data as List;
-          return ListView.builder(
-            itemCount: res.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index){
-              return _selectAddressBox(res[index][0],res[index][1],index);
-            },
-          );
-        }
-    ));
-  }
 
-  Widget _selectAddressBox(String newAddress, String oldAddress, int index){
-    Color backgrouundColor;
-    if(index.isEven){
-      backgrouundColor = Colors.white;
-    }else {backgrouundColor = Colors.black26;}
-
-    return GestureDetector(
-      onTap: (){Navigator.pop(context, newAddress);},
-      child: Container(
-        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-        decoration: BoxDecoration(
-          color: backgrouundColor
-        ),
-        child: Column(
-          children: [
-            Text(newAddress),
-            Text(oldAddress)
-          ],
-        ),
-      ),
-    );
-  }
 
 
   Future<List> fetchAddress(String keyword) async{
