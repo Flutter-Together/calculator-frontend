@@ -129,7 +129,7 @@ class _Search_AddressState extends State<Search_Address> {
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Container(
+                          Expanded(child: Container(
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 boxShadow: [
@@ -180,7 +180,7 @@ class _Search_AddressState extends State<Search_Address> {
                                         },
                                       ),
                                     ))),
-                          ),
+                          )),
                           StatefulBuilder(builder: (context, setState) {
                             return TextButton(
                                 style: TextButton.styleFrom(
