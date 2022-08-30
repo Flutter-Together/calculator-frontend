@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class Address{
+class Address_API{
   String roadAddr;
   String oldAddr;
   String pnu;
   String isIndividualHouse;
   List dong;
 
-  Address({
+  Address_API({
    required this.roadAddr,
    required this.oldAddr,
    required this.pnu,
@@ -17,8 +17,8 @@ class Address{
    required this.dong
   });
 
-  factory Address.fromJson(Map<String, dynamic> json){
-    return Address(
+  factory Address_API.fromJson(Map<String, dynamic> json){
+    return Address_API(
         roadAddr: json['roadAddr'],
       oldAddr: json['oldAddr'],
       pnu: json['pnu'],
@@ -39,7 +39,7 @@ Future fetchAddressList(String keyword) async {
 
     final addressMap = jsonResponse['results']['field'] as List;
 
-    List address_list = addressMap.map((e) => Address.fromJson(e)).toList();
+    List address_list = addressMap.map((e) => Address_API.fromJson(e)).toList();
 
     return address_list;
   } else {
