@@ -1,7 +1,7 @@
 import 'package:calculator_frontend/CapitalGainsTax.dart';
 import 'package:calculator_frontend/New_HoldingTax.dart';
-import 'package:calculator_frontend/widgets/HomePage/Desktop_Homepage.dart';
-import 'package:calculator_frontend/widgets/HomePage/Mobile_Homepage.dart';
+import 'package:calculator_frontend/widgets/HomePage/Desktop_HomePage.dart';
+import 'package:calculator_frontend/widgets/HomePage/Mobile_HomePage.dart';
 import 'package:flutter/material.dart';
 
 //2022월 08월 16일 22시 22분
