@@ -14,11 +14,11 @@ class Search_Address extends StatefulWidget {
 
   Search_Address(
       {Key? key,
-      this.roadAddr,
-      this.pnu,
-      this.dong_list,
-      this.dong,
-      this.dongho})
+        this.roadAddr,
+        this.pnu,
+        this.dong_list,
+        this.dong,
+        this.dongho})
       : super(key: key);
 
   @override
@@ -35,7 +35,7 @@ class _Search_AddressState extends State<Search_Address> {
   bool isSearchedHo = false;
   bool isSearchFinished = false;
   final TextEditingController _address_keywordEditingController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void initState() {
@@ -176,7 +176,7 @@ class _Search_AddressState extends State<Search_Address> {
                                     hintText: '예) 반포대로',
                                     focusedBorder: OutlineInputBorder(
                                         borderSide:
-                                            BorderSide(color: mainColor),
+                                        BorderSide(color: mainColor),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     enabledBorder: const OutlineInputBorder(
@@ -189,7 +189,7 @@ class _Search_AddressState extends State<Search_Address> {
                                           0, 0, 15, 10),
                                       child: IconButton(
                                         icon:
-                                            const Icon(Icons.search, size: 35),
+                                        const Icon(Icons.search, size: 35),
                                         color: Colors.grey,
                                         onPressed: () {
                                           setState(() {
@@ -224,14 +224,14 @@ class _Search_AddressState extends State<Search_Address> {
                       isSearchedAddress
                           ? Search_Total_Address(tc.text)
                           : const SizedBox(
-                              height: 100,
-                              child: Center(
-                                child: Text(
-                                  '주소를 입력해주세요',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            )
+                        height: 100,
+                        child: Center(
+                          child: Text(
+                            '주소를 입력해주세요',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ));
@@ -244,60 +244,60 @@ class _Search_AddressState extends State<Search_Address> {
     return isSearchedHo
         ? Search_Ho()
         : Expanded(
-            child: FutureBuilder(
-                future: fetchAddress(keyword),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(mainColor),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text(snapshot.error.toString()));
-                  }
-                  var res = snapshot.data! as List;
-                  return isSearchedDong
-                      ? Search_Dong2()
-                      : StatefulBuilder(builder: (context, setState) {
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ScrollPhysics(),
-                              itemCount: res.length,
-                              itemBuilder: (BuildContext context, int idx) {
-                                widget.roadAddr = res[idx].roadAddr;
-                                String oldAddr = res[idx].oldAddr;
-                                int isIndividualHouse =
-                                    res[idx].isIndividualHouse;
-                                widget.dong_list = res[idx].dong_list;
-                                return Card(
-                                  color: Colors.white,
-                                  elevation: 2.5,
-                                  child: ListTile(
-                                    title: Text(widget.roadAddr.toString()),
-                                    subtitle: Text(oldAddr),
-                                    onTap: () {
-                                      if (isIndividualHouse == 1) {
-                                        widget.roadAddr = res[idx].roadAddr;
-                                        widget.dongho = '';
-                                        Navigator.pop(context, widget.roadAddr);
-                                      } else {
-                                        Navigator.of(context).pop();
-                                        Search_Address_Dialog(
-                                            _address_keywordEditingController);
-                                        isSearchedAddress = true;
-                                        isSearchedDong = true;
-                                        widget.roadAddr = res[idx].roadAddr;
-                                        widget.pnu = res[idx].pnu;
-                                        widget.dong_list = res[idx].dong_list;
-                                        widget.dongho = '';
-                                      }
-                                    },
-                                  ),
-                                );
-                              });
-                        });
-                }));
+        child: FutureBuilder(
+            future: fetchAddress(keyword),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(mainColor),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text(snapshot.error.toString()));
+              }
+              var res = snapshot.data! as List;
+              return isSearchedDong
+                  ? Search_Dong2()
+                  : StatefulBuilder(builder: (context, setState) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemCount: res.length,
+                    itemBuilder: (BuildContext context, int idx) {
+                      widget.roadAddr = res[idx].roadAddr;
+                      String oldAddr = res[idx].oldAddr;
+                      int isIndividualHouse =
+                          res[idx].isIndividualHouse;
+                      widget.dong_list = res[idx].dong_list;
+                      return Card(
+                        color: Colors.white,
+                        elevation: 2.5,
+                        child: ListTile(
+                          title: Text(widget.roadAddr.toString()),
+                          subtitle: Text(oldAddr),
+                          onTap: () {
+                            if (isIndividualHouse == 1) {
+                              widget.roadAddr = res[idx].roadAddr;
+                              widget.dongho = '';
+                              Navigator.pop(context, widget.roadAddr);
+                            } else {
+                              Navigator.of(context).pop();
+                              Search_Address_Dialog(
+                                  _address_keywordEditingController);
+                              isSearchedAddress = true;
+                              isSearchedDong = true;
+                              widget.roadAddr = res[idx].roadAddr;
+                              widget.pnu = res[idx].pnu;
+                              widget.dong_list = res[idx].dong_list;
+                              widget.dongho = '';
+                            }
+                          },
+                        ),
+                      );
+                    });
+              });
+            }));
   }
 
   Future fetchAddress(String keyword) async {
