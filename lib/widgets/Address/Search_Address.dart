@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:calculator_frontend/widgets/Address.dart';
+import 'package:calculator_frontend/widgets/Address/Address.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -76,34 +76,36 @@ class _Search_AddressState extends State<Search_Address> {
     );
   }
 
-  Container Address_Container_Design(String hintText) {
-    return Container(
-        height: 50,
-        width: 700,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: mainColor.withOpacity(.7),
-                blurRadius: 2.0,
-                spreadRadius: 1.0,
-              )
-            ],
-            borderRadius: const BorderRadius.all(Radius.circular(10))),
-        margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              child: Text(
-                hintText,
-                style: TextStyle(fontSize: 17, color: samplecolor),
+  Address_Container_Design(String hintText) {
+    return Expanded(
+      child: Container(
+          height: 50,
+          width: 700,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: mainColor.withOpacity(.7),
+                  blurRadius: 2.0,
+                  spreadRadius: 1.0,
+                )
+              ],
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Text(
+                  hintText,
+                  style: TextStyle(fontSize: 17, color: samplecolor),
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 
   Future Search_Address_Dialog(TextEditingController tc) async {

@@ -34,60 +34,58 @@ class _MobileHomepageState extends State<MobileHomepage> {
       endDrawerEnableOpenDragGesture: false,
       appBar: PreferredSize(
         preferredSize: Size(widgetSize.width, 200),
-        child: Expanded(
-          child: Container(
-              color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: (widgetSize.width > 1000)
-                      ? widgetSize.width / 30
-                      : widgetSize.width / 50,
-                  right: (widgetSize.width > 1000)
-                      ? widgetSize.width / 30
-                      : widgetSize.width / 50,
-                ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/new_logo2.jpg',
-                      height: 50,
-                      width: 100,
-                      fit: BoxFit.fill,
-                    ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                                primary: Colors.indigo,
-                                backgroundColor: Colors.black54,
-                                padding: EdgeInsets.all(20)),
-                            child: Text('로그인',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700))),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        //  The problem is I was using the context of the widget that instantiated Scaffold.
-                        //  Not the context of a child of Scaffold
-                        Builder(builder: (context) {
-                          return IconButton(
-                              onPressed: () {
-                                Scaffold.of(context).openEndDrawer();
-                              },
-                              icon: Icon(Icons.menu_rounded));
-                        })
-                      ],
-                    )
-                  ],
-                ),
-              )),
-        ),
+        child: Container(
+            color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: (widgetSize.width > 1000)
+                    ? widgetSize.width / 30
+                    : widgetSize.width / 50,
+                right: (widgetSize.width > 1000)
+                    ? widgetSize.width / 30
+                    : widgetSize.width / 50,
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/new_logo2.jpg',
+                    height: 50,
+                    width: 100,
+                    fit: BoxFit.fill,
+                  ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      OutlinedButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                              primary: Colors.indigo,
+                              backgroundColor: Colors.black54,
+                              padding: EdgeInsets.all(20)),
+                          child: Text('로그인',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700))),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      //  The problem is I was using the context of the widget that instantiated Scaffold.
+                      //  Not the context of a child of Scaffold
+                      Builder(builder: (context) {
+                        return IconButton(
+                            onPressed: () {
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                            icon: Icon(Icons.menu_rounded));
+                      })
+                    ],
+                  )
+                ],
+              ),
+            )),
       ),
       endDrawer: Drawer(
         width: 250,
@@ -142,110 +140,108 @@ class _MobileHomepageState extends State<MobileHomepage> {
                         ? widgetSize.width / 30
                         : widgetSize.width / 50,
                   ),
-                  child: Expanded(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 95,
-                        ),
-                        RichText(
-                            text: TextSpan(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 95,
+                      ),
+                      RichText(
+                          text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 88,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.blueAccent),
+                              text: 'T A X A I',
+                              children: [
+                            TextSpan(
+                                text: '\n혁신적인 양도소득세 계산기',
                                 style: TextStyle(
-                                    fontSize: 88,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.blueAccent),
-                                text: 'T A X A I',
-                                children: [
-                              TextSpan(
-                                  text: '\n혁신적인 양도소득세 계산기',
-                                  style: TextStyle(
-                                      fontSize: 30, color: Colors.black)),
-                            ])),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                            text: TextSpan(
+                                    fontSize: 30, color: Colors.black)),
+                          ])),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      RichText(
+                        textAlign: TextAlign.center,
+                          text: TextSpan(
+                              text:
+                                  'TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의 \n',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 20),
+                              children: [
+                            TextSpan(
                                 text:
-                                    'TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의 \n',
+                                    '세법 규정을 자동으로 판단해서 계산하는\n혁신적인 양도소득세 계산기',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 20),
-                                children: [
-                              TextSpan(
-                                  text:
-                                      '세법 규정을 자동으로 판단해서 계산하는\n혁신적인 양도소득세 계산기',
-                                  style: TextStyle(
-                                    color: Colors.blueAccent,
-                                  )),
-                              TextSpan(text: ' 입니다.')
-                            ])),
-                        Image.asset(
-                          'assets/images/tax_consulting_illustration.jpg',
-                          height: 400,
-                          width: 500,
-                          fit: BoxFit.contain,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                            text: TextSpan(
+                                  color: Colors.blueAccent,
+                                )),
+                            TextSpan(text: ' 입니다.')
+                          ])),
+                      Image.asset(
+                        'assets/images/tax_consulting_illustration.jpg',
+                        height: 400,
+                        width: 500,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      RichText(
+                        textAlign: TextAlign.center,
+                          text: TextSpan(
+                              text:
+                                  'TAXAI는 15년간 재산 관련 세금 컨설팅을\n전문적으로 해온 현직 세무사가 직접 설계한 \n',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 20),
+                              children: [
+                            TextSpan(text: '프로그램으로서'),
+                            TextSpan(
                                 text:
-                                    'TAXAI는 15년간 재산 관련 세금 컨설팅을\n전문적으로 해온 현직 세무사가 직접 설계한 \n',
+                                    '최신 법령과 예규, 판례 등을\n 주기적으로 업데이트하여 케이스별로 적용 가능한\n',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 20),
-                                children: [
-                              TextSpan(text: '프로그램으로서'),
-                              TextSpan(
-                                  text:
-                                      '최신 법령과 예규, 판례 등을\n 주기적으로 업데이트하여 케이스별로 적용 가능한\n',
-                                  style: TextStyle(
-                                    color: Colors.blueAccent,
-                                  )),
-                              TextSpan(
-                                  text: '수많은 절세 규정을 미리 검토',
-                                  style: TextStyle(
-                                    color: Colors.blueAccent,
-                                  )),
-                              TextSpan(text: '할 수 있으며,\n'),
-                              TextSpan(
-                                  text:
-                                      '조정대상지역 및 공동주택 가격 등을 \n자동 조회하는 기능을 갖추고 있어\n'),
-                              TextSpan(
-                                  text:
-                                      '세금 신고 관련 오류를 \n획기적으로 줄여줄 수 있습니다.',
-                                  style: TextStyle(
-                                    color: Colors.blueAccent,
-                                  ))
-                            ])),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Image.asset(
-                          'assets/images/tax_consulting_illustration.jpg',
-                          height: 400,
-                          width: 500,
-                          fit: BoxFit.contain,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          'TAXAXI는 추후 미래 세금을 컨설팅 하는 기능도 추가할 예정입니다.',
-                          style: TextStyle(
-                              fontSize: 21,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent),
-                        ),
-                        const SizedBox(
-                          height: 80,
-                        )
-                      ],
-                    ),
+                                  color: Colors.blueAccent,
+                                )),
+                            TextSpan(
+                                text: '수많은 절세 규정을 미리 검토',
+                                style: TextStyle(
+                                  color: Colors.blueAccent,
+                                )),
+                            TextSpan(text: '할 수 있으며,\n'),
+                            TextSpan(
+                                text:
+                                    '조정대상지역 및 공동주택 가격 등을 \n자동 조회하는 기능을 갖추고 있어\n'),
+                            TextSpan(
+                                text:
+                                    '세금 신고 관련 오류를 \n획기적으로 줄여줄 수 있습니다.',
+                                style: TextStyle(
+                                  color: Colors.blueAccent,
+                                ))
+                          ])),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Image.asset(
+                        'assets/images/tax_consulting_illustration.jpg',
+                        height: 400,
+                        width: 500,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'TAXAXI는 추후 미래 세금을 컨설팅 하는 기능도 추가할 예정입니다.',
+                        style: TextStyle(
+                            fontSize: 21,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent),
+                      ),
+                      const SizedBox(
+                        height: 80,
+                      )
+                    ],
                   ),
                 ),
               ),
