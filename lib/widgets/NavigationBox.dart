@@ -20,7 +20,7 @@ class NavigationBox extends StatefulWidget {
       required this.imagepath,
       this.boxColor = Colors.white,
       this.borderColor = Colors.black,
-      this.iconColor = Colors.black})
+      this.iconColor = Colors.black,})
       : super(key: key);
 
   @override
@@ -54,8 +54,7 @@ class _NavigationBoxState extends State<NavigationBox> {
                         },
                         child: Text(
                           '확인',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ))
                   ],
                 );
@@ -68,9 +67,8 @@ class _NavigationBoxState extends State<NavigationBox> {
         elevation: 2,
         shadowColor: Colors.grey,
         color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Container(
           width: widget.isMedium == true
               ? MediaQuery.of(context).size.width / 2.5

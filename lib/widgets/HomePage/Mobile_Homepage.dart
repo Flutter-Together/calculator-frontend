@@ -343,7 +343,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                 ),
               ),
               Container(
-                width: widgetSize.width,
+                width: double.infinity,
                 padding: EdgeInsets.only(
                     top: 70,
                     left: (widgetSize.width > 1000)
