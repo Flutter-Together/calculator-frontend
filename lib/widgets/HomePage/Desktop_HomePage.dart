@@ -135,6 +135,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
           child: Column(
             children: [
               Container(
+                width: double.infinity,
                 color: Colors.white,
                 child: Padding(
                   padding: EdgeInsets.only(
