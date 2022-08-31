@@ -67,7 +67,6 @@ class _Search_AddressState extends State<Search_Address> {
               setState(() {
                 didUpdateWidget(Search_Address());
                 addr_hinttext = addr[1];
-                dongho_hinttext = addr[2];
                 samplecolor = Colors.black;
               });
             },

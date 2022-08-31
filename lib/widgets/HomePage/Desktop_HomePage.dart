@@ -154,6 +154,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                                   height: 40,
                                 ),
                                 RichText(
+                                  textAlign: TextAlign.start,
                                     text: TextSpan(
                                         style: TextStyle(
                                             fontSize: 90,
@@ -212,6 +213,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                               ),
                               Spacer(),
                               RichText(
+                                textAlign: TextAlign.start,
                                   text: TextSpan(
                                       text:
                                           'TAXAI는 15년간 재산 관련 세금 컨설팅을 전문적으로 해온\n현직 세무사가 직접 설계한 프로그램으로서\n',

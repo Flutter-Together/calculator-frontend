@@ -165,17 +165,17 @@ class _MobileHomepageState extends State<MobileHomepage> {
                           height: 10,
                         ),
                         RichText(
+                          textAlign: TextAlign.center,
                             text: TextSpan(
                                 text:
-                                    ' TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n  수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의 \n',
+                                    'TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의 \n',
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 20),
                                 children: [
-                              TextSpan(text: '            '),
                               TextSpan(
                                   text:
-                                      ' 세법 규정을 자동으로 판단해서 계산하는\n                 혁신적인 양도소득세 계산기',
+                                      '세법 규정을 자동으로 판단해서 계산하는\n혁신적인 양도소득세 계산기',
                                   style: TextStyle(
                                     color: Colors.blueAccent,
                                   )),
@@ -187,16 +187,19 @@ class _MobileHomepageState extends State<MobileHomepage> {
                           width: 500,
                           fit: BoxFit.contain,
                         ),
-                        const SizedBox(height: 20,),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         RichText(
+                          textAlign: TextAlign.center,
                             text: TextSpan(
                                 text:
-                                    '       TAXAI는 15년간 재산 관련 세금 컨설팅을  \n     전문적으로 해온 현직 세무사가 직접 설계한 \n',
+                                    'TAXAI는 15년간 재산 관련 세금 컨설팅을\n전문적으로 해온 현직 세무사가 직접 설계한 \n',
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 20),
                                 children: [
-                                  TextSpan(text: '     프로그램으로서'),
+                              TextSpan(text: '프로그램으로서'),
                               TextSpan(
                                   text:
                                       '최신 법령과 예규, 판례 등을\n 주기적으로 업데이트하여 케이스별로 적용 가능한\n',
@@ -204,26 +207,33 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                     color: Colors.blueAccent,
                                   )),
                               TextSpan(
-                                text: '     수많은 절세 규정을 미리 검토',style: TextStyle(
-                                color: Colors.blueAccent,
-                              )
-                              ),
+                                  text: '수많은 절세 규정을 미리 검토',
+                                  style: TextStyle(
+                                    color: Colors.blueAccent,
+                                  )),
                               TextSpan(text: '할 수 있으며,\n'),
                               TextSpan(
                                   text:
-                                      '         조정대상지역 및 공동주택 가격 등을 \n           자동 조회하는 기능을 갖추고 있어\n'),
+                                      '조정대상지역 및 공동주택 가격 등을 \n자동 조회하는 기능을 갖추고 있어\n'),
                               TextSpan(
-                                  text: '                     세금 신고 관련 오류를 \n              획기적으로 줄여줄 수 있습니다.',
+                                  text:
+                                      '세금 신고 관련 오류를 \n획기적으로 줄여줄 수 있습니다.',
                                   style: TextStyle(
                                     color: Colors.blueAccent,
                                   ))
                             ])),
-                        const SizedBox(height: 10,),
-                        Image.asset( 'assets/images/tax_consulting_illustration.jpg',
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Image.asset(
+                          'assets/images/tax_consulting_illustration.jpg',
                           height: 400,
                           width: 500,
-                          fit: BoxFit.contain,),
-                        const SizedBox(height: 15,),
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Text(
                           'TAXAXI는 추후 미래 세금을 컨설팅 하는 기능도 추가할 예정입니다.',
                           style: TextStyle(
@@ -502,10 +512,8 @@ class _MobileHomepageState extends State<MobileHomepage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('확인',
-                      style: TextStyle(
-                          color: Color(0xff80cfd5),
-                          fontWeight: FontWeight.bold)))
+                  child:
+                      Text('확인', style: TextStyle(fontWeight: FontWeight.bold)))
             ],
           );
         });
