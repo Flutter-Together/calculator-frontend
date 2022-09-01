@@ -20,7 +20,7 @@ class NavigationBox extends StatefulWidget {
       required this.imagepath,
       this.boxColor = Colors.white,
       this.borderColor = Colors.black,
-      this.iconColor = Colors.black,})
+      this.iconColor = Colors.black})
       : super(key: key);
 
   @override
@@ -28,6 +28,8 @@ class NavigationBox extends StatefulWidget {
 }
 
 class _NavigationBoxState extends State<NavigationBox> {
+  final mainColor = 0xff80cfd5;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -54,71 +56,68 @@ class _NavigationBoxState extends State<NavigationBox> {
                         },
                         child: Text(
                           '확인',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Color(mainColor),
+                              fontWeight: FontWeight.bold),
                         ))
                   ],
                 );
               });
         } else {
-          await Navigator.pushNamed(context, widget.pushNamed);
+          final res = await Navigator.pushNamed(context, widget.pushNamed);
         }
       },
-      child: Card(
-        elevation: 2,
-        shadowColor: Colors.grey,
-        color: Colors.white,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Container(
-          width: widget.isMedium == true
-              ? MediaQuery.of(context).size.width / 2.5
-              : MediaQuery.of(context).size.width / 5,
-          height: widget.isMedium == true
-              ? MediaQuery.of(context).size.width / 4.3
-              : MediaQuery.of(context).size.width / 8,
-          padding: widget.isMedium == true
-              ? EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width / 55,
-                )
-              : EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width / 90,
-                ),
-          //padding 안쪽 여백
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 130,
-                    bottom: MediaQuery.of(context).size.height / 160),
-                child: Image.asset(
-                  widget.imagepath,
-                  fit: BoxFit.cover,
-                  width: widget.isMedium == true
-                      ? MediaQuery.of(context).size.width / 18
-                      : MediaQuery.of(context).size.width / 28,
-                  height: widget.isMedium == true
-                      ? MediaQuery.of(context).size.width / 18
-                      : MediaQuery.of(context).size.width / 28,
-                  color: widget.iconColor,
-                ),
-              ),
-              LargeText(
-                text: widget.title_1,
-                weight: FontWeight.bold,
-                size: widget.isMedium == true
-                    ? MediaQuery.of(context).size.width / 35
-                    : MediaQuery.of(context).size.width / 70,
-              ),
-              LargeText(
-                text: widget.title_2,
-                weight: FontWeight.bold,
-                size: widget.isMedium == true
-                    ? MediaQuery.of(context).size.width / 35
-                    : MediaQuery.of(context).size.width / 70,
+      child: Container(
+        width: widget.isMedium == true
+            ? MediaQuery.of(context).size.width / 2.5
+            : MediaQuery.of(context).size.width / 5,
+        height: widget.isMedium == true
+            ? MediaQuery.of(context).size.width / 4.3
+            : MediaQuery.of(context).size.width / 8,
+        decoration: BoxDecoration(
+          color: widget.boxColor,
+          border: Border.all(width: 0.1, color: widget.borderColor),
+        ),
+        padding: widget.isMedium == true
+            ? EdgeInsets.only(
+                left: MediaQuery.of(context).size.width / 55,
               )
-            ],
-          ),
+            : EdgeInsets.only(
+                left: MediaQuery.of(context).size.width / 90,
+              ),
+        //padding 안쪽 여백
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height / 130,
+                  bottom: MediaQuery.of(context).size.height / 160),
+              child: Image.asset(
+                widget.imagepath,
+                fit: BoxFit.cover,
+                width: widget.isMedium == true
+                    ? MediaQuery.of(context).size.width / 18
+                    : MediaQuery.of(context).size.width / 28,
+                height: widget.isMedium == true
+                    ? MediaQuery.of(context).size.width / 18
+                    : MediaQuery.of(context).size.width / 28,
+                color: widget.iconColor,
+              ),
+            ),
+            LargeText(
+              text: widget.title_1,
+              size: widget.isMedium == true
+                  ? MediaQuery.of(context).size.width / 35
+                  : MediaQuery.of(context).size.width / 70,
+            ),
+            LargeText(
+              text: widget.title_2,
+              size: widget.isMedium == true
+                  ? MediaQuery.of(context).size.width / 35
+                  : MediaQuery.of(context).size.width / 70,
+            )
+          ],
         ),
       ),
     );
