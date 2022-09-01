@@ -32,10 +32,6 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   bool isSearchedAddress = false;
   bool isSearchedDong = false;
   bool isSearchedHo = false;
-  final TextEditingController _address_keywordEditingController = TextEditingController();
-
-  TempAddr _tempAddr = TempAddr();
-
 
 
   final mainColor = 0xff80cfd5;
@@ -46,23 +42,10 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   Color _color = Colors.black38;
   final backgroundColor = 0xfffafafa;
 
-  final List<List<String>> _reduceTaxHouseList = [
-    ['19000101','20001231','취득일','1986.1.1~2000.12.31 신축된 5호 이상의 주택을 5년이상 임대한 국민주택 또는 세액감면대상 주택, 86년이전 신축 공동주택(입주사실 없는)'],
-    ['19990101','20991231','취득일','1999.8.20~2001.12.31 신축된 1호이상의 주택을 포함한 2호이상의 주택을 5년이상 임대한 신축임대주택, 세액감면대상 주택'],
-    ['19951101','19981231','계약일','1995.11.1~1997.12.31 1998.3.1~1998.12.31 서울외 지방의 미분양 국민주택 취득후 5년이상 임대한후에 양도'],
-    ['20081103','20101231','계약일','2008.11.3~2010.12.31 수도권 미분양주택 취득분'],
-    ['20090212','20100211','계약일','2009.2.12(비거주자 3.16)~2010.2.11 취득 서울시 밖에 미분양주택, 자기건설신축주택'],
-    ['20100211','20110430','계약일','2010.2.11~2011.4.30 취득분 수도권밖 미분양주택'],
-    ['20110329','20111231','계약일','2011.3.29현재 준공후 미분양주택을 2011년까지 취득하고 5년이상 임대하고 양도'],
-    ['20120924','20121231','계약일','2012.9.24 현재 미분양주택을 2012년안에 취득한 9억원 이하의 주택'],
-    ['20150101','20151231','계약일','2015.1.1~12.31 까지 취득(취득가액 6억원 이하, 연면적 135m이하)하여 5년이상 임대한 주택'],
-    ['20130401','20131231','계약일','2013.4.1~2013.12.31 신축주택(취득가 6억원 이하 or 85m이하) 미분양주택']
-  ];
-
-  List<String?> _reduceTaxHouseChecklist = List.generate(10, (index) => null);
-
   String? buyDate;
   String? contractDate;
+
+  late int _stage;
 
 
   List acquisitionETCTCList = List.generate(5, (index) => TextEditingController());
@@ -73,24 +56,28 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   List<List<dynamic>> currentCSV = [];
   List<List<dynamic>> originCSV = [];
 
-  List<String> _residencePeriod =  List.generate(11, (index){
-    if(index == 0){
-      return '1년 미만';
-    }else {return '$index년 이상';}
-  });
-
-
-  late int _stage;
-
   Future getCSVonce() => asyncMemoizer.runOnce(()async{
-    final _rawData1 = await rootBundle.loadString('assets/capgain/firstFilter.CSV');
-    final _rawData2 = await rootBundle.loadString('assets/capgain/AcquisitionDate.CSV');
+    String _rawData1 = await rootBundle.loadString('assets/capgain/firstFilter.CSV');
+    String _rawData2 = await rootBundle.loadString('assets/capgain/AcquisitionDate.CSV');
 
-    List<List<dynamic>> listData1 = const CsvToListConverter().convert(_rawData1);
-    List<List<dynamic>> listData2 = const CsvToListConverter().convert(_rawData2);
+     List<List<dynamic>> listData1 = [];// =  CsvToListConverter().convert(_rawData1);
+     List<List<dynamic>> listData2 = []; //=  CsvToListConverter().convert(_rawData2);
+
+    List<String> _l1 = _rawData1.split('\n');
+    for(int i = 0 ; i < _l1.length ; i++){
+      listData1.add(_l1[i].split(','));
+    }
+
+    List<String> _l2 = _rawData2.split('\n');
+    for(int i = 0 ; i < _l2.length ;i++){
+      listData2.add(_l2[i].split(','));
+    }
+
+    listData1.removeLast();
+    listData2.removeLast();
 
 
-    List<List<dynamic>> res = listData1.where((element) => (element[3] == 1)).toList();
+    List<List<dynamic>> res = listData1.where((element) => (element[3] == '1')).toList();
 
     firstFilterCSV = res;
     currentCSV = res;
@@ -1178,7 +1165,7 @@ class _CapGainBodyState extends State<CapGainBody> {
       return FutureBuilder(
           future: fetchOfficialPrice(_tempAddr.pnu!,  _transferDateTC.text),
           builder: (BuildContext context, AsyncSnapshot snapshot){
-            print(_tempAddr.pnu!);
+
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child:  CircularProgressIndicator(),);
             }
@@ -1480,7 +1467,7 @@ class _CapGainBodyState extends State<CapGainBody> {
                 }else {buyDate = _buydate2.toString();}
               }
             }
-            if(csv[index][4] == '계약일 당시 무주택 여부 (o,x)'){
+            if(csv[index][4] == '"계약일 당시 무주택 여부 (o,x)"'){
               return whetherHavingHome();
             }else if(csv[index][5] == 1){
               DateTime inheri;
