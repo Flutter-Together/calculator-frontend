@@ -4,14 +4,14 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "assets/AssetManifest.json": "a314e5c12770092e172afa75895eb986",
-"assets/assets/capgain/AcquisitionDate.CSV": "f3f7c849d1ddfde5642bcd724dce42d4",
-"assets/assets/capgain/firstFilter.CSV": "1fd3207e3f2c78cbc53d70183546b295",
+"assets/assets/capgain/AcquisitionDate.CSV": "05a828694b728853ef0435651103b5a9",
+"assets/assets/capgain/firstFilter.CSV": "dbff27f512d3d9527c31ee887aa5407a",
 "assets/assets/images/calculate.png": "42d165cbec3b5602318c9b0d4302e8b9",
 "assets/assets/images/logo.png": "6525dac3feb1ce00a411c0757369a472",
 "assets/assets/images/logo2.png": "50c01fca94b78259cd6bcf4c7d05fca9",
 "assets/assets/images/psychology.png": "f9327401bc96e78ef18af3964c7fe4ea",
-"assets/assets/txt/HoldingTax_description.txt": "a557d2134be63958310e25ffec3f07ac",
-"assets/assets/txt/HoldingTax_precaution.txt": "104ba2321b5ffd02f94066bdcd733d25",
+"assets/assets/txt/HoldingTax_description.txt": "dd1f7922ffccd98480eed6e310ddb970",
+"assets/assets/txt/HoldingTax_precaution.txt": "3ae2978170febf9a110bf6c057e05c26",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
 "assets/NOTICES": "ea0e4c83506c39ca270e420706e0a33e",
@@ -27,10 +27,10 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "901ea8f45d1fb237f69764f38bad0eda",
-"/": "901ea8f45d1fb237f69764f38bad0eda",
-"main.dart.js": "20ddf1ad42a0d2137ab8593cf7bba8d8",
-"manifest.json": "95661a1970efe399ed9952fc5ad2f7e3",
+"index.html": "c7f067a698ee770326edf155c04b7f47",
+"/": "c7f067a698ee770326edf155c04b7f47",
+"main.dart.js": "852e47c58ee657b0ac4de4f972d1d1fc",
+"manifest.json": "1ed273c041fc2e55ec72a084aeeef615",
 "version.json": "12385392cb97fc7e83d60845948177b1"
 };
 
