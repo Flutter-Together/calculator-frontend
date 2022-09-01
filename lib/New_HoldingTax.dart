@@ -1,7 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:calculator_frontend/widgets/LargeText.dart';
 import 'package:calculator_frontend/widgets/MediumText.dart';
-import 'package:calculator_frontend/widgets/Search_Address.dart';
+import 'package:calculator_frontend/widgets/Address/Search_Address.dart';
 import 'package:flutter/material.dart';
 
 class Resume_HoldingTaxPage extends StatefulWidget {
@@ -54,237 +54,239 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                   ),
                 ),
                 Diver_Title(),
-                Padding(
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Selected_num_of_house(),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            index_selected >= 1
-                                ? Column(
-                                    children: [
-                                      Label('주소'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      LabelwithBadge_2('소유주'),
-                                    ],
-                                  )
-                                : Label('주소'),
-                            index_selected >= 1
-                                ? SizedBox()
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [Text('주소1'), Search_Address()],
-                                  ),
-                            index_selected == 1
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [Text('주소1'), Search_Address()],
-                                  )
-                                : SizedBox(),
-                            index_selected == 2
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [Text('주소1'), Search_Address()],
-                                  )
-                                : SizedBox(),
-                          ],
-                        ),
-                        index_selected == 1
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Owenr_Row(1),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: 120,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('주소2'),
-                                          Search_Address()
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Owenr_Row(2),
-                                ],
-                              )
-                            : SizedBox(),
-                        index_selected == 2
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Owenr_Row(1),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 120,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('주소2'),
-                                          Search_Address()
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Owenr_Row(2),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 120,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('주소3'),
-                                          Search_Address()
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Owenr_Row(3),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 120,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('주소4'),
-                                          Search_Address()
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Owenr_Row(4),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 120,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('주소5'),
-                                          Search_Address()
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Owenr_Row(5),
-                                ],
-                              )
-                            : SizedBox(),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        index_selected >= 1
-                            ? SizedBox()
-                            : Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      LabelwithBadge_1('보유기간'),
-                                      CheckBox_holding_period(0),
-                                      CheckBox_holding_period(1),
-                                      CheckBox_holding_period(2),
-                                      CheckBox_holding_period(3),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 40),
-                                  Row(
-                                    children: [
-                                      LabelwithBadge_1('연령입력'),
-                                      CheckBox_age(0),
-                                      CheckBox_age(1),
-                                      CheckBox_age(2),
-                                      CheckBox_age(3),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 40,
-                                  ),
-                                ],
+                Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Selected_num_of_house(),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              index_selected >= 1
+                                  ? Column(
+                                      children: [
+                                        Label('주소'),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        LabelwithBadge_2('소유주'),
+                                      ],
+                                    )
+                                  : Label('주소'),
+                              index_selected >= 1
+                                  ? SizedBox()
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [Text('주소1'), Search_Address()],
+                                    ),
+                              index_selected == 1
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [Text('주소1'), Search_Address()],
+                                    )
+                                  : SizedBox(),
+                              index_selected == 2
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [Text('주소1'), Search_Address()],
+                                    )
+                                  : SizedBox(),
+                            ],
+                          ),
+                          index_selected == 1
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Owenr_Row(1),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: 120,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('주소2'),
+                                            Search_Address()
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Owenr_Row(2),
+                                  ],
+                                )
+                              : SizedBox(),
+                          index_selected == 2
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Owenr_Row(1),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 120,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('주소2'),
+                                            Search_Address()
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Owenr_Row(2),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 120,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('주소3'),
+                                            Search_Address()
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Owenr_Row(3),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 120,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('주소4'),
+                                            Search_Address()
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Owenr_Row(4),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 120,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('주소5'),
+                                            Search_Address()
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Owenr_Row(5),
+                                  ],
+                                )
+                              : SizedBox(),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          index_selected >= 1
+                              ? SizedBox()
+                              : Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        LabelwithBadge_1('보유기간'),
+                                        CheckBox_holding_period(0),
+                                        CheckBox_holding_period(1),
+                                        CheckBox_holding_period(2),
+                                        CheckBox_holding_period(3),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 40),
+                                    Row(
+                                      children: [
+                                        LabelwithBadge_1('연령입력'),
+                                        CheckBox_age(0),
+                                        CheckBox_age(1),
+                                        CheckBox_age(2),
+                                        CheckBox_age(3),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                  ],
+                                ),
+                          Column(
+                            children: [
+                              Row(
+                                children: [Label('공시가격')],
                               ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [Label('공시가격')],
-                            ),
-                            SizedBox(
-                              height: 60,
-                            )
-                          ],
-                        ),
-                      ],
-                    ))
+                              SizedBox(
+                                height: 60,
+                              )
+                            ],
+                          ),
+                        ],
+                      )),
+                )
               ],
             ),
           ),
@@ -732,18 +734,20 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
         ],
       );
 
-  Row Selected_num_of_house() {
+  Selected_num_of_house() {
     return Row(
       children: [
         Label('주택수 선택'),
-        Wrap(
-          spacing: 35,
-          runSpacing: 10,
-          children: [
-            buildActionChip3(),
-            buildActionChip2(),
-            buildActionChip(),
-          ],
+        Expanded(
+          child: Wrap(
+            spacing: 35,
+            runSpacing: 10,
+            children: [
+              buildActionChip3(),
+              buildActionChip2(),
+              buildActionChip(),
+            ],
+          ),
         ),
       ],
     );
