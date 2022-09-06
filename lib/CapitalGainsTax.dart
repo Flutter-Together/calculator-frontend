@@ -142,7 +142,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                           height: 50,
                           margin: const EdgeInsets.fromLTRB(0, 50, 0, 10),
                           child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Colors.redAccent),
+                            style: ElevatedButton.styleFrom(primary: Color(mainColor)),
                             onPressed: () {
                               if (_checkFormIsCompleted()) {
                                 setState(() {});
