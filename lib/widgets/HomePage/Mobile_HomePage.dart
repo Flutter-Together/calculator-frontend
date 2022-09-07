@@ -2,6 +2,7 @@ import 'package:calculator_frontend/widgets/LargeText.dart';
 import 'package:calculator_frontend/widgets/NavigationBox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MobileHomepage extends StatefulWidget {
   const MobileHomepage({Key? key}) : super(key: key);
@@ -13,6 +14,17 @@ class MobileHomepage extends StatefulWidget {
 class _MobileHomepageState extends State<MobileHomepage> {
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
+
+  _launchUrl() async {
+    final Uri login_url = Uri.parse(
+        'https://taxai.auth.ap-northeast-2.amazoncognito.com/login?client_id=165n75nfnnvlphe5vlom6lsu9q&response_type=token&scope=aws.cognito.signin.user.admin&redirect_uri=https://taxai.co.kr/callback');
+    // 해당 url이 실행가능한지 확인
+    if (!await canLaunchUrl(login_url)) {
+      throw 'Could not launch $login_url';
+    } else {
+      launchUrl(login_url);
+    }
+  }
 
   _scrollListener() {
     setState(() {
@@ -60,7 +72,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OutlinedButton(
-                            onPressed: () {},
+                            onPressed: _launchUrl,
                             style: OutlinedButton.styleFrom(
                                 primary: Colors.indigo,
                                 backgroundColor: Colors.black54,
@@ -156,11 +168,11 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                     color: Colors.blueAccent),
                                 text: 'T A X A I',
                                 children: [
-                                  TextSpan(
-                                      text: '\n혁신적인 양도소득세 계산기',
-                                      style: TextStyle(
-                                          fontSize: 30, color: Colors.black)),
-                                ])),
+                              TextSpan(
+                                  text: '\n혁신적인 양도소득세 계산기',
+                                  style: TextStyle(
+                                      fontSize: 30, color: Colors.black)),
+                            ])),
                         const SizedBox(
                           height: 10,
                         ),
@@ -168,14 +180,14 @@ class _MobileHomepageState extends State<MobileHomepage> {
                             textAlign: TextAlign.center,
                             text: TextSpan(
                                 text:
-                                'TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의 \n',
+                                    'TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n수백 가지의 비과세 유형과 중과 주택수, 감면주택 등의 \n',
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 20),
                                 children: [
                                   TextSpan(
                                       text:
-                                      '세법 규정을 자동으로 판단해서 계산하는\n혁신적인 양도소득세 계산기',
+                                          '세법 규정을 자동으로 판단해서 계산하는\n혁신적인 양도소득세 계산기',
                                       style: TextStyle(
                                         color: Colors.blueAccent,
                                       )),
@@ -194,7 +206,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                             textAlign: TextAlign.center,
                             text: TextSpan(
                                 text:
-                                'TAXAI는 15년간 재산 관련 세금 컨설팅을\n전문적으로 해온 현직 세무사가 직접 설계한 \n',
+                                    'TAXAI는 15년간 재산 관련 세금 컨설팅을\n전문적으로 해온 현직 세무사가 직접 설계한 \n',
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 20),
@@ -202,7 +214,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                   TextSpan(text: '프로그램으로서'),
                                   TextSpan(
                                       text:
-                                      '최신 법령과 예규, 판례 등을\n 주기적으로 업데이트하여 케이스별로 적용 가능한\n',
+                                          '최신 법령과 예규, 판례 등을\n 주기적으로 업데이트하여 케이스별로 적용 가능한\n',
                                       style: TextStyle(
                                         color: Colors.blueAccent,
                                       )),
@@ -214,10 +226,9 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                   TextSpan(text: '할 수 있으며,\n'),
                                   TextSpan(
                                       text:
-                                      '조정대상지역 및 공동주택 가격 등을 \n자동 조회하는 기능을 갖추고 있어\n'),
+                                          '조정대상지역 및 공동주택 가격 등을 \n자동 조회하는 기능을 갖추고 있어\n'),
                                   TextSpan(
-                                      text:
-                                      '세금 신고 관련 오류를 \n획기적으로 줄여줄 수 있습니다.',
+                                      text: '세금 신고 관련 오류를 \n획기적으로 줄여줄 수 있습니다.',
                                       style: TextStyle(
                                         color: Colors.blueAccent,
                                       ))
@@ -378,22 +389,39 @@ class _MobileHomepageState extends State<MobileHomepage> {
                     ),
                     widgetSize.width < 700
                         ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('(주) NEW EYE CORPORATION |'),
-                        Text('주소 : 부산광역시 남구 수영로 295, 911호(대연동, 세웅빌딩)')
-                      ],
-                    )
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('(주) NEW EYE CORPORATION |'),
+                              Text('주소 : 부산광역시 남구 수영로 295, 911호(대연동, 세웅빌딩)')
+                            ],
+                          )
                         : Text(
-                        '(주) NEW EYE CORPORATION | 주소 : 부산광역시 남구 수영로 295, 911호(대연동, 세웅빌딩)'),
+                            '(주) NEW EYE CORPORATION | 주소 : 부산광역시 남구 수영로 295, 911호(대연동, 세웅빌딩)'),
                     widgetSize.width < 700
                         ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('대표자 김난이 | 사업자 등록번회: 457-86-02417'),
-                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('| 이메일 : '),
+                                Text('대표자 김난이 | 사업자 등록번회: 457-86-02417'),
+                                Row(
+                                  children: [
+                                    Text('| 이메일 : '),
+                                    TextButton(
+                                        onPressed: () {
+                                          sendTAXAIEmail();
+                                        },
+                                        child: Text(
+                                          'admin@taxai.co.kr',
+                                          style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationThickness: 2),
+                                        ))
+                                  ],
+                                )
+                              ])
+                        : Row(
+                            children: [
+                              Text('대표자 김난이 | 사업자 등록번회: 457-86-02417 | 이메일'),
                               TextButton(
                                   onPressed: () {
                                     sendTAXAIEmail();
@@ -401,28 +429,11 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                   child: Text(
                                     'admin@taxai.co.kr',
                                     style: TextStyle(
-                                        decoration:
-                                        TextDecoration.underline,
+                                        decoration: TextDecoration.underline,
                                         decorationThickness: 2),
                                   ))
                             ],
                           )
-                        ])
-                        : Row(
-                      children: [
-                        Text('대표자 김난이 | 사업자 등록번회: 457-86-02417 | 이메일'),
-                        TextButton(
-                            onPressed: () {
-                              sendTAXAIEmail();
-                            },
-                            child: Text(
-                              'admin@taxai.co.kr',
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  decorationThickness: 2),
-                            ))
-                      ],
-                    )
                   ],
                 ),
               )
@@ -513,7 +524,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                     Navigator.pop(context);
                   },
                   child:
-                  Text('확인', style: TextStyle(fontWeight: FontWeight.bold)))
+                      Text('확인', style: TextStyle(fontWeight: FontWeight.bold)))
             ],
           );
         });
