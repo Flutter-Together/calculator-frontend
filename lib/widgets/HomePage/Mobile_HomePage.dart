@@ -72,7 +72,9 @@ class _MobileHomepageState extends State<MobileHomepage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OutlinedButton(
-                            onPressed: _launchUrl,
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/login');
+                            },
                             style: OutlinedButton.styleFrom(
                                 primary: Colors.indigo,
                                 backgroundColor: Colors.black54,

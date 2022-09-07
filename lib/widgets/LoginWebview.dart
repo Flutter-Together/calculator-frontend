@@ -21,13 +21,14 @@ class LoginWebview extends StatefulWidget {
 }
 
 class _LoginWebviewState extends State<LoginWebview> {
-  final webviewPlugin = FlutterWebviewPlugin();
+  final webviewPlugin = new FlutterWebviewPlugin();
 
+  late StreamSubscription _onDestroy;
   late StreamSubscription<String> _onUrlChanged;
   late StreamSubscription<WebViewStateChanged> _onStateChanged;
   late String? token;
 
-  _launchUrl() async {
+  launchUrl() {
     final String login_url =
         'https://taxai.auth.ap-northeast-2.amazoncognito.com/login?client_id=165n75nfnnvlphe5vlom6lsu9q&response_type=token&scope=aws.cognito.signin.user.admin&redirect_uri=https://taxai.co.kr/callback';
     webviewPlugin.launch(login_url);
@@ -36,7 +37,15 @@ class _LoginWebviewState extends State<LoginWebview> {
   @override
   void initState() {
     super.initState();
-    webviewPlugin.close();
+    _onDestroy = webviewPlugin.onDestroy.listen((_) {
+      print('destory');
+    });
+
+    _onStateChanged =
+        webviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
+      print("onStateChanged: ${state.type} ${state.url}");
+    });
+
     _onUrlChanged = webviewPlugin.onUrlChanged.listen((String url) {
       if (mounted) {
         setState(() {
@@ -49,11 +58,14 @@ class _LoginWebviewState extends State<LoginWebview> {
         });
       }
     });
+
+    webviewPlugin.close();
   }
 
   @override
   void dispose() {
     // Every listener should be canceled, the same should be done with this stream.
+    _onDestroy.cancel();
     _onUrlChanged.cancel();
     _onStateChanged.cancel();
     webviewPlugin.dispose();
@@ -62,6 +74,8 @@ class _LoginWebviewState extends State<LoginWebview> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final String login_url =
+        'https://taxai.auth.ap-northeast-2.amazoncognito.com/login?client_id=165n75nfnnvlphe5vlom6lsu9q&response_type=token&scope=aws.cognito.signin.user.admin&redirect_uri=https://taxai.co.kr/callback';
+    return WebviewScaffold(url: login_url);
   }
 }
