@@ -1454,6 +1454,7 @@ class CapGainBodyState extends State<CapGainBody> {
                           title: Text(res[idx].roadAddr),
                           subtitle: Text(res[idx].oldAddr),
                           onTap: () {
+                            print(res[idx].pnu);
                             _tempAddr = TempAddr(roadAddr: res[idx].roadAddr, isIndividualHouse: isIndividualHouse, oldAddr: res[idx].oldAddr,pnu: res[idx].pnu);
                             if (isIndividualHouse == 1) {
                               Navigator.pop(context,_tempAddr.roadAddr!);
@@ -1496,7 +1497,7 @@ class CapGainBodyState extends State<CapGainBody> {
                           title: Text( dongList[idx].toString()),
                           onTap: () {
                             if(dongList[idx] == '동 없음'){
-                              _tempAddr.dong = '';
+                              _tempAddr.dong = dongList[idx];
                             }
                             else {_tempAddr.dong = dongList[idx];}
                             dialogSetState((){
@@ -1538,7 +1539,7 @@ class CapGainBodyState extends State<CapGainBody> {
                           onTap: () {
                             _tempAddr.ho = hoList[idx];
                             dialogSetState((){
-                              Navigator.pop(context, '${_tempAddr.roadAddr!} ${_tempAddr.dong!} ${_tempAddr.ho!}');
+                              Navigator.pop(context, '${_tempAddr.roadAddr!} ${((){if(_tempAddr.dong! == '동 없음'){return '';}else {return _tempAddr.dong!;}})()} ${_tempAddr.ho!}');
                             });
                           },
                         );
@@ -1547,18 +1548,7 @@ class CapGainBodyState extends State<CapGainBody> {
             )
         );
       }else {return Container();}
-      // return TextButton(
-      //   child: Text('호 리스트'),
-      //   onPressed: (){
-      //     dialogSetState((){
-      //       _searchPhase = 0;
-      //     });
-      //     Navigator.pop(context);
-      //   },
-      // );
     }
-
-
 
     var res = await showDialog(
         context: context,
@@ -1592,7 +1582,6 @@ class CapGainBodyState extends State<CapGainBody> {
                   _hoList(dialogSetState)
                 ];
 
-                print(_searchPhase);
 
                 return Container(
                   color: Colors.grey[60],
