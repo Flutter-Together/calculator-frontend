@@ -27,6 +27,8 @@ class CapGainBodyState extends State<CapGainBody> {
   bool isSearchedAddress = false;
   bool isSearchedDong = false;
   bool isSearchedHo = false;
+
+
   String? _dropDownMenuPriorInheritanceHouse;
   final TextEditingController _address_keywordEditingController = TextEditingController();
 
@@ -135,10 +137,10 @@ class CapGainBodyState extends State<CapGainBody> {
             Expanded(
                 child: GestureDetector(
                   onTap: () async {
-                    var a = await Search_Address_Dialog(_findingAddressTC);
+                    var a = await Search_Address_Dialog2(_findingAddressTC);
 
                     setState(() {
-                      sampleAddress = a.roadAddr! + a.dongho!;
+                      sampleAddress = a;
                       _color = Colors.black;
                       _stage = 2;
                     });
@@ -1386,38 +1388,213 @@ class CapGainBodyState extends State<CapGainBody> {
 
     ]
     );
-
   }
 
-  Future<TempAddr> Search_Address_Dialog(TextEditingController tc) async {
-    setState(() {
-      isSearchedAddress = false;
-      isSearchedDong = false;
-    });
+  Future<String> Search_Address_Dialog2(TextEditingController tc)async{
+
+    int _searchPhase = 0;
+
+    Widget _searchAddressGuide(){
+      return Row(
+        children:  [
+          Expanded(
+              child:
+              Card(
+                elevation: 2.5,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: Center(
+                    child: RichText(
+                        text: const TextSpan(
+                            children: [
+                              TextSpan(text: "찾으시려는 ",style: TextStyle(fontSize: 17, height: 1.5)),
+                              TextSpan(text: "도로명 주소",style: TextStyle(fontSize: 17, height: 1.5,color: Colors.redAccent)),
+                              TextSpan(text: " 또는 ",style: TextStyle(fontSize: 17, height: 1.5)),
+                              TextSpan(text: "지번주소",style: TextStyle(fontSize: 17, height: 1.5,color: Colors.redAccent)),
+                              TextSpan(text: "를 입력해주세요.\n",style: TextStyle(fontSize: 17, height: 1.5)),
+                              TextSpan(text: "예) 도로명 주소 : 불정로 432번길 / 지번 주소 : 정자동 178-1\n",style: TextStyle(fontSize: 17, height: 1.5,fontStyle: FontStyle.italic)),
+                              TextSpan(text: "* 단 도로명 또는 동(읍/면/리)만 검색하시는 경우 정확한 검색결과가 나오지 않을 수 있습니다.",style: TextStyle(fontSize: 17, height: 1.5)),
+                            ]
+                        )
+                    ),
+                  ),
+                ),
+              )
+          )
+        ],
+      );
+    }
+
+    Widget _addressList(StateSetter dialogSetState) {
+      return Expanded(
+          child: FutureBuilder(
+              future: fetchAddress(tc.text),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(Color(mainColor)),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+                var res = snapshot.data! as List;
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemCount: res.length,
+                    itemBuilder: (BuildContext context, int idx) {
+                      int isIndividualHouse = res[idx].isIndividualHouse;
+                      return Card(
+                        color: Colors.white,
+                        elevation: 2.5,
+                        child: ListTile(
+                          title: Text(res[idx].roadAddr),
+                          subtitle: Text(res[idx].oldAddr),
+                          onTap: () {
+                            _tempAddr = TempAddr(roadAddr: res[idx].roadAddr, isIndividualHouse: isIndividualHouse, oldAddr: res[idx].oldAddr,pnu: res[idx].pnu);
+                            if (isIndividualHouse == 1) {
+                              Navigator.pop(context,_tempAddr.roadAddr!);
+                            }else {
+                              dialogSetState(() {
+                                tc.clear();
+                                _searchPhase = 2;
+                              });
+                            }
+                          },
+                        ),
+                      );
+                    });
+              }));
+    }
+
+    Widget _dongList(StateSetter dialogSetState){
+      if(_searchPhase == 2){
+        return Expanded(
+            child: FutureBuilder(
+                future: fetchDong(_tempAddr.pnu!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Color(mainColor)),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  List dongList = snapshot.data! as List;
+                  _tempAddr.dong_list = dongList;
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: dongList.length,
+                      itemBuilder: (BuildContext context, int idx) {
+                        return ListTile(
+                          title: Text( dongList[idx].toString()),
+                          onTap: () {
+                            if(dongList[idx] == '동 없음'){
+                              _tempAddr.dong = '';
+                            }
+                            else {_tempAddr.dong = dongList[idx];}
+                            dialogSetState((){
+                              _searchPhase = 3;
+                            });
+                          },
+                        );
+                      });
+                }
+            )
+        );
+      }else {return Container();}
+
+    }
+
+    Widget _hoList(StateSetter dialogSetState){
+      if(_searchPhase == 3){
+        return Expanded(
+            child: FutureBuilder(
+                future: fetchHo(_tempAddr.pnu!, _tempAddr.dong!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Color(mainColor)),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  List hoList = snapshot.data! as List;
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: hoList.length,
+                      itemBuilder: (BuildContext context, int idx) {
+                        return ListTile(
+                          title: Text( hoList[idx].toString()),
+                          onTap: () {
+                            _tempAddr.ho = hoList[idx];
+                            dialogSetState((){
+                              Navigator.pop(context, '${_tempAddr.roadAddr!} ${_tempAddr.dong!} ${_tempAddr.ho!}');
+                            });
+                          },
+                        );
+                      });
+                }
+            )
+        );
+      }else {return Container();}
+      // return TextButton(
+      //   child: Text('호 리스트'),
+      //   onPressed: (){
+      //     dialogSetState((){
+      //       _searchPhase = 0;
+      //     });
+      //     Navigator.pop(context);
+      //   },
+      // );
+    }
+
+
+
     var res = await showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                title: Text('주소 검색'),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.cancel_outlined,
-                          color: Color(mainColor),
-                          size: 35,
-                        )),
-                  )
-                ],
-                content: Container(
+        builder: (BuildContext context){
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text('주소 검색'),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.cancel_outlined,
+                      color: Color(mainColor),
+                      size: 35,
+                    )),
+              )
+            ],
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter dialogSetState){
+
+                List<Widget> dialogBody = [
+                  _searchAddressGuide(),
+                  _addressList(dialogSetState),
+                  _dongList(dialogSetState),
+                  _hoList(dialogSetState)
+                ];
+
+                print(_searchPhase);
+
+                return Container(
                   color: Colors.grey[60],
                   width: 600,
                   constraints: const BoxConstraints(
@@ -1429,186 +1606,86 @@ class CapGainBodyState extends State<CapGainBody> {
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Expanded(child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(mainColor).withOpacity(.7),
-                                    blurRadius: 2.0,
-                                    spreadRadius: 1.0,
-                                  )
-                                ],
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10))),
-                            width: 540,
-                            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: TextField(
-                                controller: tc,
-                                autofocus: true,
-                                onSubmitted: (value) {
-                                  setState(() {
-                                    isSearchedAddress = true;
-                                  });
-                                },
-                                cursorColor: Color(mainColor),
-                                textInputAction: TextInputAction.search,
-                                style: const TextStyle(fontSize: 17),
-                                decoration: InputDecoration(
-                                    hintText: '예) 불정로 432번길',
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(color: Color(mainColor)),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(10))),
-                                    enabledBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.transparent),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    suffixIcon: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 15, 10),
-                                      child: IconButton(
-                                        icon:
-                                        const Icon(Icons.search, size: 35),
-                                        color: Colors.grey,
-                                        onPressed: () {
-                                          setState(() {
-                                            isSearchedAddress = true;
-                                          });
-                                        },
-                                      ),
-                                    ))),
-                          )),
-                          StatefulBuilder(builder: (context, setState) {
-                            return TextButton(
-                                style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    alignment: Alignment.center),
-                                onPressed: () {
-                                  _address_keywordEditingController.clear();
-                                  Navigator.pop(context);
-                                  Search_Address_Dialog(
-                                      _address_keywordEditingController);
-                                  isSearchedDong = false;
-                                  isSearchedAddress = false;
-                                  isSearchedHo = false;
-                                },
-                                child: const Text(
-                                  '취소',
-                                  style: TextStyle(
-                                      fontSize: 17, color: Color(0xff80cfd5)),
-                                ));
-                          })
+                          Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(mainColor).withOpacity(.7),
+                                        blurRadius: 2.0,
+                                        spreadRadius: 1.0,
+                                      )
+                                    ],
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10))),
+                                width: 540,
+                                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                child: TextField(
+                                    controller: tc,
+                                    autofocus: true,
+                                    onSubmitted: (value) {
+                                      dialogSetState(() {
+                                        _searchPhase = 1;
+                                      });
+                                    },
+                                    cursorColor: Color(mainColor),
+                                    textInputAction: TextInputAction.search,
+                                    style: const TextStyle(fontSize: 17),
+                                    decoration: InputDecoration(
+                                        hintText: '예) 불정로 432번길',
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Color(mainColor)),
+                                            borderRadius: const BorderRadius.all(
+                                                Radius.circular(10))),
+                                        enabledBorder: const OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.transparent),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        suffixIcon: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 15, 10),
+                                          child: IconButton(
+                                            icon:
+                                            const Icon(Icons.search, size: 35),
+                                            color: Colors.grey,
+                                            onPressed: () {
+                                              dialogSetState(() {
+                                                _searchPhase = 1;
+                                              });
+                                            },
+                                          ),
+                                        ))),
+                              )),
+                          TextButton(
+                              style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  alignment: Alignment.center),
+                              onPressed: () {
+                                tc.clear();
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                '취소',
+                                style: TextStyle(
+                                    fontSize: 17, color: Color(0xff80cfd5)),
+                              ))
                         ],
                       ),
-                      isSearchedAddress ? Search_Total_Address(tc.text) :
-                          Row(
-                            children:  [
-                              Expanded(child: Card(
-                                elevation: 2.5,
-                                color: Colors.white,
-                                child: Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: Center(
-                                    child: RichText(
-                                      text: const TextSpan(
-                                        children: [
-                                          TextSpan(text: "찾으시려는 ",style: TextStyle(fontSize: 17, height: 1.5)),
-                                          TextSpan(text: "도로명 주소",style: TextStyle(fontSize: 17, height: 1.5,color: Colors.redAccent)),
-                                          TextSpan(text: " 또는 ",style: TextStyle(fontSize: 17, height: 1.5)),
-                                          TextSpan(text: "지번주소",style: TextStyle(fontSize: 17, height: 1.5,color: Colors.redAccent)),
-                                          TextSpan(text: "를 입력해주세요.\n",style: TextStyle(fontSize: 17, height: 1.5)),
-                                          TextSpan(text: "예) 도로명 주소 : 불정로 432번길 / 지번 주소 : 정자동 178-1\n",style: TextStyle(fontSize: 17, height: 1.5,fontStyle: FontStyle.italic)),
-                                          TextSpan(text: "* 단 도로명 또는 동(읍/면/리)만 검색하시는 경우 정확한 검색결과가 나오지 않을 수 있습니다.",style: TextStyle(fontSize: 17, height: 1.5)),
-                                        ]
-                                      )
-                                    ),
-                                  ),
-                                ),
-                              ))
-                            ],
-                          )
-                      // const SizedBox(
-                      //   height: 100,
-                      //   child: Center(
-                      //     child: Text(
-                      //       '주소를 입력해주세요',
-                      //       style: TextStyle(fontSize: 20),
-                      //     ),
-                      //   ),
-                      // )
+                      dialogBody[_searchPhase]
                     ],
                   ),
-                ));
-          });
-        });
-
-    return _tempAddr;
-  }
-
-
-
-  Widget Search_Total_Address(String keyword) {
-    return isSearchedHo
-        ? Search_Ho()
-        : Expanded(
-        child: FutureBuilder(
-            future: fetchAddress(keyword),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Color(mainColor)),
-                  ),
                 );
-              } else if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
-              }
-              var res = snapshot.data! as List;
-              return isSearchedDong
-                  ? Search_Dong2()
-                  : StatefulBuilder(builder: (context, setState) {
-                return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemCount: res.length,
-                    itemBuilder: (BuildContext context, int idx) {
-                      _tempAddr.roadAddr = res[idx].roadAddr;
-                      String oldAddr = res[idx].oldAddr;
-                      int isIndividualHouse =
-                          res[idx].isIndividualHouse;
-                      _tempAddr.dong_list = res[idx].dong_list;
-                      return Card(
-                        color: Colors.white,
-                        elevation: 2.5,
-                        child: ListTile(
-                          title: Text(_tempAddr.roadAddr.toString()),
-                          subtitle: Text(oldAddr),
-                          onTap: () {
-                            if (isIndividualHouse == 1) {
-                              _tempAddr.roadAddr = res[idx].roadAddr;
-                              _tempAddr.dongho = '';
-                              Navigator.pop(context, _tempAddr.roadAddr);
-                            }else {
-                              Navigator.of(context).pop();
-                              Search_Address_Dialog(
-                                  _address_keywordEditingController);
-                              isSearchedAddress = true;
-                              isSearchedDong = true;
-                              _tempAddr.roadAddr = res[idx].roadAddr;
-                              _tempAddr.pnu = res[idx].pnu;
-                              _tempAddr.dong_list = res[idx].dong_list;
-                              _tempAddr.dongho = '';
-                            }
-                          },
-                        ),
-                      );
-                    });
-              });
-            }));
+              },
+            ),
+          );
+        }
+    );
+
+    return res;
   }
+
 
   Future fetchAddress(String keyword) async {
     String urlBase =
@@ -1627,77 +1704,32 @@ class CapGainBodyState extends State<CapGainBody> {
     }
   }
 
-  Widget Search_Dong2() {
-    return ListView.builder(
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
-        itemCount: _tempAddr.dong_list?.length,
-        itemBuilder: (BuildContext context, int idx) {
-          _tempAddr.dong = _tempAddr.dong_list?[idx];
-          return ListTile(
-            title: Text(_tempAddr.dong.toString()),
-            onTap: () {
-              Navigator.of(context).pop();
-              Search_Address_Dialog(_address_keywordEditingController);
-              isSearchedAddress = true;
-              isSearchedDong = true;
-              isSearchedHo = true;
-              _tempAddr.dong = _tempAddr.dong_list?[idx];
-            },
-          );
-        });
-  }
 
-  Search_Ho() {
-    if (_tempAddr.dong.toString().lastIndexOf('동') == -1) {
-      _tempAddr.dongho = _tempAddr.dong;
-      Navigator.pop(context);
-    } else {
-      return Expanded(
-          child: FutureBuilder(
-              future: fetchDongHO(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Color(mainColor)),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                }
-                List ho_list = snapshot.data! as List;
-                return StatefulBuilder(builder: (context, setState) {
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      itemCount: ho_list.length,
-                      itemBuilder: (BuildContext context, int idx) {
-                        _tempAddr.dongho = ho_list[idx];
-                        return ListTile(
-                          title: Text(_tempAddr.dongho.toString()),
-                          onTap: () {
-                            _tempAddr.dongho = ho_list[idx];
-                            Navigator.pop(context);
-                          },
-                        );
-                      });
-                });
-              }));
-    }
-  }
-
-  Future fetchDongHO() async {
+  Future fetchDong(String pnu) async {
     String urlBase =
         'https://z0hq847m05.execute-api.ap-northeast-2.amazonaws.com/default/detailedAddress?pnu=';
-    final response = await http.get(Uri.parse(
-        urlBase + _tempAddr.pnu.toString() + '&dong=' + _tempAddr.dong.toString()));
+    final response = await http.get(Uri.parse(urlBase + pnu));
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(utf8.decode(
           response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
-      List ho_list = jsonResponse['results']['field'] as List;
-      return ho_list;
+      List dongList = jsonResponse['results']['field'] as List;
+      return dongList;
+    } else {
+      throw Exception("Fail to fetch address data");
+    }
+  }
+
+  Future fetchHo(String pnu, String dong) async {
+    String urlBase =
+        'https://z0hq847m05.execute-api.ap-northeast-2.amazonaws.com/default/detailedAddress?pnu=';
+    final response = await http.get(Uri.parse('$urlBase$pnu&dong=$dong'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(utf8.decode(
+          response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
+      List hoList = jsonResponse['results']['field'] as List;
+      return hoList;
     } else {
       throw Exception("Fail to fetch address data");
     }
@@ -1707,9 +1739,11 @@ class CapGainBodyState extends State<CapGainBody> {
 
 class TempAddr{
   String? roadAddr;
+  String? oldAddr;
   String? pnu;
+  int? isIndividualHouse;
   List? dong_list;
   String? dong;
-  String? dongho;
-  TempAddr({this.roadAddr, this.pnu, this.dong_list, this.dong, this.dongho});
+  String? ho;
+  TempAddr({this.roadAddr,this.oldAddr,this.isIndividualHouse, this.pnu, this.dong_list, this.dong, this.ho});
 }
