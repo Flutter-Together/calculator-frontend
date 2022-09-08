@@ -26,17 +26,4 @@ class Address {
     };
   }
 
-// @override
-// String toString() => toJson().toString();
-
-// @override
-// toMap() {
-//   return {
-//     'roadAddr': '$roadAddr',
-//     'oldAddr': '$oldAddr',
-//     'pnu': '$pnu',
-//     'isIndividualHouse': '$isIndividualHouse',
-//     'dong': '$dong'
-//   };
-// }
 }
