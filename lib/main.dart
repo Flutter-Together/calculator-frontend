@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/capgain': (context) => CapitalGainsTaxPage(),
         '/holding': (context) => Resume_HoldingTaxPage(),
-        '/login': (context) => LoginWebview()
+        '/login' : (context) => LoginWebview()
       },
     );
   }

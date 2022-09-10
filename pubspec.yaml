@@ -33,7 +33,7 @@ dependencies:
   badges: ^2.0.3
   http_client_helper: ^2.0.3
   url_launcher: ^6.1.5
-  flutter_webview_plugin: ^0.4.0
+  webview_flutter: ^3.0.4  # android ios
   flutter:
     sdk: flutter
 
