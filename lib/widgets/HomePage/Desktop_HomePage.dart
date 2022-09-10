@@ -430,56 +430,47 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
   }
 
   sendInquiryEmail() async {
-    final Email email = Email(
-      body: '',
-      subject: 'TAXAI 문의사항',
-      recipients: ['tech@taxai.co.kr'],
-      cc: [],
-      bcc: [],
-      attachmentPaths: [],
-      isHTML: false,
+    final Uri inquiry_url = Uri(
+      scheme: 'mailto',
+      path: 'tech@taxai.co.kr',
+      query: 'subject=[TAXAI 문의사항]', //add subject and body here
     );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (error) {
+    if (await canLaunchUrl(inquiry_url)) {
+      await launchUrl(inquiry_url);
+    } else {
       showAlert('TAXAI 문의사항', 'tech@taxai.co.kr');
+      throw 'Could not launch $inquiry_url';
     }
   }
 
   sendPartnerEmail() async {
-    final Email email = Email(
-      body: '',
-      subject: 'TAXAI 제휴문의',
-      recipients: ['admin@taxai.co.kr'],
-      cc: [],
-      bcc: [],
-      attachmentPaths: [],
-      isHTML: false,
+    final Uri partner_url = Uri(
+      scheme: 'mailto',
+      path: 'admin@taxai.co.kr',
+      query: 'subject=[TAXAI 제휴문의]', //add subject and body here
     );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (error) {
+    if (await canLaunchUrl(partner_url)) {
+      await launchUrl(partner_url);
+    } else {
       showAlert('TAXAI 제휴문의', 'admin@taxai.co.kr');
+      throw 'Could not launch $partner_url';
     }
   }
 
   sendTAXAIEmail() async {
-    final Email email = Email(
-      body: '',
-      subject: 'TAXAI',
-      recipients: ['admin@taxai.co.kr'],
-      cc: [],
-      bcc: [],
-      attachmentPaths: [],
-      isHTML: false,
+    final Uri taxai_url = Uri(
+      scheme: 'mailto',
+      path: 'admin@taxai.co.kr',
+      query: 'subject=[TAXAI]', //add subject and body here
     );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (error) {
-      showAlert('TAXAI 문의사항', 'admin@taxai.co.kr');
+    if (await canLaunchUrl(taxai_url)) {
+      await launchUrl(taxai_url);
+    } else {
+      showAlert('TAXAI', 'admin@taxai.co.kr');
+      throw 'Could not launch $taxai_url';
     }
   }
 

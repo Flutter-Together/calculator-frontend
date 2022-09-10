@@ -12,7 +12,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  final Color mainColor = const Color(0xff80cfd5);
 
   // This widget is the root of your application.
   @override
@@ -20,14 +19,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TAXAI',
       debugShowCheckedModeBanner: false,
+      color: Colors.white,
       theme: ThemeData(
-        primaryColor: mainColor,
+        primaryColor: Colors.white,
         fontFamily: 'One_Mobile',
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(
-          MediumLayout: const MobileHomepage(),
-          LargeLayout: const DesktopHomepage()),
+          MobileHomepage: const MobileHomepage(),
+          DesktopHomepage: const DesktopHomepage()),
       routes: {
         '/capgain': (context) => CapitalGainsTaxPage(),
         '/holding': (context) => Resume_HoldingTaxPage(),
@@ -38,20 +38,20 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  final Widget MediumLayout;
-  final Widget LargeLayout;
+  final Widget MobileHomepage;
+  final Widget DesktopHomepage;
 
   const MyHomePage(
-      {Key? key, required this.MediumLayout, required this.LargeLayout})
+      {Key? key, required this.MobileHomepage, required this.DesktopHomepage})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 1200) {
-        return MediumLayout;
+        return MobileHomepage;
       } else {
-        return LargeLayout;
+        return DesktopHomepage;
       }
     });
   }
