@@ -46,103 +46,107 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
       // PreferredSize를 사용하면 AppBar와 같이 user 지정 width나 length 지정 가능
       appBar: PreferredSize(
         preferredSize: Size(widgetSize.width, 200),
-        child: Expanded(
-          child: Container(
-              color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
-              padding: EdgeInsets.all(10),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: (widgetSize.width > 1400)
-                      ? widgetSize.width / 20
-                      : widgetSize.width / 100,
-                  right: (widgetSize.width > 1400)
-                      ? widgetSize.width / 20
-                      : widgetSize.width / 100,
-                ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/new_logo2.jpg',
-                      height: 50,
-                      width: 100,
-                      fit: BoxFit.fill,
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                  color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
+                  padding: EdgeInsets.all(10),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: (widgetSize.width > 1400)
+                          ? widgetSize.width / 20
+                          : widgetSize.width / 100,
+                      right: (widgetSize.width > 1400)
+                          ? widgetSize.width / 20
+                          : widgetSize.width / 100,
                     ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    child: Row(
                       children: [
-                        TextButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                                primary: Colors.grey,
-                                padding: EdgeInsets.all(20)),
-                            child: Text(
-                              'TAXIAI 소개',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700),
-                            )),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15),
-                          child: TextButton(
-                              onPressed: () {},
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.grey,
-                                  padding: EdgeInsets.all(20)),
-                              child: Text('공지사항',
+                        Image.asset(
+                          'assets/images/new_logo2.jpg',
+                          height: 50,
+                          width: 100,
+                          fit: BoxFit.fill,
+                        ),
+                        Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton(
+                                onPressed: () {},
+                                style: OutlinedButton.styleFrom(
+                                    primary: Colors.grey,
+                                    padding: EdgeInsets.all(20)),
+                                child: Text(
+                                  'TAXIAI 소개',
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w700))),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15),
-                          child: TextButton(
-                              onPressed: () {
-                                sendInquiryEmail();
-                              },
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.grey,
-                                  padding: EdgeInsets.all(20)),
-                              child: Text('기술 문의',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700))),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 20),
-                          child: TextButton(
-                              onPressed: () {
-                                sendPartnerEmail();
-                              },
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.grey,
-                                  padding: EdgeInsets.all(20)),
-                              child: Text('제휴 문의',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700))),
-                        ),
-                        OutlinedButton(
-                            onPressed: _launchUrl,
-                            style: OutlinedButton.styleFrom(
-                                primary: Colors.indigo,
-                                backgroundColor: Colors.black54,
-                                padding: EdgeInsets.all(20)),
-                            child: Text('로그인',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700)))
+                                      fontWeight: FontWeight.w700),
+                                )),
+                            Padding(
+                              padding: EdgeInsets.only(left: 15),
+                              child: TextButton(
+                                  onPressed: () {},
+                                  style: OutlinedButton.styleFrom(
+                                      primary: Colors.grey,
+                                      padding: EdgeInsets.all(20)),
+                                  child: Text('공지사항',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700))),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 15),
+                              child: TextButton(
+                                  onPressed: () {
+                                    sendInquiryEmail();
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                      primary: Colors.grey,
+                                      padding: EdgeInsets.all(20)),
+                                  child: Text('기술 문의',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700))),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 15, right: 20),
+                              child: TextButton(
+                                  onPressed: () {
+                                    sendPartnerEmail();
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                      primary: Colors.grey,
+                                      padding: EdgeInsets.all(20)),
+                                  child: Text('제휴 문의',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700))),
+                            ),
+                            OutlinedButton(
+                                onPressed: _launchUrl,
+                                style: OutlinedButton.styleFrom(
+                                    primary: Colors.indigo,
+                                    backgroundColor: Colors.black54,
+                                    padding: EdgeInsets.all(20)),
+                                child: Text('로그인',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700)))
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ),
-              )),
-        ),
+                    ),
+                  )),
+            ),
+          ],
+        )
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -161,118 +165,116 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                         ? widgetSize.width / 20
                         : widgetSize.width / 100,
                   ),
-                  child: Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 40,
-                                ),
-                                RichText(
-                                    textAlign: TextAlign.start,
-                                    text: TextSpan(
-                                        style: TextStyle(
-                                            fontSize: 90,
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.blueAccent),
-                                        text: 'T A X A I',
-                                        children: [
-                                          TextSpan(
-                                              text: '\n혁신적인 양도소득세 계산기',
-                                              style: TextStyle(
-                                                  fontSize: 30,
-                                                  color: Colors.black)),
-                                        ])),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                RichText(
-                                    text: TextSpan(
-                                        text:
-                                            ' TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n 수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의\n',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 20),
-                                        children: [
-                                      TextSpan(
-                                          text:
-                                              ' 세법 규정을 자동으로 판단해서 계산하는\n 혁신적인 양도소득세 계산기',
-                                          style: TextStyle(
-                                            color: Colors.blueAccent,
-                                          )),
-                                      TextSpan(text: ' 입니다.')
-                                    ]))
-                              ],
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 40, 0, 0),
-                              child: Image.asset(
-                                'assets/images/tax_consulting_illustration.jpg',
-                                height: 500,
-                                width: 600,
-                                fit: BoxFit.contain,
-                              ),
-                            )
-                          ],
-                        ),
-                        AnimatedOpacity(
-                          duration: const Duration(microseconds: 20),
-                          opacity: _scrollPosition < 230 ? 0.5 : 1,
-                          child: Row(
+                  child:  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset(
-                                'assets/images/tax_consulting_illustration.jpg',
-                                height: 500,
-                                width: 600,
-                                fit: BoxFit.fitHeight,
+                              const SizedBox(
+                                height: 40,
                               ),
-                              Spacer(),
                               RichText(
                                   textAlign: TextAlign.start,
                                   text: TextSpan(
+                                      style: TextStyle(
+                                          fontSize: 90,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.blueAccent),
+                                      text: 'T A X A I',
+                                      children: [
+                                        TextSpan(
+                                            text: '\n혁신적인 양도소득세 계산기',
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                color: Colors.black)),
+                                      ])),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              RichText(
+                                  text: TextSpan(
                                       text:
-                                          'TAXAI는 15년간 재산 관련 세금 컨설팅을 전문적으로 해온\n현직 세무사가 직접 설계한 프로그램으로서\n',
+                                      ' TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n 수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의\n',
                                       style: TextStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 20),
                                       children: [
                                         TextSpan(
                                             text:
-                                                '최신 법령과 예규, 판례 등을 주기적으로 업데이트하여\n케이스별로 적용 가능한 수많은 절세 규정을 미리 검토',
+                                            ' 세법 규정을 자동으로 판단해서 계산하는\n 혁신적인 양도소득세 계산기',
                                             style: TextStyle(
                                               color: Colors.blueAccent,
                                             )),
-                                        TextSpan(text: '할 수 있으며,\n'),
-                                        TextSpan(
-                                            text:
-                                                '조정대상지역 및 공동주택 가격 등을 자동 조회하는 기능을 갖추고 있어\n'),
-                                        TextSpan(
-                                            text:
-                                                '세금 신고 관련 오류를 획기적으로 줄여줄 수 있습니다.',
-                                            style: TextStyle(
-                                              color: Colors.blueAccent,
-                                            ))
-                                      ])),
+                                        TextSpan(text: ' 입니다.')
+                                      ]))
                             ],
                           ),
+                          Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 40, 0, 0),
+                            child: Image.asset(
+                              'assets/images/tax_consulting_illustration.jpg',
+                              height: 500,
+                              width: 600,
+                              fit: BoxFit.contain,
+                            ),
+                          )
+                        ],
+                      ),
+                      AnimatedOpacity(
+                        duration: const Duration(microseconds: 20),
+                        opacity: _scrollPosition < 230 ? 0.5 : 1,
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/tax_consulting_illustration.jpg',
+                              height: 500,
+                              width: 600,
+                              fit: BoxFit.fitHeight,
+                            ),
+                            Spacer(),
+                            RichText(
+                                textAlign: TextAlign.start,
+                                text: TextSpan(
+                                    text:
+                                    'TAXAI는 15년간 재산 관련 세금 컨설팅을 전문적으로 해온\n현직 세무사가 직접 설계한 프로그램으로서\n',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 20),
+                                    children: [
+                                      TextSpan(
+                                          text:
+                                          '최신 법령과 예규, 판례 등을 주기적으로 업데이트하여\n케이스별로 적용 가능한 수많은 절세 규정을 미리 검토',
+                                          style: TextStyle(
+                                            color: Colors.blueAccent,
+                                          )),
+                                      TextSpan(text: '할 수 있으며,\n'),
+                                      TextSpan(
+                                          text:
+                                          '조정대상지역 및 공동주택 가격 등을 자동 조회하는 기능을 갖추고 있어\n'),
+                                      TextSpan(
+                                          text:
+                                          '세금 신고 관련 오류를 획기적으로 줄여줄 수 있습니다.',
+                                          style: TextStyle(
+                                            color: Colors.blueAccent,
+                                          ))
+                                    ])),
+                          ],
                         ),
-                        Text(
-                          'TAXAXI는 추후 미래 세금을 컨설팅 하는 기능도 추가할 예정입니다.',
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent),
-                        ),
-                        const SizedBox(
-                          height: 80,
-                        )
-                      ],
-                    ),
+                      ),
+                      Text(
+                        'TAXAXI는 추후 미래 세금을 컨설팅 하는 기능도 추가할 예정입니다.',
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent),
+                      ),
+                      const SizedBox(
+                        height: 80,
+                      )
+                    ],
                   ),
                 ),
               ),
