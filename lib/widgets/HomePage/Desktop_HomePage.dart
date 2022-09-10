@@ -46,103 +46,101 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
       // PreferredSize를 사용하면 AppBar와 같이 user 지정 width나 length 지정 가능
       appBar: PreferredSize(
         preferredSize: Size(widgetSize.width, 200),
-        child: Expanded(
-          child: Container(
-              color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
-              padding: EdgeInsets.all(10),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: (widgetSize.width > 1400)
-                      ? widgetSize.width / 20
-                      : widgetSize.width / 100,
-                  right: (widgetSize.width > 1400)
-                      ? widgetSize.width / 20
-                      : widgetSize.width / 100,
-                ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/new_logo2.jpg',
-                      height: 50,
-                      width: 100,
-                      fit: BoxFit.fill,
-                    ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
+        child: Container(
+            color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
+            padding: EdgeInsets.all(10),
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: (widgetSize.width > 1400)
+                    ? widgetSize.width / 20
+                    : widgetSize.width / 100,
+                right: (widgetSize.width > 1400)
+                    ? widgetSize.width / 20
+                    : widgetSize.width / 100,
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/new_logo2.jpg',
+                    height: 50,
+                    width: 100,
+                    fit: BoxFit.fill,
+                  ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                              primary: Colors.grey,
+                              padding: EdgeInsets.all(20)),
+                          child: Text(
+                            'TAXIAI 소개',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700),
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: TextButton(
                             onPressed: () {},
                             style: OutlinedButton.styleFrom(
                                 primary: Colors.grey,
                                 padding: EdgeInsets.all(20)),
-                            child: Text(
-                              'TAXIAI 소개',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700),
-                            )),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15),
-                          child: TextButton(
-                              onPressed: () {},
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.grey,
-                                  padding: EdgeInsets.all(20)),
-                              child: Text('공지사항',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700))),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15),
-                          child: TextButton(
-                              onPressed: () {
-                                sendInquiryEmail();
-                              },
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.grey,
-                                  padding: EdgeInsets.all(20)),
-                              child: Text('기술 문의',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700))),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, right: 20),
-                          child: TextButton(
-                              onPressed: () {
-                                sendPartnerEmail();
-                              },
-                              style: OutlinedButton.styleFrom(
-                                  primary: Colors.grey,
-                                  padding: EdgeInsets.all(20)),
-                              child: Text('제휴 문의',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700))),
-                        ),
-                        OutlinedButton(
-                            onPressed: _launchUrl,
-                            style: OutlinedButton.styleFrom(
-                                primary: Colors.indigo,
-                                backgroundColor: Colors.black54,
-                                padding: EdgeInsets.all(20)),
-                            child: Text('로그인',
+                            child: Text('공지사항',
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700)))
-                      ],
-                    )
-                  ],
-                ),
-              )),
-        ),
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700))),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: TextButton(
+                            onPressed: () {
+                              sendInquiryEmail();
+                            },
+                            style: OutlinedButton.styleFrom(
+                                primary: Colors.grey,
+                                padding: EdgeInsets.all(20)),
+                            child: Text('기술 문의',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700))),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 15, right: 20),
+                        child: TextButton(
+                            onPressed: () {
+                              sendPartnerEmail();
+                            },
+                            style: OutlinedButton.styleFrom(
+                                primary: Colors.grey,
+                                padding: EdgeInsets.all(20)),
+                            child: Text('제휴 문의',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700))),
+                      ),
+                      OutlinedButton(
+                          onPressed: _launchUrl,
+                          style: OutlinedButton.styleFrom(
+                              primary: Colors.indigo,
+                              backgroundColor: Colors.black54,
+                              padding: EdgeInsets.all(20)),
+                          child: Text('로그인',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700)))
+                    ],
+                  )
+                ],
+              ),
+            )),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -150,6 +148,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
           child: Column(
             children: [
               Container(
+                width: double.infinity,
                 color: Colors.white,
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -376,6 +375,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                 ),
               ),
               Container(
+                width: double.infinity,
                 padding: EdgeInsets.only(
                     top: 70,
                     left: (widgetSize.width > 1400)
@@ -426,56 +426,47 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
   }
 
   sendInquiryEmail() async {
-    final Email email = Email(
-      body: '',
-      subject: 'TAXAI 문의사항',
-      recipients: ['tech@taxai.co.kr'],
-      cc: [],
-      bcc: [],
-      attachmentPaths: [],
-      isHTML: false,
+    final Uri inquiry_url = Uri(
+      scheme: 'mailto',
+      path: 'tech@taxai.co.kr',
+      query: 'subject=[TAXAI 문의사항]', //add subject and body here
     );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (error) {
+    if (await canLaunchUrl(inquiry_url)) {
+      await launchUrl(inquiry_url);
+    } else {
       showAlert('TAXAI 문의사항', 'tech@taxai.co.kr');
+      throw 'Could not launch $inquiry_url';
     }
   }
 
   sendPartnerEmail() async {
-    final Email email = Email(
-      body: '',
-      subject: 'TAXAI 제휴문의',
-      recipients: ['admin@taxai.co.kr'],
-      cc: [],
-      bcc: [],
-      attachmentPaths: [],
-      isHTML: false,
+    final Uri partner_url = Uri(
+      scheme: 'mailto',
+      path: 'admin@taxai.co.kr',
+      query: 'subject=[TAXAI 제휴문의]', //add subject and body here
     );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (error) {
+    if (await canLaunchUrl(partner_url)) {
+      await launchUrl(partner_url);
+    } else {
       showAlert('TAXAI 제휴문의', 'admin@taxai.co.kr');
+      throw 'Could not launch $partner_url';
     }
   }
 
   sendTAXAIEmail() async {
-    final Email email = Email(
-      body: '',
-      subject: 'TAXAI',
-      recipients: ['admin@taxai.co.kr'],
-      cc: [],
-      bcc: [],
-      attachmentPaths: [],
-      isHTML: false,
+    final Uri taxai_url = Uri(
+      scheme: 'mailto',
+      path: 'admin@taxai.co.kr',
+      query: 'subject=[TAXAI]', //add subject and body here
     );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (error) {
-      showAlert('TAXAI 문의사항', 'admin@taxai.co.kr');
+    if (await canLaunchUrl(taxai_url)) {
+      await launchUrl(taxai_url);
+    } else {
+      showAlert('TAXAI', 'admin@taxai.co.kr');
+      throw 'Could not launch $taxai_url';
     }
   }
 
