@@ -65,7 +65,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                             Navigator.pushNamed(context, '/login');
                           },
                           style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.indigo,
+                              primary: Colors.indigo,
                               backgroundColor: Colors.black54,
                               padding: EdgeInsets.all(20)),
                           child: Text('로그인',
