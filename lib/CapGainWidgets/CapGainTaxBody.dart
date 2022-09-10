@@ -1456,14 +1456,10 @@ class CapGainBodyState extends State<CapGainBody> {
                           onTap: () {
                             print(res[idx].pnu);
                             _tempAddr = TempAddr(roadAddr: res[idx].roadAddr, isIndividualHouse: isIndividualHouse, oldAddr: res[idx].oldAddr,pnu: res[idx].pnu);
-                            if (isIndividualHouse == 1) {
-                              Navigator.pop(context,_tempAddr.roadAddr!);
-                            }else {
-                              dialogSetState(() {
-                                tc.clear();
-                                _searchPhase = 2;
-                              });
-                            }
+                            dialogSetState(() {
+                              tc.clear();
+                              _searchPhase = 2;
+                            });
                           },
                         ),
                       );
@@ -1487,25 +1483,31 @@ class CapGainBodyState extends State<CapGainBody> {
                     return Center(child: Text(snapshot.error.toString()));
                   }
                   List dongList = snapshot.data! as List;
-                  _tempAddr.dong_list = dongList;
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      itemCount: dongList.length,
-                      itemBuilder: (BuildContext context, int idx) {
-                        return ListTile(
-                          title: Text( dongList[idx].toString()),
-                          onTap: () {
-                            if(dongList[idx] == '동 없음'){
-                              _tempAddr.dong = dongList[idx];
-                            }
-                            else {_tempAddr.dong = dongList[idx];}
-                            dialogSetState((){
-                              _searchPhase = 3;
-                            });
-                          },
-                        );
-                      });
+                  if(dongList.isNotEmpty){
+                    _tempAddr.dong_list = dongList;
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        itemCount: dongList.length,
+                        itemBuilder: (BuildContext context, int idx) {
+                          return ListTile(
+                            title: Text( dongList[idx].toString()),
+                            onTap: () {
+                              if(dongList[idx] == '동 없음'){
+                                _tempAddr.dong = dongList[idx];
+                              }
+                              else {_tempAddr.dong = dongList[idx];}
+                              dialogSetState((){
+                                _searchPhase = 3;
+                              });
+                            },
+                          );
+                        });
+                  }
+                  else {
+                    Navigator.pop(context,_tempAddr.roadAddr);
+                    return Container();
+                  }
                 }
             )
         );
@@ -1581,8 +1583,6 @@ class CapGainBodyState extends State<CapGainBody> {
                   _dongList(dialogSetState),
                   _hoList(dialogSetState)
                 ];
-
-
                 return Container(
                   color: Colors.grey[60],
                   width: 600,
@@ -1702,8 +1702,14 @@ class CapGainBodyState extends State<CapGainBody> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(utf8.decode(
           response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
-      List dongList = jsonResponse['results']['field'] as List;
-      return dongList;
+
+      if(jsonResponse['results']['metadata']['errorCode'] == "0"){
+        List dongList = jsonResponse['results']['field'] as List;
+        print(dongList);
+        return dongList;
+      }
+      else {return [];}
+
     } else {
       throw Exception("Fail to fetch address data");
     }
