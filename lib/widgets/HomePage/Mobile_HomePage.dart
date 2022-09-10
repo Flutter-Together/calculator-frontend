@@ -134,7 +134,6 @@ class _MobileHomepageState extends State<MobileHomepage> {
             children: [
               Container(
                 color: Colors.white,
-                width: double.infinity,
                 child: Padding(
                   padding: EdgeInsets.only(
                     left: (widgetSize.width > 1000)
@@ -350,7 +349,6 @@ class _MobileHomepageState extends State<MobileHomepage> {
                 ),
               ),
               Container(
-                width: double.infinity,
                 padding: EdgeInsets.only(
                     top: 70,
                     left: (widgetSize.width > 1000)

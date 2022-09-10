@@ -150,7 +150,6 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
           child: Column(
             children: [
               Container(
-                width: double.infinity,
                 color: Colors.white,
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -377,7 +376,6 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                 ),
               ),
               Container(
-                width: double.infinity,
                 padding: EdgeInsets.only(
                     top: 70,
                     left: (widgetSize.width > 1400)

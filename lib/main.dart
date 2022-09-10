@@ -20,8 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TAXAI',
       debugShowCheckedModeBanner: false,
+      color: Colors.white,
       theme: ThemeData(
-        primaryColor: mainColor,
+        primaryColor: Colors.white,
         fontFamily: 'One_Mobile',
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
