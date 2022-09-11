@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:calculator_frontend/CapGainWidgets/CapGainTaxBody.dart';
+import 'package:calculator_frontend/CapgainResult.dart';
 import 'package:calculator_frontend/widgets/HomePage/Search%20Address%20Api.dart';
 import 'package:calculator_frontend/widgets/Address.dart';
 import 'package:calculator_frontend/widgets/LargeText.dart';
@@ -145,7 +146,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                             style: ElevatedButton.styleFrom(primary: Color(mainColor)),
                             onPressed: () {
                               if (_checkFormIsCompleted()) {
-                                setState(() {});
+                                //Navigator.pushNamed(context, '/capgainres');
                               } else {
                                 setState(() {});
                               }
@@ -385,8 +386,8 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
           ]
       ),
     );
-
   }
+
 }
 
 

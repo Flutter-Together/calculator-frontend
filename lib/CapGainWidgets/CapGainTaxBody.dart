@@ -65,8 +65,10 @@ class CapGainBodyState extends State<CapGainBody> {
   final TextEditingController _acquisitionPriceTC = TextEditingController();
   final TextEditingController _manageDateTC = TextEditingController();
   final TextEditingController _businessStartDateTC = TextEditingController();
-  final TextEditingController _rightPriceTC = TextEditingController();
+  final TextEditingController _evaluatedPriceTC = TextEditingController();
   final TextEditingController _rentalHouseRegistrationDateTC = TextEditingController();
+  final TextEditingController _payedMoneyTC = TextEditingController();
+  final TextEditingController _getMoneyTC = TextEditingController();
 
   List acquisitionETCTCList = List.generate(5, (index) => TextEditingController());
 
@@ -93,6 +95,7 @@ class CapGainBodyState extends State<CapGainBody> {
   };
 
   String? _dropDownMenuForResidencePeriod;
+  String? _dropDownMenuForHouseShare;
 
   List<String> _typeOfTransfer = [];
   String? _dropDownMenuForTypeOfTransfer;
@@ -102,6 +105,7 @@ class CapGainBodyState extends State<CapGainBody> {
   String? _dropDownMenuForReasonOfAquistition;
   String? _dropDownMenuHavingHome;
   String? _dropDownMenuHavingHome_RentalHouse;
+  String? _dropDownMenuForKindOfConcession;
 
   bool? _shortRent;
   bool? _under85;
@@ -574,6 +578,84 @@ class CapGainBodyState extends State<CapGainBody> {
             _acquisitionPrice(_acquisitionPriceTC, '10000000',_stage >= 8)
           ],
         ),//취득가액 및 필요경비
+        Row(
+          children: [
+            _smallTitle('주택지분'),
+            Expanded(
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints){
+                      return DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          items:((){
+                            if(_stage >= 9){
+                              return ["단독명의","공동명의"];
+                            }else {
+                              return [];
+                            }})().map((item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: const TextStyle(
+                                fontSize: 17,
+                                //color: Colors.white,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )).toList(),
+                          value: _dropDownMenuForHouseShare,
+                          onChanged: (value) {
+                            setState(() {
+                              _dropDownMenuForHouseShare = value as String;
+                              _stage = 10;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down,
+                          ),
+                          iconSize: 30,
+                          buttonHeight: 50,
+                          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                          buttonDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: ((){
+                              if(_stage >= 9){
+                                return Border.all(color: Color(mainColor));
+                              }
+                              else {return Border.all(color: Colors.black12);
+                              }})(),
+                            color: ((){
+                              if(_stage >= 9){
+                                return Color(backgroundColor);
+                              }
+                              else {return Colors.black12;
+                              }})(),
+                          ),
+                          buttonElevation: 2,
+                          itemHeight: 40,
+                          itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                          dropdownMaxHeight: 200,
+                          dropdownWidth: constraints.maxWidth,
+                          dropdownPadding: null,
+                          dropdownDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            // color: Colors.redAccent,
+                          ),
+                          dropdownElevation: 8,
+                          scrollbarRadius: const Radius.circular(40),
+                          scrollbarThickness: 6,
+                          scrollbarAlwaysShow: true,
+                          offset: const Offset(0, 0),
+                        ),
+                      );
+                    },
+                  ),
+                )
+            ),
+          ],
+        ),
         preReconstructionHouse(),
         residentialOfficetel(),
       ],
@@ -593,7 +675,7 @@ class CapGainBodyState extends State<CapGainBody> {
   }
 
   Widget residentialOfficetel(){
-    Widget rentalHouse(){
+    Widget rentalHouse(StateSetter _dialogSetState){
       return ListView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -623,6 +705,9 @@ class CapGainBodyState extends State<CapGainBody> {
                             value: _dropDownMenuHavingHome_RentalHouse,
                             onChanged: (value) {
                               setState(() {
+                                _dropDownMenuHavingHome_RentalHouse = value as String;
+                              });
+                              _dialogSetState(() {
                                 _dropDownMenuHavingHome_RentalHouse = value as String;
                               });
                             },
@@ -660,7 +745,6 @@ class CapGainBodyState extends State<CapGainBody> {
                     ),
                   )
               )
-
             ],
           ),//계약일&취득일 당시 무주택 여부
           Row(
@@ -704,20 +788,20 @@ class CapGainBodyState extends State<CapGainBody> {
         children: [
           Row(
             children: [
-              _smallTitle('조특법 농어촌주택'),
+              _smallTitle('조특법 농어촌주택',width: 180),
               const Text('추후 추가'),
             ],
           ),
           Row(
             children: [
-              _smallTitle('소득세법 농어촌주택'),
+              _smallTitle('소득세법 농어촌주택',width: 180),
               const Text('추후 추가'),
             ],
           ),
         ],
       );
     }
-    Widget reduceTaxHouse(){
+    Widget reduceTaxHouse(StateSetter _dialogState){
 
       List<List<String>> filtered = [];
 
@@ -783,6 +867,9 @@ class CapGainBodyState extends State<CapGainBody> {
                               setState(() {
                                 _reduceTaxHouseChecklist[_idx] = value as String;
                               });
+                              _dialogState(() {
+                                _reduceTaxHouseChecklist[_idx] = value as String;
+                              });
                             },
                             icon: const Icon(
                               Icons.keyboard_arrow_down,
@@ -822,15 +909,127 @@ class CapGainBodyState extends State<CapGainBody> {
       );
     }
 
+    Future<void> ruralHouseDialog()async{
+      await showDialog(
+          context: context,
+          builder: (BuildContext context){
+            return AlertDialog(
+              title: Text('농어촌주택 관련 추가선택'),
+              content: StatefulBuilder(
+                  builder: (BuildContext context, StateSetter dialogSetState){
+                    return Container(
+                      width: 600,
+                      child: ruralHouse(),
+                    );
+                  },
+              )
+            );
+          }
+      );
+    }
+
+    Future<void> rentalHouseDialog()async{
+      await showDialog(
+          context: context,
+          builder: (BuildContext context){
+            return AlertDialog(
+              title: Text('임대주택 관련 추가선택'),
+              content:StatefulBuilder(
+                builder: (BuildContext context,StateSetter dialogSetState){
+                  return Container(
+                    width: 600,
+                    constraints: BoxConstraints(
+                      minHeight: 500,
+                      maxHeight: 800,
+                    ),
+                    child: rentalHouse(dialogSetState),
+                  );
+                },
+              ),
+            );
+          }
+      );
+    }
+
+    Future<void> reduceTaxHouseDialog()async{
+      await showDialog(
+          context: context,
+          builder: (BuildContext context){
+            return AlertDialog(
+              title: Text('조특법상 감면주택 관련 추가선택'),
+              content: StatefulBuilder(
+                builder: (BuildContext context,StateSetter dialogSetState ){
+                  return Container(
+                    width: 600,
+                    constraints: BoxConstraints(
+                      minHeight: 500,
+                      maxHeight: 800,
+                    ),
+                    child: reduceTaxHouse(dialogSetState),
+                  );
+                },
+              ),
+            );
+          }
+      );
+    }
+
     if(_dropDownMenuForTypeOfTransfer == '주택(주거용 오피스텔 포함)'){
       return ListView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          const Divider(),
-          rentalHouse(),
-          ruralHouse(),
-          reduceTaxHouse(),
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: const Text(
+                  '임대주택 관련 추가선택',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              IconButton(
+                  onPressed: ()async{
+                    await rentalHouseDialog();
+                  },
+                  icon: Icon(Icons.add_circle_outline,color: Color(mainColor),size: 30,)
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: const Text(
+                  '농어촌주택 관련 추가선택',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              IconButton(
+                  onPressed: ()async{
+                    await ruralHouseDialog();
+                  },
+                  icon: Icon(Icons.add_circle_outline,color: Color(mainColor),size: 30,)
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: const Text(
+                  '조특법상 감면주택 관련 추가선택',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              IconButton(
+                  onPressed: ()async{
+                    await reduceTaxHouseDialog();
+                  },
+                  icon: Icon(Icons.add_circle_outline,color: Color(mainColor),size: 30,)
+              )
+            ],
+          ),
         ],
       );
     }else {
@@ -840,8 +1039,8 @@ class CapGainBodyState extends State<CapGainBody> {
 
   Widget isSeoul(){
     if(_tempAddr.pnu != null && (_tempAddr.pnu!.substring(0,2) == '11' || _tempAddr.pnu!.substring(0,2) == '28' || _tempAddr.pnu!.substring(0,2) == '41')){
-      return Text('O');
-    }else return Text('X');
+      return Text('O',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),);
+    }else return Text('X',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold));
   }
 
   Widget officialPriceWidget(){
@@ -1013,8 +1212,20 @@ class CapGainBodyState extends State<CapGainBody> {
           ),
           Row(
             children: [
-              _smallTitle('입주권 가치'),
-              _textField2(_rightPriceTC, '17000000', true)
+              _smallTitle('종전 주택의 평가액'),
+              _textField2(_evaluatedPriceTC, '17000000', true)
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('납부한 분담금'),
+              _textField2(_payedMoneyTC, '17000000', true)
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('지원받은 청산금'),
+              _textField2(_getMoneyTC, '17000000', true)
             ],
           ),
         ],
@@ -1120,6 +1331,101 @@ class CapGainBodyState extends State<CapGainBody> {
       }
     }
 
+    Widget kindOfConcession(){
+      return Row(
+        children: [
+          _smallTitle('분양권 종류'),
+          Expanded(
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints){
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        items: ['승계 분양권','최초당첨 분양권'].map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              //color: Colors.white,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )).toList(),
+                        value: _dropDownMenuForKindOfConcession,
+                        onChanged: (value) {
+                          setState(() {
+                            _dropDownMenuForKindOfConcession = value as String;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down,
+                        ),
+                        iconSize: 30,
+                        buttonHeight: 50,
+                        buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                        buttonDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: Color(mainColor)),
+                          color: Color(backgroundColor),
+                        ),
+                        buttonElevation: 2,
+                        itemHeight: 40,
+                        itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                        dropdownMaxHeight: 200,
+                        dropdownWidth: constraints.maxWidth,
+                        dropdownPadding: null,
+                        dropdownDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          // color: Colors.redAccent,
+                        ),
+                        dropdownElevation: 8,
+                        scrollbarRadius: const Radius.circular(40),
+                        scrollbarThickness: 6,
+                        scrollbarAlwaysShow: true,
+                        offset: const Offset(0, 0),
+                      ),
+                    );
+                  },
+                ),
+              )
+          )
+        ],
+      );
+    }
+
+    Widget Cession(List<List<dynamic>> _csv){
+      if(_dropDownMenuForKindOfConcession == null){
+        return Container();
+      }
+      else {
+        List<List<dynamic>> _filtered = _csv.where((element) => element[6] == _dropDownMenuForKindOfConcession!).toList();
+        return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _filtered.length,
+            itemBuilder: (context, index){
+              if(_filtered[index][7] == '취득일'){
+                buyDate = acquisitionETCTCList[index].text;
+                print('취득일은 : $buyDate');
+              }
+              if(_filtered[index][7] == '계약일'){
+                contractDate = acquisitionETCTCList[index].text;
+                print('계약일은 : $contractDate');
+              }
+              return Row(
+                children: [
+                  _smallTitle(_filtered[index][4].toString().replaceAll('"', '')),
+                  _textField2(acquisitionETCTCList[index],'',true)
+                ],
+              );
+            }
+        );
+      }
+    }
+
     if(_stage<6){
       return Container();
     }
@@ -1127,8 +1433,26 @@ class CapGainBodyState extends State<CapGainBody> {
       List<List<dynamic>> csv = originCSV.where((element) => (element[0] == _dropDownMenuForTypeOfTransfer) && (element[1] == _dropDownMenuForReasonOfAquistition) && (element[2] == _dropDownMenuForTypeOfAcquisition)).toList();
 
       String? startInheritance;
-
-      return ListView.builder(
+      if(_dropDownMenuForTypeOfTransfer == '주택(주거용 오피스텔 포함)' && _dropDownMenuForReasonOfAquistition == '매매' && (_dropDownMenuForTypeOfAcquisition == '분양권(2021년 이전 취득)' || _dropDownMenuForTypeOfAcquisition == '분양권(2022년 이후 취득)')){
+        return ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            kindOfConcession(),
+            Cession(csv),
+          ],
+        );
+      }else if((_dropDownMenuForTypeOfTransfer == '분양권(2021년 이전 취득)' ||_dropDownMenuForTypeOfTransfer == '분양권(2022년 이후 취득)'  )&& _dropDownMenuForReasonOfAquistition == '매매' && (_dropDownMenuForTypeOfAcquisition == '분양권(2021년 이전 취득)' || _dropDownMenuForTypeOfAcquisition == '분양권(2022년 이후 취득)')){
+        return ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            kindOfConcession(),
+            Cession(csv),
+          ],
+        );
+      }else {
+        return ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: csv.length,
@@ -1141,14 +1465,22 @@ class CapGainBodyState extends State<CapGainBody> {
               contractDate = acquisitionETCTCList[index].text;
               print('계약일은 : $contractDate');
             }
-            if(csv[index][7].length > 1 && csv[index][7]!='취득일' && csv[index][7]!='계약일'){
+            if(csv[index][7]=='취득일&계약일'){
+              buyDate = acquisitionETCTCList[index].text;
+              contractDate = acquisitionETCTCList[index].text;
+            }
+            if(csv[index][7].length > 1 && csv[index][7]!='취득일' && csv[index][7]!='계약일'&& csv[index][7]!='취득일&계약일'){
               if(acquisitionETCTCList[0].text.length > 1 && acquisitionETCTCList[1].text.length > 1){
                 int _buydate1 = int.parse(acquisitionETCTCList[0].text);
                 int _buydate2 = int.parse(acquisitionETCTCList[1].text);
 
                 if(_buydate1 > _buydate2){
                   buyDate = _buydate1.toString();
-                }else {buyDate = _buydate2.toString();}
+                  contractDate = _buydate1.toString();
+                }else {
+                  buyDate = _buydate2.toString();
+                  contractDate = _buydate1.toString();
+                }
               }
             }
             if(csv[index][4] == '"계약일 당시 무주택 여부 (o,x)"'){
@@ -1170,7 +1502,7 @@ class CapGainBodyState extends State<CapGainBody> {
               if(diff <= 731){
                 return Row(
                   children: [
-                    _smallTitle(csv[index][4]),
+                    _smallTitle(csv[index][4].toString().replaceAll('"', '')),
                     _textField2(acquisitionETCTCList[index],'',true)
                   ],
                 );
@@ -1179,7 +1511,7 @@ class CapGainBodyState extends State<CapGainBody> {
             else {
               return Row(
                 children: [
-                  _smallTitle(csv[index][4]),
+                  _smallTitle(csv[index][4].toString().replaceAll('"', '')),
                   _textField2(acquisitionETCTCList[index],'',true)
                 ],
               );
@@ -1187,6 +1519,7 @@ class CapGainBodyState extends State<CapGainBody> {
 
           }
       );
+      }
     }
   }
 
@@ -1342,15 +1675,28 @@ class CapGainBodyState extends State<CapGainBody> {
   }
 
 
-  Widget _smallTitle(String txt) {
-    return Container(
-      width: 140,
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-      child: Text(
-        txt,
-        style: const TextStyle(fontSize: 20),
-      ),
-    );
+  Widget _smallTitle(String txt,{double? width}) {
+    if(width == null){
+      return Container(
+        width: 140,
+        margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: Text(
+          txt,
+          style: const TextStyle(fontSize: 20),
+        ),
+      );
+    }
+    else {
+      return Container(
+        width: width!,
+        margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: Text(
+          txt,
+          style: const TextStyle(fontSize: 20),
+        ),
+      );
+    }
+
   }
 
   Widget largeTitle(){
@@ -1456,14 +1802,10 @@ class CapGainBodyState extends State<CapGainBody> {
                           onTap: () {
                             print(res[idx].pnu);
                             _tempAddr = TempAddr(roadAddr: res[idx].roadAddr, isIndividualHouse: isIndividualHouse, oldAddr: res[idx].oldAddr,pnu: res[idx].pnu);
-                            if (isIndividualHouse == 1) {
-                              Navigator.pop(context,_tempAddr.roadAddr!);
-                            }else {
-                              dialogSetState(() {
-                                tc.clear();
-                                _searchPhase = 2;
-                              });
-                            }
+                            dialogSetState(() {
+                              tc.clear();
+                              _searchPhase = 2;
+                            });
                           },
                         ),
                       );
@@ -1487,25 +1829,31 @@ class CapGainBodyState extends State<CapGainBody> {
                     return Center(child: Text(snapshot.error.toString()));
                   }
                   List dongList = snapshot.data! as List;
-                  _tempAddr.dong_list = dongList;
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      itemCount: dongList.length,
-                      itemBuilder: (BuildContext context, int idx) {
-                        return ListTile(
-                          title: Text( dongList[idx].toString()),
-                          onTap: () {
-                            if(dongList[idx] == '동 없음'){
-                              _tempAddr.dong = dongList[idx];
-                            }
-                            else {_tempAddr.dong = dongList[idx];}
-                            dialogSetState((){
-                              _searchPhase = 3;
-                            });
-                          },
-                        );
-                      });
+                  if(dongList.isNotEmpty){
+                    _tempAddr.dong_list = dongList;
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        itemCount: dongList.length,
+                        itemBuilder: (BuildContext context, int idx) {
+                          return ListTile(
+                            title: Text( dongList[idx].toString()),
+                            onTap: () {
+                              if(dongList[idx] == '동 없음'){
+                                _tempAddr.dong = dongList[idx];
+                              }
+                              else {_tempAddr.dong = dongList[idx];}
+                              dialogSetState((){
+                                _searchPhase = 3;
+                              });
+                            },
+                          );
+                        });
+                  }
+                  else {
+                    Navigator.pop(context,_tempAddr.roadAddr);
+                    return Container();
+                  }
                 }
             )
         );
@@ -1581,8 +1929,6 @@ class CapGainBodyState extends State<CapGainBody> {
                   _dongList(dialogSetState),
                   _hoList(dialogSetState)
                 ];
-
-
                 return Container(
                   color: Colors.grey[60],
                   width: 600,
@@ -1702,8 +2048,14 @@ class CapGainBodyState extends State<CapGainBody> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(utf8.decode(
           response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
-      List dongList = jsonResponse['results']['field'] as List;
-      return dongList;
+
+      if(jsonResponse['results']['metadata']['errorCode'] == "0"){
+        List dongList = jsonResponse['results']['field'] as List;
+        print(dongList);
+        return dongList;
+      }
+      else {return [];}
+
     } else {
       throw Exception("Fail to fetch address data");
     }
