@@ -7,12 +7,24 @@ import 'package:http/http.dart' as http;
 
 class Search_Address extends StatefulWidget {
   String? roadAddr;
+  String? oldAddr;
   String? pnu;
   List? dong_list;
   String? dong;
-  String? dongho;
+  String? ho;
+  int? isIndividualHouse;
+  int stage;
 
-  Search_Address({Key? key, this.roadAddr, this.pnu, this.dong_list, this.dong, this.dongho})
+  Search_Address(
+      {Key? key,
+      required this.stage,
+      this.roadAddr,
+      this.pnu,
+      this.dong_list,
+      this.dong,
+      this.ho,
+      this.oldAddr,
+      this.isIndividualHouse})
       : super(key: key);
 
   @override
@@ -27,51 +39,66 @@ class _Search_AddressState extends State<Search_Address> {
   bool isSearchedDong = false;
   bool isSearchedHo = false;
   final TextEditingController _address_keywordEditingController =
-  TextEditingController();
+      TextEditingController();
+  Search_Address _temp_search_addr = Search_Address(stage: 1,);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    widget.stage;
   }
 
-  void _back(BuildContext context) {
-    Navigator.pop(context);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         GestureDetector(
-            onTap: () async {
-              var addr = await Search_Address_Dialog(
-                  _address_keywordEditingController);
-
-              setState(() {
-                addr_hinttext = addr;
-                samplecolor = Colors.black;
-                _address_keywordEditingController.clear();
-              });
-            },
-            child: Address_Container_Design(addr_hinttext)),
+          onTap: widget.stage >= 1
+              ? () async {
+                  var a = await Search_Address_Dialog(
+                      _address_keywordEditingController);
+                  setState(() {
+                    addr_hinttext = a;
+                    samplecolor = Colors.black;
+                    widget.stage = 2;
+                    _address_keywordEditingController.clear();
+                  });
+                }
+              : () async {
+                  return showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) {
+                        Future.delayed(Duration(milliseconds: 750), () {
+                          Navigator.of(context).pop(true);
+                        });
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          title: Text('앞의 단계를 먼저 진행해주세요',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                              textAlign: TextAlign.center),
+                        );
+                      });
+                },
+          child: address_Container_Desgin(),
+        )
       ],
     );
   }
 
-  Container Address_Container_Design( String hintText) {
+  Container address_Container_Desgin() {
     return Container(
         height: 50,
-        width: 700,
+        width: 750,
         decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: mainColor.withOpacity(.7),
-                blurRadius: 2.0,
-                spreadRadius: 1.0,
-              )
-            ],
+            border: Border.all(
+              color: mainColor,
+            ),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
         padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -81,7 +108,7 @@ class _Search_AddressState extends State<Search_Address> {
           children: [
             Flexible(
               child: Text(
-                hintText,
+                addr_hinttext,
                 style: TextStyle(fontSize: 17, color: samplecolor),
               ),
             ),
@@ -90,34 +117,226 @@ class _Search_AddressState extends State<Search_Address> {
   }
 
   Future<String> Search_Address_Dialog(TextEditingController tc) async {
-    setState(() {
-      isSearchedAddress = false;
-      isSearchedDong = false;
-    });
+    int _searchPhase = 0;
+
+    Widget _searchAddressGuide() {
+      return Row(
+        children: [
+          Expanded(
+              child: Card(
+            elevation: 2.5,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Center(
+                child: RichText(
+                    text: const TextSpan(children: [
+                  TextSpan(
+                      text: "찾으시려는 ",
+                      style: TextStyle(fontSize: 17, height: 1.5)),
+                  TextSpan(
+                      text: "도로명 주소",
+                      style: TextStyle(
+                          fontSize: 17, height: 1.5, color: Colors.redAccent)),
+                  TextSpan(
+                      text: " 또는 ",
+                      style: TextStyle(fontSize: 17, height: 1.5)),
+                  TextSpan(
+                      text: "지번주소",
+                      style: TextStyle(
+                          fontSize: 17, height: 1.5, color: Colors.redAccent)),
+                  TextSpan(
+                      text: "를 입력해주세요.\n",
+                      style: TextStyle(fontSize: 17, height: 1.5)),
+                  TextSpan(
+                      text: "예) 도로명 주소 : 불정로 432번길 / 지번 주소 : 정자동 178-1\n",
+                      style: TextStyle(
+                          fontSize: 17,
+                          height: 1.5,
+                          fontStyle: FontStyle.italic)),
+                  TextSpan(
+                      text:
+                          "* 단 도로명 또는 동(읍/면/리)만 검색하시는 경우 정확한 검색결과가 나오지 않을 수 있습니다.",
+                      style: TextStyle(fontSize: 17, height: 1.5)),
+                ])),
+              ),
+            ),
+          ))
+        ],
+      );
+    }
+
+    Widget _addressList(StateSetter dialogSetState) {
+      return Expanded(
+          child: FutureBuilder(
+              future: fetchAddress(tc.text),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(mainColor),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+                var res = snapshot.data! as List;
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemCount: res.length,
+                    itemBuilder: (BuildContext context, int idx) {
+                      int isIndividualHouse = res[idx].isIndividualHouse;
+                      return Card(
+                        color: Colors.white,
+                        elevation: 2.5,
+                        child: ListTile(
+                          title: Text(res[idx].roadAddr),
+                          subtitle: Text(res[idx].oldAddr),
+                          onTap: () {
+                            print(res[idx].pnu);
+                            _temp_search_addr = Search_Address(
+                              stage: 1,
+                                roadAddr: res[idx].roadAddr,
+                                isIndividualHouse: isIndividualHouse,
+                                oldAddr: res[idx].oldAddr,
+                                pnu: res[idx].pnu);
+                            if (isIndividualHouse == 1) {
+                              Navigator.pop(
+                                  context, _temp_search_addr.roadAddr!);
+                            } else {
+                              dialogSetState(() {
+                                tc.clear();
+                                _searchPhase = 2;
+                              });
+                            }
+                          },
+                        ),
+                      );
+                    });
+              }));
+    }
+
+    Widget _dongList(StateSetter dialogSetState) {
+      if (_searchPhase == 2) {
+        return Expanded(
+            child: FutureBuilder(
+                future: fetchDong(_temp_search_addr.pnu!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(mainColor),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  List dongList = snapshot.data! as List;
+                  _temp_search_addr.dong_list = dongList;
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: dongList.length,
+                      itemBuilder: (BuildContext context, int idx) {
+                        return ListTile(
+                          title: Text(dongList[idx].toString()),
+                          onTap: () {
+                            if (dongList[idx] == '동 없음') {
+                              _temp_search_addr.dong = dongList[idx];
+                            } else {
+                              _temp_search_addr.dong = dongList[idx];
+                            }
+                            dialogSetState(() {
+                              _searchPhase = 3;
+                            });
+                          },
+                        );
+                      });
+                }));
+      } else {
+        return Container();
+      }
+    }
+
+    Widget _hoList(StateSetter dialogSetState) {
+      if (_searchPhase == 3) {
+        return Expanded(
+            child: FutureBuilder(
+                future:
+                    fetchHo(_temp_search_addr.pnu!, _temp_search_addr.dong!),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(mainColor),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  List hoList = snapshot.data! as List;
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: hoList.length,
+                      itemBuilder: (BuildContext context, int idx) {
+                        return ListTile(
+                          title: Text(hoList[idx].toString()),
+                          onTap: () {
+                            _temp_search_addr.ho = hoList[idx];
+                            dialogSetState(() {
+                              Navigator.pop(
+                                  context,
+                                  '${_temp_search_addr.roadAddr!} ${(() {
+                                    if (_temp_search_addr.dong! == '동 없음') {
+                                      return '';
+                                    } else {
+                                      return _temp_search_addr.dong!;
+                                    }
+                                  })()} ${_temp_search_addr.ho!}');
+                            });
+                          },
+                        );
+                      });
+                }));
+      } else {
+        return Container();
+      }
+    }
+
     var res = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                title: Text('주소 검색'),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: IconButton(
-                        onPressed: () {
-                          _back(context);
-                        },
-                        icon: Icon(
-                          Icons.cancel_outlined,
-                          color: mainColor,
-                          size: 35,
-                        )),
-                  )
-                ],
-                content: Container(
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text('주소 검색'),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.cancel_outlined,
+                      color: mainColor,
+                      size: 35,
+                    )),
+              )
+            ],
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter dialogSetState) {
+                List<Widget> dialogBody = [
+                  _searchAddressGuide(),
+                  _addressList(dialogSetState),
+                  _dongList(dialogSetState),
+                  _hoList(dialogSetState)
+                ];
+
+                return Container(
                   color: Colors.grey[60],
                   width: 600,
                   constraints: const BoxConstraints(
@@ -129,7 +348,8 @@ class _Search_AddressState extends State<Search_Address> {
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Expanded(child: Container(
+                          Expanded(
+                              child: Container(
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 boxShadow: [
@@ -147,18 +367,18 @@ class _Search_AddressState extends State<Search_Address> {
                                 controller: tc,
                                 autofocus: true,
                                 onSubmitted: (value) {
-                                  setState(() {
-                                    isSearchedAddress = true;
+                                  dialogSetState(() {
+                                    _searchPhase = 1;
                                   });
                                 },
                                 cursorColor: mainColor,
                                 textInputAction: TextInputAction.search,
                                 style: const TextStyle(fontSize: 17),
                                 decoration: InputDecoration(
-                                    hintText: '예) 반포대로',
+                                    hintText: '예) 불정로 432번길',
                                     focusedBorder: OutlineInputBorder(
                                         borderSide:
-                                        BorderSide(color: mainColor),
+                                            BorderSide(color: mainColor),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     enabledBorder: const OutlineInputBorder(
@@ -171,115 +391,41 @@ class _Search_AddressState extends State<Search_Address> {
                                           0, 0, 15, 10),
                                       child: IconButton(
                                         icon:
-                                        const Icon(Icons.search, size: 35),
+                                            const Icon(Icons.search, size: 35),
                                         color: Colors.grey,
                                         onPressed: () {
-                                          setState(() {
-                                            isSearchedAddress = true;
+                                          dialogSetState(() {
+                                            _searchPhase = 1;
                                           });
                                         },
                                       ),
                                     ))),
                           )),
-                          StatefulBuilder(builder: (context, setState) {
-                            return TextButton(
-                                style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    alignment: Alignment.center),
-                                onPressed: () {
-                                  _address_keywordEditingController.clear();
-                                  Navigator.pop(context);
-                                  Search_Address_Dialog(
-                                      _address_keywordEditingController);
-                                  isSearchedDong = false;
-                                  isSearchedAddress = false;
-                                  isSearchedHo = false;
-                                },
-                                child: const Text(
-                                  '취소',
-                                  style: TextStyle(
-                                      fontSize: 17, color: Color(0xff80cfd5)),
-                                ));
-                          })
+                          TextButton(
+                              style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  alignment: Alignment.center),
+                              onPressed: () {
+                                tc.clear();
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                '취소',
+                                style: TextStyle(
+                                    fontSize: 17, color: Color(0xff80cfd5)),
+                              ))
                         ],
                       ),
-                      isSearchedAddress
-                          ? Search_Total_Address(tc.text)
-                          : const SizedBox(
-                        height: 100,
-                        child: Center(
-                          child: Text(
-                            '주소를 입력해주세요',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                      )
+                      dialogBody[_searchPhase]
                     ],
                   ),
-                ));
-          });
-        });
-    return '${widget.roadAddr.toString()} ${widget.dongho.toString()}';
-  }
-
-  Widget Search_Total_Address(String keyword) {
-    return isSearchedHo
-        ? Search_Ho()
-        : Expanded(
-        child: FutureBuilder(
-            future: fetchAddress(keyword),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(mainColor),
-                  ),
                 );
-              } else if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
-              }
-              var res = snapshot.data! as List;
-              return isSearchedDong
-                  ? Search_Dong2()
-                  : StatefulBuilder(builder: (context, setState) {
-                return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemCount: res.length,
-                    itemBuilder: (BuildContext context, int idx) {
-                      widget.roadAddr = res[idx].roadAddr;
-                      String oldAddr = res[idx].oldAddr;
-                      int isIndividualHouse =
-                          res[idx].isIndividualHouse;
-                      widget.dong_list = res[idx].dong_list;
-                      return Card(
-                        color: Colors.white,
-                        elevation: 2.5,
-                        child: ListTile(
-                          title: Text(widget.roadAddr.toString()),
-                          subtitle: Text(oldAddr),
-                          onTap: () {
-                            if (isIndividualHouse == 1) {
-                              widget.roadAddr = res[idx].roadAddr;
-                              widget.dongho = '';
-                              Navigator.pop(context, widget.roadAddr);
-                            }else {
-                              Navigator.of(context).pop();
-                              Search_Address_Dialog(
-                                  _address_keywordEditingController);
-                              isSearchedAddress = true;
-                              isSearchedDong = true;
-                              widget.roadAddr = res[idx].roadAddr;
-                              widget.pnu = res[idx].pnu;
-                              widget.dong_list = res[idx].dong_list;
-                              widget.dongho = '';
-                            }
-                          },
-                        ),
-                      );
-                    });
-              });
-            }));
+              },
+            ),
+          );
+        });
+
+    return res;
   }
 
   Future fetchAddress(String keyword) async {
@@ -299,77 +445,31 @@ class _Search_AddressState extends State<Search_Address> {
     }
   }
 
-  Widget Search_Dong2() {
-    return ListView.builder(
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
-        itemCount: widget.dong_list?.length,
-        itemBuilder: (BuildContext context, int idx) {
-          widget.dong = widget.dong_list?[idx];
-          return ListTile(
-            title: Text(widget.dong.toString()),
-            onTap: () {
-              Navigator.of(context).pop();
-              Search_Address_Dialog(_address_keywordEditingController);
-              isSearchedAddress = true;
-              isSearchedDong = true;
-              isSearchedHo = true;
-              widget.dong = widget.dong_list?[idx];
-            },
-          );
-        });
-  }
-
-  Search_Ho() {
-    if (widget.dong.toString().lastIndexOf('동') == -1) {
-      widget.dongho = widget.dong;
-      Navigator.pop(context);
-    } else {
-      return Expanded(
-          child: FutureBuilder(
-              future: fetchDongHO(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(mainColor),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                }
-                List ho_list = snapshot.data! as List;
-                return StatefulBuilder(builder: (context, setState) {
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      itemCount: ho_list.length,
-                      itemBuilder: (BuildContext context, int idx) {
-                       widget.dongho = ho_list[idx];
-                        return ListTile(
-                          title: Text(widget.dongho.toString()),
-                          onTap: () {
-                            widget.dongho = ho_list[idx];
-                            Navigator.pop(context);
-                          },
-                        );
-                      });
-                });
-              }));
-    }
-  }
-
-  Future fetchDongHO() async {
+  Future fetchDong(String pnu) async {
     String urlBase =
         'https://z0hq847m05.execute-api.ap-northeast-2.amazonaws.com/default/detailedAddress?pnu=';
-    final response = await http.get(Uri.parse(
-        urlBase + widget.pnu.toString() + '&dong=' + widget.dong.toString()));
+    final response = await http.get(Uri.parse(urlBase + pnu));
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(utf8.decode(
           response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
-      List ho_list = jsonResponse['results']['field'] as List;
-      return ho_list;
+      List dongList = jsonResponse['results']['field'] as List;
+      return dongList;
+    } else {
+      throw Exception("Fail to fetch address data");
+    }
+  }
+
+  Future fetchHo(String pnu, String dong) async {
+    String urlBase =
+        'https://z0hq847m05.execute-api.ap-northeast-2.amazonaws.com/default/detailedAddress?pnu=';
+    final response = await http.get(Uri.parse('$urlBase$pnu&dong=$dong'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(utf8.decode(
+          response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
+      List hoList = jsonResponse['results']['field'] as List;
+      return hoList;
     } else {
       throw Exception("Fail to fetch address data");
     }
