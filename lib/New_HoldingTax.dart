@@ -286,7 +286,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                 ],
                               ),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(primary: mainColor),
+                          style: ElevatedButton.styleFrom(primary: mainColor, minimumSize: Size(500, 50)),
                           onPressed: () {},
                           child: const Text(
                             '계산하기',

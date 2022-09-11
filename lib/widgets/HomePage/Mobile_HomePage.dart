@@ -132,10 +132,10 @@ class _MobileHomepageState extends State<MobileHomepage> {
         child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xffe8e8e8), Color(0xff448aff)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )),
+            colors: [Color(0xffe8e8e8), Color(0xff448aff)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          )),
           child: SingleChildScrollView(
             controller: _scrollController,
             child: Column(
@@ -157,7 +157,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                           height: 70,
                         ),
                         RichText(
-                          textAlign: TextAlign.center,
+                            textAlign: TextAlign.center,
                             text: TextSpan(
                                 style: TextStyle(
                                     fontSize: 110,
@@ -167,16 +167,15 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                       Shadow(
                                           offset: Offset(5, 5),
                                           color: Colors.white.withOpacity(.7),
-                                          blurRadius: 7
-                                      )
+                                          blurRadius: 7)
                                     ]),
                                 text: 'T A X A I',
                                 children: [
-                              TextSpan(
-                                  text: '\n혁신적인 양도소득세 계산기',
-                                  style: TextStyle(
-                                      fontSize: 35, color: Colors.black)),
-                            ])),
+                                  TextSpan(
+                                      text: '\n혁신적인 양도소득세 계산기',
+                                      style: TextStyle(
+                                          fontSize: 35, color: Colors.black)),
+                                ])),
                         const SizedBox(
                           height: 50,
                         ),
@@ -186,7 +185,8 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                 text:
                                     'TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n수백 가지의 비과세 유형과 중과 주택수, 감면주택 등의 \n',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.normal, fontSize: 20),
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 20),
                                 children: [
                                   TextSpan(
                                       text:
@@ -196,7 +196,9 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                       )),
                                   TextSpan(text: ' 입니다.')
                                 ])),
-                        const SizedBox(height: 20,),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Image.asset(
                           'assets/images/homepage_image.png',
                           height: 400,
@@ -212,7 +214,8 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                 text:
                                     'TAXAI는 15년간 재산관련 세금컨설팅을\n전문적으로 해온 현직 세무사가 직접 설계한 \n',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.normal, fontSize: 20),
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 20),
                                 children: [
                                   TextSpan(text: '프로그램으로서 '),
                                   TextSpan(
@@ -296,7 +299,9 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                 pushNamed: '/capgain',
                                 title_1: '양도소득세',
                                 title_2: 'AI 판단 계산기'),
-                            SizedBox(width: 30,),
+                            SizedBox(
+                              width: 30,
+                            ),
                             NavigationBox(
                                 isCalculator: true,
                                 imagepath: 'assets/images/calculator_line.png',
@@ -313,7 +318,6 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                     pushNamed: '',
                                     title_1: '',
                                     title_2: ''))
-
                           ],
                         ),
                       ),
@@ -342,21 +346,25 @@ class _MobileHomepageState extends State<MobileHomepage> {
                       Column(
                         children: [
                           SingleChildScrollView(
-                            scrollDirection : Axis.horizontal,
+                            scrollDirection: Axis.horizontal,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 NavigationBox(
                                     isCalculator: false,
-                                    imagepath: 'assets/images/consultant_line.png',
+                                    imagepath:
+                                        'assets/images/consultant_line.png',
                                     isMedium: true,
                                     pushNamed: '/',
                                     title_1: '양도소득세 AI',
                                     title_2: '컨설팅'),
-                                SizedBox(width: 30,),
+                                SizedBox(
+                                  width: 30,
+                                ),
                                 NavigationBox(
                                     isCalculator: false,
-                                    imagepath: 'assets/images/consultant_line.png',
+                                    imagepath:
+                                        'assets/images/consultant_line.png',
                                     isMedium: true,
                                     pushNamed: '/',
                                     title_1: '매도 관련',
@@ -383,15 +391,19 @@ class _MobileHomepageState extends State<MobileHomepage> {
                               children: [
                                 NavigationBox(
                                     isCalculator: false,
-                                    imagepath: 'assets/images/consultant_line.png',
+                                    imagepath:
+                                        'assets/images/consultant_line.png',
                                     isMedium: true,
                                     pushNamed: '/',
                                     title_1: '양도소득세 AI',
                                     title_2: '컨설팅'),
-                                SizedBox(width: 30,),
+                                SizedBox(
+                                  width: 30,
+                                ),
                                 NavigationBox(
                                     isCalculator: false,
-                                    imagepath: 'assets/images/consultant_line.png',
+                                    imagepath:
+                                        'assets/images/consultant_line.png',
                                     isMedium: true,
                                     pushNamed: '/',
                                     title_1: '매도 관련',
