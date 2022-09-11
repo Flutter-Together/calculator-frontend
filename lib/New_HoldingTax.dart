@@ -32,6 +32,18 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
   ];
   List<bool> _is_selected_age = [false, false, false, false];
   final Color mainColor = Color(0xff80cfd5);
+  int stage1 = 0;
+  int stage2 = 0;
+  int stage3 = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    stage1 = 0;
+    stage2 = 0;
+    stage3 = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,20 +96,20 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                 : Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [Text('주소1'), Search_Address()],
+                                    children: [Text('주소1'), Search_Address(stage: stage1,)],
                                   ),
                             index_selected == 1
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [Text('주소1'), Search_Address()],
+                                    children: [Text('주소1'), Search_Address(stage: stage2,)],
                                   )
                                 : SizedBox(),
                             index_selected == 2
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [Text('주소1'), Search_Address()],
+                                    children: [Text('주소1'), Search_Address(stage: stage3,)],
                                   )
                                 : SizedBox(),
                           ],
@@ -124,7 +136,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소2'),
-                                          Search_Address()
+                                          Search_Address(stage: stage1,)
                                         ],
                                       ),
                                     ],
@@ -158,7 +170,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소2'),
-                                          Search_Address()
+                                          Search_Address(stage: stage3,)
                                         ],
                                       ),
                                     ],
@@ -182,7 +194,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소3'),
-                                          Search_Address()
+                                          Search_Address(stage: stage3,)
                                         ],
                                       ),
                                     ],
@@ -206,7 +218,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소4'),
-                                          Search_Address()
+                                          Search_Address(stage: stage3,)
                                         ],
                                       ),
                                     ],
@@ -230,7 +242,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text('주소5'),
-                                          Search_Address()
+                                          Search_Address(stage: stage3,)
                                         ],
                                       ),
                                     ],
@@ -273,15 +285,13 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                                   ),
                                 ],
                               ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [Label('공시가격')],
-                            ),
-                            SizedBox(
-                              height: 60,
-                            )
-                          ],
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(primary: mainColor, minimumSize: Size(500, 50)),
+                          onPressed: () {},
+                          child: const Text(
+                            '계산하기',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
                       ],
                     ))
@@ -652,28 +662,36 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Transform.scale(
-            scale: 1.1,
-            child: Checkbox(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(35),
-                ),
-                side: BorderSide(width: 1, color: mainColor),
-                checkColor: Colors.white,
-                activeColor: mainColor,
-                value: _is_selected_holding_period[idx],
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (count_selected_holding_period == 0) {
-                      _is_selected_holding_period[idx] = value!;
-                    } else if (count_selected_holding_period == 1) {
-                      if (index_selected_holding_period == idx) {
-                        _is_selected_holding_period[idx] =
-                            !_is_selected_holding_period[idx];
+          Theme(
+            data: ThemeData(accentColor: Colors.black26),
+            child: Transform.scale(
+                scale: 1.1,
+                child: Checkbox(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(35),
+                    ),
+                    side: BorderSide(
+                        width: 1,
+                        color: stage1 == 2 ? mainColor : Colors.black26),
+                    checkColor: Colors.white,
+                    activeColor: mainColor,
+                    value: _is_selected_holding_period[idx],
+                    onChanged: (bool? value) async {
+                      if (stage1 != 2) {
+                        return _showDialog_stage();
+                      } else if (stage1 == 2) {
+                        setState(() {
+                          if (count_selected_holding_period == 0) {
+                            _is_selected_holding_period[idx] = value!;
+                          } else if (count_selected_holding_period == 1) {
+                            if (index_selected_holding_period == idx) {
+                              _is_selected_holding_period[idx] =
+                                  !_is_selected_holding_period[idx];
+                            }
+                          }
+                        });
                       }
-                    }
-                  });
-                }),
+                    })),
           ),
           const SizedBox(
             width: 1,
@@ -685,6 +703,26 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _showDialog_stage() {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          Future.delayed(Duration(milliseconds: 750), () {
+            Navigator.of(context).pop(true);
+          });
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Text('앞의 단계를 먼저 진행해주세요',
+                style: TextStyle(
+                  fontSize: 17,
+                ),
+                textAlign: TextAlign.center),
+          );
+        });
   }
 
   SizedBox Label(String label) =>
@@ -740,31 +778,35 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
           spacing: 35,
           runSpacing: 10,
           children: [
-            buildActionChip3(),
-            buildActionChip2(),
-            buildActionChip(),
+            buildActionChip3(stage1),
+            buildActionChip2(stage2),
+            buildActionChip(stage3),
           ],
         ),
       ],
     );
   }
 
-  ActionChip buildActionChip3() {
+  ActionChip buildActionChip3(int stage) {
     int count_selected =
         _is_selected_num_of_house.where((element) => element == true).length;
     int index_selected =
         _is_selected_num_of_house.indexWhere((element) => element == true);
     return ActionChip(
         onPressed: () {
-          setState(() {
-            if (count_selected == 0) {
+          if (count_selected == 0){
+            setState(() {
               _is_selected_num_of_house[0] = !_is_selected_num_of_house[0];
-            } else if (count_selected == 1) {
+              stage1 = 1;
+            });
+          }else if (count_selected == 1){
+            setState(() {
               if (index_selected == 0) {
                 _is_selected_num_of_house[0] = !_is_selected_num_of_house[0];
+                stage1 = 0;
               }
-            }
-          });
+            });
+          }
         },
         labelPadding: EdgeInsets.all(5),
         backgroundColor:
@@ -787,7 +829,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
         ));
   }
 
-  ActionChip buildActionChip2() {
+  ActionChip buildActionChip2(int stage) {
     int count_selected =
         _is_selected_num_of_house.where((element) => element == true).length;
     int index_selected =
@@ -797,9 +839,11 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
           setState(() {
             if (count_selected == 0) {
               _is_selected_num_of_house[1] = !_is_selected_num_of_house[1];
+              stage = 1;
             } else if (count_selected == 1) {
               if (index_selected == 1) {
                 _is_selected_num_of_house[1] = !_is_selected_num_of_house[1];
+                stage = 0;
               }
             }
           });
@@ -825,7 +869,7 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
         ));
   }
 
-  ActionChip buildActionChip() {
+  ActionChip buildActionChip(int stage) {
     int count_selected =
         _is_selected_num_of_house.where((element) => element == true).length;
     int index_selected =
@@ -835,9 +879,11 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
           setState(() {
             if (count_selected == 0) {
               _is_selected_num_of_house[2] = !_is_selected_num_of_house[2];
+              stage = 1;
             } else if (count_selected == 1) {
               if (index_selected == 2) {
                 _is_selected_num_of_house[2] = !_is_selected_num_of_house[2];
+                stage = 0;
               }
             }
           });
