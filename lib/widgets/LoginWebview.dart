@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 
 LoginCallback() {
   try {
@@ -28,13 +29,14 @@ class _LoginViewState extends State<LoginWebview> {
   final Completer<WebViewController> _controller =
   Completer<WebViewController>();
 
+
   late String? token;
 
   @override
   void initState() {
     super.initState();
     // Enable virtual display.
-    WebView.platform = SurfaceAndroidWebView();
+    WebView.platform = AndroidWebView();
   }
 
   @override
@@ -56,28 +58,28 @@ class _LoginViewState extends State<LoginWebview> {
               RegExp regExp = RegExp("callback#access_token=(.*)");
               token = regExp.firstMatch(request.url)?.group(1);
               // blocking navigation to $request
-              setState(() {
-                showBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20))),
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: 60,
-                        width: double.maxFinite,
-                        child: Center(child: Text('로그인 되었습니다')),
-                      );
-                    });
-              });
+              // setState(() {
+              //   showBottomSheet(
+              //       context: context,
+              //       shape: const RoundedRectangleBorder(
+              //           borderRadius:
+              //           BorderRadius.vertical(top: Radius.circular(20))),
+              //       builder: (BuildContext context) {
+              //         return Container(
+              //           height: 60,
+              //           width: double.maxFinite,
+              //           child: Center(child: Text('로그인 되었습니다')),
+              //         );
+              //       });
+              // });
               return NavigationDecision.prevent;
             }
             // allowing navigation to $request'
             return NavigationDecision.navigate;
           },
-          onPageFinished: (String url) {
-            Navigator.of(context).pop();
-          },
+          // onPageFinished: (String url) {
+          //   Navigator.of(context).pop();
+          // },
           gestureNavigationEnabled: true,
         ),
       ),

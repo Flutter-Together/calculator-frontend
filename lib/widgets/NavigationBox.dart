@@ -10,18 +10,20 @@ class NavigationBox extends StatefulWidget {
   final String imagepath;
   final Color? iconColor;
   final bool isMedium;
+  final bool? isCalculator;
 
-  const NavigationBox(
-      {Key? key,
-        required this.isMedium,
-        required this.pushNamed,
-        required this.title_1,
-        required this.title_2,
-        required this.imagepath,
-        this.boxColor = Colors.white,
-        this.borderColor = Colors.black,
-        this.iconColor = Colors.black,})
-      : super(key: key);
+  const NavigationBox({
+    Key? key,
+    required this.isMedium,
+    required this.pushNamed,
+    required this.title_1,
+    required this.title_2,
+    required this.imagepath,
+    required this.isCalculator,
+    this.boxColor = Colors.white,
+    this.borderColor = Colors.black,
+    this.iconColor = Colors.black,
+  }) : super(key: key);
 
   @override
   State<NavigationBox> createState() => _NavigationBoxState();
@@ -64,59 +66,41 @@ class _NavigationBoxState extends State<NavigationBox> {
         }
       },
       child: Card(
-        elevation: 2,
+        elevation: 1,
         shadowColor: Colors.grey,
         color: Colors.white,
-        shape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Container(
-          width: widget.isMedium == true
-              ? MediaQuery.of(context).size.width / 2.5
-              : MediaQuery.of(context).size.width / 5,
-          height: widget.isMedium == true
-              ? MediaQuery.of(context).size.width / 4.3
-              : MediaQuery.of(context).size.width / 8,
-          padding: widget.isMedium == true
-              ? EdgeInsets.only(
-            left: MediaQuery.of(context).size.width / 55,
-          )
-              : EdgeInsets.only(
-            left: MediaQuery.of(context).size.width / 90,
-          ),
+          width: 250,
+          height: 150,
+          padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
           //padding 안쪽 여백
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 130,
-                    bottom: MediaQuery.of(context).size.height / 160),
-                child: Image.asset(
-                  widget.imagepath,
-                  fit: BoxFit.cover,
-                  width: widget.isMedium == true
-                      ? MediaQuery.of(context).size.width / 18
-                      : MediaQuery.of(context).size.width / 28,
-                  height: widget.isMedium == true
-                      ? MediaQuery.of(context).size.width / 18
-                      : MediaQuery.of(context).size.width / 28,
-                  color: widget.iconColor,
-                ),
+                padding: const EdgeInsets.only(top: 10),
+                child: RichText(
+                    textAlign: TextAlign.start,
+                    text: TextSpan(
+                        text: widget.title_1 + '\n',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.black),
+                        children: [TextSpan(text: widget.title_2)])),
               ),
-              LargeText(
-                text: widget.title_1,
-                weight: FontWeight.bold,
-                size: widget.isMedium == true
-                    ? MediaQuery.of(context).size.width / 35
-                    : MediaQuery.of(context).size.width / 70,
+              Spacer(),
+              Padding(
+                padding: widget.isCalculator == true
+                    ? EdgeInsets.fromLTRB(0, 5, 5, 0)
+                    : EdgeInsets.only(right: 5),
+                child: Image.asset(widget.imagepath,
+                    fit: BoxFit.fitWidth,
+                    width: widget.isCalculator == true ? 50 : 65),
               ),
-              LargeText(
-                text: widget.title_2,
-                weight: FontWeight.bold,
-                size: widget.isMedium == true
-                    ? MediaQuery.of(context).size.width / 35
-                    : MediaQuery.of(context).size.width / 70,
-              )
             ],
           ),
         ),

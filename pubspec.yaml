@@ -34,6 +34,7 @@ dependencies:
   http_client_helper: ^2.0.3
   url_launcher: ^6.1.5
   webview_flutter: ^3.0.4  # android ios
+  desktop_webview_window: ^0.1.6
   flutter:
     sdk: flutter
 
@@ -75,7 +76,12 @@ flutter:
     - assets/images/new_logo2.jpg
     - assets/images/tax_consulting_illustration.jpg
     - assets/capgain/firstFilter.CSV
+    - assets/images/homepage_image.png
+    - assets/images/homepage_image2.png
+    - assets/images/consultant_line.png
     - assets/images/
+    - assets/images/logo_color_col.png
+    - assets/images/logo_color_row.png
     - assets/images/psychology.png
     - assets/images/calculate.png
     - assets/capgain/AcquisitionDate.CSV
