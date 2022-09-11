@@ -1,6 +1,8 @@
 <component name="libraryTable">
   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
-    <CLASSES />
+    <CLASSES>
+      <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_email_sender-5.1.0" />
+    </CLASSES>
     <JAVADOC />
     <SOURCES />
   </library>
