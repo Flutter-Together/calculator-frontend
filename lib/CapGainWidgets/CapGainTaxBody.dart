@@ -15,7 +15,8 @@ import 'package:flutter/services.dart' show rootBundle;
 class CapGainBody extends StatefulWidget {
   final List<List<dynamic>> res;
   final List<List<dynamic>> originCSV;
-  const CapGainBody({Key? key, required this.res, required this.originCSV}) : super(key: key);
+  final String? transferDate;
+  const CapGainBody({Key? key, required this.res, required this.originCSV, this.transferDate}) : super(key: key);
 
   @override
   State<CapGainBody> createState() => CapGainBodyState();
@@ -69,6 +70,7 @@ class CapGainBodyState extends State<CapGainBody> {
   final TextEditingController _rentalHouseRegistrationDateTC = TextEditingController();
   final TextEditingController _payedMoneyTC = TextEditingController();
   final TextEditingController _getMoneyTC = TextEditingController();
+  final TextEditingController _rentalPriceTC = TextEditingController();
 
   List acquisitionETCTCList = List.generate(5, (index) => TextEditingController());
 
@@ -91,6 +93,7 @@ class CapGainBodyState extends State<CapGainBody> {
     'HavingHome':null,
     'HavingHome_RentalHouse':null,
     'PriorInheritanceHouse':null,
+    'SameHouseHold':null,
     'reduceTaxHouseChecklist':List.generate(10, (index) => null)
   };
 
@@ -217,7 +220,7 @@ class CapGainBodyState extends State<CapGainBody> {
                             onChanged: (value) {
                               setState(() {
                                 _dropDownMenuForTypeOfTransfer = value as String;
-                                _stage = 3;
+                                _stage = 4;
                               });
                             },
                             icon: const Icon(
@@ -265,53 +268,6 @@ class CapGainBodyState extends State<CapGainBody> {
             ),
           ],
         ),//양도시 종류
-        Row(
-          children: [
-            _smallTitle('양도예정일'),
-            _expectedTransferDate(_transferDateTC, '20220725',((){
-              if(_stage >=3 && _donthaveTransferDate == false){return true;} else {return false;}})()),
-            SizedBox(
-              width: 140,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Transform.scale(
-                    scale: 1.1,
-                    child: Checkbox(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(35),
-                      ),
-                      side: BorderSide(width: 1, color: ((){
-                        if(_stage >= 3){
-                          return Color(mainColor);
-                        }else {return Colors.black12;}
-                      })()),
-                      checkColor: Colors.white,
-                      activeColor: Color(mainColor),
-                      value: _donthaveTransferDate,
-                      onChanged: (bool? value){
-                        if(_stage<3){
-                        }else {
-                          setState(() {
-                            _donthaveTransferDate = value!;
-                            _stage = 4;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 1,
-                  ),
-                  const Text(
-                    '미정',
-                    style: TextStyle(fontSize: 17),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),//양도예정일
         Row(
           children: [
             _smallTitle('취득 원인'),
@@ -399,7 +355,6 @@ class CapGainBodyState extends State<CapGainBody> {
             ),
           ],
         ),//취득원인
-        _priorInheritanceHouse(),
         Row(
           children: [
             _smallTitle('취득시 종류'),
@@ -487,7 +442,7 @@ class CapGainBodyState extends State<CapGainBody> {
             )
           ],
         ),//취득시 종류
-        AcquisitionDateETC(),//조건에 맞는 추가 선택란 1
+        AcquisitionDateETC(),//조건에 맞는 추가 선택란 1(취득일등)
         Row(
           children: [
             _smallTitle('취득후 거주기간'),
@@ -575,7 +530,8 @@ class CapGainBodyState extends State<CapGainBody> {
         Row(
           children: [
             _smallTitle('취득가액 및 필요경비'),
-            _acquisitionPrice(_acquisitionPriceTC, '10000000',_stage >= 8)
+            _acquisitionPrice(_acquisitionPriceTC, '10000000',_stage >= 8),
+            _toolTip('취득가액과 필요경비 합산액을 입력해주세요.\n필요경비 : 설비비, 계량비, 자본적지출액, 양도비(취득세, 법무사 수수료등)')
           ],
         ),//취득가액 및 필요경비
         Row(
@@ -654,20 +610,37 @@ class CapGainBodyState extends State<CapGainBody> {
                   ),
                 )
             ),
+            _toolTip('공동명의는 50%로 자동계산 됩니다.')
           ],
         ),
         preReconstructionHouse(),
+        _priorInheritanceHouse(),
         residentialOfficetel(),
       ],
     );
   }
   Widget _priorInheritanceHouse(){
     CustomDropDown priorDropdown = CustomDropDown(items: ['O','X'],selected: selectedDropDownTable['PriorInheritanceHouse'],widgetName: 'PriorInheritanceHouse',activated: _dropDownMenuForReasonOfAquistition == '상속');
+    CustomDropDown sameHouseHold = CustomDropDown(items: ['O','X'],selected: selectedDropDownTable['SameHouseHold'],widgetName: 'SameHouseHold',activated: _dropDownMenuForReasonOfAquistition == '상속');
     if(_dropDownMenuForReasonOfAquistition == '상속'){
-      return Row(
+      return ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         children: [
-          _smallTitle('선순위 상속주택'),
-          priorDropdown
+          Row(
+            children: [
+              _smallTitle('선순위 상속주택'),
+              priorDropdown,
+              _toolTip('피상속인의 주택이 1주택이라면 o를 입력해주세요\n피상속인이 2주택 이상을 상속하는 경우 피상속인 기준으로 아래의 요건순서에 따라\n선순위에 해당하는 주택인지 확인해주세요\n① 피상속인이 소유한 기간이 가장 긴 1주택\n② 피상속인이 거주한 기간이 가장 긴 1주택\n③ 피상속인이 상속개시 당시 거주한 1주택\n④ 기준시가가 가장 높은 1주택(기준시가가 같은 경우에는 상속인이 선택하는 1주택)')
+            ],
+          ),
+          Row(
+            children: [
+              _smallTitle('상속시 동일세대원 여부'),
+              sameHouseHold,
+              _toolTip('상속 당시 피상속인과 주택을 소유한 상속인과 동일세대원인지 여부')
+            ],
+          ),
         ],
       );
     }
@@ -1037,6 +1010,18 @@ class CapGainBodyState extends State<CapGainBody> {
     }
   }
 
+  Widget rentalPrice(){
+    if(_dropDownMenuForTypeOfTransfer == '분양권(2021년 이전 취득)' || _dropDownMenuForTypeOfTransfer == '분양권(2022년 이후 취득)'){
+      return Row(
+        children: [
+          _smallTitle('분양가액'),
+          _textField2(_rentalPriceTC, '',true)
+        ],
+      );
+    }
+    else {return Container();}
+  }
+
   Widget isSeoul(){
     if(_tempAddr.pnu != null && (_tempAddr.pnu!.substring(0,2) == '11' || _tempAddr.pnu!.substring(0,2) == '28' || _tempAddr.pnu!.substring(0,2) == '41')){
       return Text('O',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),);
@@ -1044,9 +1029,9 @@ class CapGainBodyState extends State<CapGainBody> {
   }
 
   Widget officialPriceWidget(){
-    if(_tempAddr.pnu != null && _transferDateTC.text.length > 7){
+    if(_tempAddr.pnu != null && widget.transferDate != null && widget.transferDate!.length > 7){
       return FutureBuilder(
-          future: fetchOfficialPrice(_tempAddr.pnu!,  _transferDateTC.text),
+          future: fetchOfficialPrice(_tempAddr.pnu!,  widget.transferDate!),
           builder: (BuildContext context, AsyncSnapshot snapshot){
 
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1219,13 +1204,15 @@ class CapGainBodyState extends State<CapGainBody> {
           Row(
             children: [
               _smallTitle('납부한 분담금'),
-              _textField2(_payedMoneyTC, '17000000', true)
+              _textField2(_payedMoneyTC, '17000000', true),
+              _toolTip('납부한 분담금과 지급받은 청산금 중 하나만 입력해 주세요.')
             ],
           ),
           Row(
             children: [
               _smallTitle('지원받은 청산금'),
-              _textField2(_getMoneyTC, '17000000', true)
+              _textField2(_getMoneyTC, '17000000', true),
+              _toolTip('납부한 분담금과 지급받은 청산금 중 하나만 입력해 주세요.')
             ],
           ),
         ],
@@ -1299,12 +1286,13 @@ class CapGainBodyState extends State<CapGainBody> {
           )
         ],
       );
-    }
+    }//계약일 당시 무주택 여부 body
     Widget whetherHavingHome(){
       if(buyDate != null && buyDate!.length > 7 && contractDate != null && contractDate!.length > 7 && _tempAddr.pnu != null){
         return FutureBuilder(
             future: Future.wait([isConflict(_tempAddr.pnu!, buyDate!),isConflict(_tempAddr.pnu!, contractDate!)]),
             builder: (BuildContext context, AsyncSnapshot snapshot){
+              print('call 조정지역 api');
               if (snapshot.hasData == false) {
                 return const Center(child:  CircularProgressIndicator(),);
               }
@@ -1329,7 +1317,7 @@ class CapGainBodyState extends State<CapGainBody> {
       }else{
         return Container();
       }
-    }
+    }//계약일 당시 무주택 여부
 
     Widget kindOfConcession(){
       return Row(
@@ -1394,7 +1382,7 @@ class CapGainBodyState extends State<CapGainBody> {
           )
         ],
       );
-    }
+    }//분양권 종류 선택(승계분양권 or 최초당첨분양권)
 
     Widget Cession(List<List<dynamic>> _csv){
       if(_dropDownMenuForKindOfConcession == null){
@@ -1402,6 +1390,7 @@ class CapGainBodyState extends State<CapGainBody> {
       }
       else {
         List<List<dynamic>> _filtered = _csv.where((element) => element[6] == _dropDownMenuForKindOfConcession!).toList();
+
         return ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -1424,7 +1413,7 @@ class CapGainBodyState extends State<CapGainBody> {
             }
         );
       }
-    }
+    }//승계분양권 최초당첨분양권
 
     if(_stage<6){
       return Container();
@@ -1457,17 +1446,20 @@ class CapGainBodyState extends State<CapGainBody> {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: csv.length,
           itemBuilder: (context, index){
-            if(csv[index][7] == '취득일'){
+            print((csv[index][7].toString()));
+            if(csv[index][7].toString() == '취득일'){
               buyDate = acquisitionETCTCList[index].text;
               print('취득일은 : $buyDate');
             }
-            if(csv[index][7] == '계약일'){
+            if(csv[index][7].toString() == '계약일'){
               contractDate = acquisitionETCTCList[index].text;
               print('계약일은 : $contractDate');
             }
-            if(csv[index][7]=='취득일&계약일'){
+            if(csv[index][7].toString() =='취득일&계약일'){
               buyDate = acquisitionETCTCList[index].text;
               contractDate = acquisitionETCTCList[index].text;
+              print('취득일은 : $buyDate');
+              print('계약일은 : $contractDate');
             }
             if(csv[index][7].length > 1 && csv[index][7]!='취득일' && csv[index][7]!='계약일'&& csv[index][7]!='취득일&계약일'){
               if(acquisitionETCTCList[0].text.length > 1 && acquisitionETCTCList[1].text.length > 1){
@@ -1483,7 +1475,7 @@ class CapGainBodyState extends State<CapGainBody> {
                 }
               }
             }
-            if(csv[index][4] == '"계약일 당시 무주택 여부 (o,x)"'){
+            if(csv[index][4] == '계약일 당시 무주택 여부'){
               return whetherHavingHome();
             }else if(csv[index][5] == 1){
               DateTime inheri;
@@ -1496,7 +1488,7 @@ class CapGainBodyState extends State<CapGainBody> {
               if(startInheritance!.length > 7){
                 inheri = DateTime.parse(startInheritance!);
               }else {inheri = DateTime.parse('21001231');}
-              DateTime transfer = DateTime.parse(_transferDateTC.text);
+              DateTime transfer = DateTime.parse(widget.transferDate!);
 
               int diff = int.parse(inheri.difference(transfer).inDays.toString());
               if(diff <= 731){
@@ -1607,39 +1599,6 @@ class CapGainBodyState extends State<CapGainBody> {
         ));
   }
 
-  Widget _expectedTransferDate(TextEditingController tc, String hintText,bool able) {
-    return Expanded(
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-          child: TextField(
-            onChanged: (text){
-              if(tc.text.length == 8){
-                setState(() {
-                  _stage = 4;
-                });
-              }
-              else {
-                setState(() {
-                  _stage = 3;
-                });
-              }
-            },
-            enabled: able,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            controller: tc,
-            cursorColor: Colors.black,
-            textInputAction: TextInputAction.search,
-            style: const TextStyle(fontSize: 17),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(color: Colors.black38),
-              focusedBorder: _outlineInputBorder(),
-              enabledBorder: _outlineInputBorder(),
-              border: _outlineInputBorder(),
-            ),
-          ),
-        ));
-  }
 
   Widget _textField2(TextEditingController tc, String hintText,bool able) {
     return Expanded(
@@ -1688,7 +1647,7 @@ class CapGainBodyState extends State<CapGainBody> {
     }
     else {
       return Container(
-        width: width!,
+        width: width,
         margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Text(
           txt,
@@ -2074,6 +2033,17 @@ class CapGainBodyState extends State<CapGainBody> {
     } else {
       throw Exception("Fail to fetch address data");
     }
+  }
+
+  Widget _toolTip(String txt){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+      child: Tooltip(
+        child:Icon(Icons.build_circle, color: Color(mainColor),size: 30),
+        message: txt,
+        textStyle: TextStyle(fontSize: 15,color: Colors.white),
+      ),
+    );
   }
 }
 

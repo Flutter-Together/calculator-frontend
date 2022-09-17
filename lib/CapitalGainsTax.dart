@@ -2,16 +2,10 @@
 import 'dart:convert';
 
 import 'package:calculator_frontend/CapGainWidgets/CapGainTaxBody.dart';
-import 'package:calculator_frontend/CapgainResult.dart';
-import 'package:calculator_frontend/widgets/HomePage/Search%20Address%20Api.dart';
-import 'package:calculator_frontend/widgets/Address.dart';
 import 'package:calculator_frontend/widgets/LargeText.dart';
-import 'package:csv/csv.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:async/async.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
 
 class CapitalGainsTaxPage extends StatefulWidget {
@@ -48,6 +42,9 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   List<String> _houseNumList = ['1주택','2주택','3주택'];
   List<bool> _houseNumBoolList = [true, false, false];
 
+  final TextEditingController _transferDateTC = TextEditingController();
+  bool _donthaveTransferDate = false;
+
 
   List acquisitionETCTCList = List.generate(5, (index) => TextEditingController());
 
@@ -71,11 +68,21 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
 
     List<String> _l2 = _rawData2.split('\n');
     for(int i = 0 ; i < _l2.length ;i++){
+      List<dynamic> _list = _l2[i].split(',');
+
       listData2.add(_l2[i].split(','));
     }
 
     listData1.removeLast();
     listData2.removeLast();
+
+    for(int i = 0 ; i <listData2.length ; i++){
+      if(listData2[i][7] != null && listData2[i][7].length > 0){
+        listData2[i][7] = listData2[i][7].toString().substring(0,listData2[i][7].length - 1);
+      }
+    }
+
+
 
 
     List<List<dynamic>> res = listData1.where((element) => (element[3] == '1')).toList();
@@ -83,6 +90,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
     firstFilterCSV = res;
     currentCSV = res;
     originCSV = listData2;
+
 
     return res;
   });
@@ -138,6 +146,51 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                             ),
                           ],
                         ),//주택수
+                        Row(
+                          children: [
+                            _smallTitle('양도예정일'),
+                            _expectedTransferDate(_transferDateTC, '20220725',((){
+                              if(_donthaveTransferDate == false){return true;} else {return false;}})()),
+                            SizedBox(
+                              width: 140,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Transform.scale(
+                                    scale: 1.1,
+                                    child: Checkbox(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(35),
+                                      ),
+                                      side: BorderSide(width: 1, color: Color(mainColor)),
+                                      checkColor: Colors.white,
+                                      activeColor: Color(mainColor),
+                                      value: _donthaveTransferDate,
+                                      onChanged: (bool? value){
+                                        setState(() {
+                                          _donthaveTransferDate = value!;
+                                          _stage = 4;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 1,
+                                  ),
+                                  const Text(
+                                    '미정',
+                                    style: TextStyle(fontSize: 17),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Tooltip(
+                              child:Icon(Icons.build_circle, color: Color(mainColor),size: 30),
+                              message: '연월일을 연속적으로 입력해주세요 (YYYYMMDD)',
+                              textStyle: TextStyle(fontSize: 15,color: Colors.white),
+                            )
+                          ],
+                        ),//양도예정일
                         body(res),
                         Container(
                           height: 50,
@@ -166,6 +219,47 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
         )
     );
   }
+
+  Widget _expectedTransferDate(TextEditingController tc, String hintText,bool able) {
+    return Expanded(
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: TextField(
+            onChanged: (text){
+              if(tc.text.length == 8){
+                setState(() {
+                  _stage = 4;
+                });
+              }
+              else {
+                setState(() {
+                  _stage = 3;
+                });
+              }
+            },
+            enabled: able,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            controller: tc,
+            cursorColor: Colors.black,
+            textInputAction: TextInputAction.search,
+            style: const TextStyle(fontSize: 17),
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: const TextStyle(color: Colors.black38),
+              focusedBorder: _outlineInputBorder(),
+              enabledBorder: _outlineInputBorder(),
+              border: _outlineInputBorder(),
+            ),
+          ),
+        ));
+  }
+
+  OutlineInputBorder _outlineInputBorder() {
+    return OutlineInputBorder(
+        borderSide: BorderSide(color: Color(mainColor)),
+        borderRadius: const BorderRadius.all(Radius.circular(10)));
+  }
+
   Widget body(List<List<dynamic>> res){
     if(houseNum == null || houseNum == '1주택'){
       body1 = CapGainBody(res: res,originCSV: originCSV);
