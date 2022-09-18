@@ -68,15 +68,22 @@ class _NavigationBoxState extends State<NavigationBox> {
       child: Card(
         elevation: 1,
         shadowColor: Colors.grey,
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
         child: Container(
           width: 250,
           height: 150,
           padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
           //padding 안쪽 여백
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blueAccent.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 7,
+              ),
+            ],
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
