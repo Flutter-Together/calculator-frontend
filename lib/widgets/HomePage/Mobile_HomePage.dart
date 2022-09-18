@@ -274,7 +274,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                           textAlign: TextAlign.center,
                           text: TextSpan(
                               style: TextStyle(
-                                  fontSize: 90,
+                                  fontSize: 70,
                                   fontWeight: FontWeight.w900,
                                   color: Colors.blueAccent,
                                   shadows: [
@@ -289,7 +289,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                 TextSpan(
                                     text: '\nAI가 판단하는 세금 계산기',
                                     style: TextStyle(
-                                        fontSize: 30,
+                                        fontSize: 25,
                                         color: Colors.black,
                                         shadows: [
                                           Shadow(color: Colors.white)
@@ -313,7 +313,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                   fontSize: 18),
                               children: [
                                 TextSpan(
-                                    text: '라는 질문으로 이 프로그램을 기획하게 되었습니다.',
+                                    text: '라는 질문으로 이 프로그램을\n기획하게 되었습니다.',
                                     style: TextStyle(color: Colors.black)),
                               ])),
                       const SizedBox(
@@ -331,14 +331,14 @@ class _MobileHomepageState extends State<MobileHomepage> {
                       RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(
-                            text: '수많은 세금관련 규정을 정리하고 도식화 하고 \n'
+                            text: '수많은 세금관련 규정을 정리하고도식화 하고 \n'
                                 '프로그래밍화 하는 과정을 거쳐\n'
                                 '프로그램을 완성하게 되었습니다.\n\n'
                                 '앞으로도 개정되는 법령과 예규, 판례를\n'
                                 '주기적으로 업데이트하여\n'
-                                '세금 관련 판단을 하는데 도움이 되도록 하겠습니다.',
+                                '세금 관련 판단을 하는데\n도움이 되도록 하겠습니다.',
                             style: TextStyle(
-                                fontWeight: FontWeight.normal, fontSize: 18),
+                                fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
                           )),
                       const SizedBox(
                         height: 30,
@@ -380,7 +380,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                         child: Text('김동현 세무사 (기술고문)',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 32,
+                              fontSize: 27,
                               fontWeight: FontWeight.bold,
                             )),
                       ),
@@ -397,7 +397,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                               '- (前) 우리은행 TAX컨설팅팀 (상속, 증여, 양도 컨설팅 전문)\n'
                               '- (現) AI TAX CONSULTING 대표 세무사',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 15,
                                 fontWeight: FontWeight.bold,
                               )),
                           TextButton(
@@ -406,7 +406,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                               },
                               child: Text('- 컨설팅 문의 : TECH@TAXAI.CO.KR',
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   )))
                         ],
