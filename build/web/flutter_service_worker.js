@@ -3,8 +3,8 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "e218142eb6d0454a767f1553947250d9",
-"assets/assets/capgain/AcquisitionDate.CSV": "f3f7c849d1ddfde5642bcd724dce42d4",
+  "assets/AssetManifest.json": "eb5632c554dd4d54f6797809eb9e1752",
+"assets/assets/capgain/AcquisitionDate.CSV": "86fb497c5ef4b0942752278c34cc137d",
 "assets/assets/capgain/firstFilter.CSV": "1fd3207e3f2c78cbc53d70183546b295",
 "assets/assets/images/application_number.png": "43225d9ce2728f6f77da82bb8cf86e82",
 "assets/assets/images/calculate.png": "42d165cbec3b5602318c9b0d4302e8b9",
@@ -21,12 +21,13 @@ const RESOURCES = {
 "assets/assets/images/white_logo_col.png": "677d4b48ebd90d6a960b8326983acdb8",
 "assets/assets/txt/HoldingTax_description.txt": "a557d2134be63958310e25ffec3f07ac",
 "assets/assets/txt/HoldingTax_precaution.txt": "104ba2321b5ffd02f94066bdcd733d25",
-"assets/FontManifest.json": "5b200908180cac1c9647499dfcf0b647",
+"assets/FontManifest.json": "9faf54ed3b766ac05b2fa0fbf59b372d",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
-"assets/fonts/ONE%2520Mobile%2520Bold.ttf": "79badd71ce490387bb296d5928e298cd",
-"assets/fonts/ONE%2520Mobile%2520Light.ttf": "1bf073dbb0ce25a25ad7897d1607428d",
-"assets/fonts/ONE%2520Mobile%2520Regular.ttf": "bf1d72cb0322e346939a3d36aa234a3d",
-"assets/fonts/ONE%2520Mobile%2520Title.ttf": "3f64ec963e791bbf39ecd47a4060043a",
+"assets/fonts/SpoqaHanSansNeo-Bold.ttf": "4db68f99b1aa69d92a0366c31c384383",
+"assets/fonts/SpoqaHanSansNeo-Light.ttf": "10959d83c4a36caa81a804df6d9c0400",
+"assets/fonts/SpoqaHanSansNeo-Medium.ttf": "1c177bbda2f670a03abce8f15bbad484",
+"assets/fonts/SpoqaHanSansNeo-Regular.ttf": "2118fb0c3ef472cc03c7fd589c59ae05",
+"assets/fonts/SpoqaHanSansNeo-Thin.ttf": "4cb52f730d1f6281fac53066012c509c",
 "assets/NOTICES": "2627c15e6ad7a92425177bd1da29037b",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
 "assets/shaders/ink_sparkle.frag": "6333b551ea27fd9d8e1271e92def26a9",
@@ -40,9 +41,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "6993fcc8ece279604df65d375c74d342",
-"/": "6993fcc8ece279604df65d375c74d342",
-"main.dart.js": "7e0d00d07a694a11def14a4a52a27a57",
+"index.html": "0601e1a4d4fcb7222207b7391a7957ce",
+"/": "0601e1a4d4fcb7222207b7391a7957ce",
+"main.dart.js": "3825ea2a788dcce1f53d563e71925657",
 "manifest.json": "95661a1970efe399ed9952fc5ad2f7e3",
 "version.json": "12385392cb97fc7e83d60845948177b1"
 };

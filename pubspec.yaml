@@ -102,16 +102,18 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: One_Mobile
+    - family: SpoqaHanSansNeo
       fonts:
-        - asset: fonts/ONE Mobile Bold.ttf
-          weight: 700  #w700 bold
-        - asset: fonts/ONE Mobile Light.ttf
+        - asset: fonts/SpoqaHanSansNeo-Bold.ttf
+          weight: 700 #w700 bold
+        - asset: fonts/SpoqaHanSansNeo-Medium.ttf
+        - weight: 500
+        - asset: fonts/SpoqaHanSansNeo-Regular.ttf
+          weight: 400
+        - asset: fonts/SpoqaHanSansNeo-Light.ttf
           weight: 300  #w300 light
-        - asset: fonts/ONE Mobile Regular.ttf
-          weight: 400 #w300 normal
-        - asset: fonts/ONE Mobile Title.ttf
-          weight: 900
+        - asset: fonts/SpoqaHanSansNeo-Thin.ttf
+          weight: 200
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       color: Colors.transparent,
       theme: ThemeData(
         primaryColor: Colors.transparent,
-        fontFamily: 'One_Mobile',
+        fontFamily: 'SpoqaHanSansNeo',
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(

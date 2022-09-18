@@ -288,7 +288,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                       Text('AI가 판단하는 세금 계산기',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 50,
+                              fontSize: 47,
                               color: Colors.black)),
                       const SizedBox(
                         height: 50,
