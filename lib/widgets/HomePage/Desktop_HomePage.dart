@@ -1,7 +1,13 @@
+import 'package:calculator_frontend/main.dart';
+import 'package:calculator_frontend/widgets/HomePage/Mobile_HomePage.dart';
+import 'package:calculator_frontend/widgets/HomePage/Tablet_HomePage.dart';
 import 'package:calculator_frontend/widgets/LargeText.dart';
 import 'package:calculator_frontend/widgets/NavigationBox.dart';
 import 'package:flutter/material.dart';
+
+import 'dart:async';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 
 class DesktopHomepage extends StatefulWidget {
   const DesktopHomepage({Key? key}) : super(key: key);
@@ -14,17 +20,6 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0;
 
-  _launchUrl() async {
-    final Uri login_url = Uri.parse(
-        'https://taxai.auth.ap-northeast-2.amazoncognito.com/login?client_id=165n75nfnnvlphe5vlom6lsu9q&response_type=token&scope=aws.cognito.signin.user.admin&redirect_uri=https://taxai.co.kr/callback');
-    // 해당 url이 실행가능한지 확인
-    if (!await canLaunchUrl(login_url)) {
-      throw 'Could not launch $login_url';
-    } else {
-      launchUrl(login_url);
-    }
-  }
-
   _scrollListener() {
     setState(() {
       _scrollPosition = _scrollController.position.pixels;
@@ -35,6 +30,61 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
   void initState() {
     _scrollController.addListener(_scrollListener);
     super.initState();
+    get_token();
+  }
+
+  late String? token;
+
+  Future launchLoginUrl() async {
+    final Uri login_url = Uri.parse(
+        'https://taxai.auth.ap-northeast-2.amazoncognito.com/login?client_id=165n75nfnnvlphe5vlom6lsu9q&response_type=token&scope=aws.cognito.signin.user.admin&redirect_uri=https://taxai.co.kr/callback');
+    // 해당 url이 실행가능한지 확인
+    if (!await canLaunchUrl(login_url)) {
+      throw 'Could not launch $login_url';
+    } else {
+      // webOnlyWindowName : '_blank' => URL is loaded into a new window, or tab. This is the default
+      // webOnlyWindowName: '_self' => URL replaces the current page
+      // webOnlyWindowName: '_parent' => URL is loaded into the parent frame
+      // _top	URL replaces any framesets that may be loaded
+      // name	The name of the window (does not specify the title of the window)
+      launchUrl(login_url,
+          mode: LaunchMode.platformDefault, webOnlyWindowName: '_self');
+      get_token();
+    }
+
+    // https://api.flutter.dev/flutter/dart-core/Uri-class.html
+    // final uri = Uri.parse(
+    //     'https://dart.dev/guides/libraries/library-tour#utility-classes');
+    // print(uri); // https://dart.dev
+    // print(uri.isScheme('https')); // true
+    // print(uri.origin); // https://dart.dev
+    // print(uri.host); // dart.dev
+    // print(uri.authority); // dart.dev
+    // print(uri.port); // 443
+    // print(uri.path); // guides/libraries/library-tour
+    // print(uri.pathSegments); // [guides, libraries, library-tour]
+    // print(uri.fragment); // utility-classes
+    // print(uri.hasQuery); // false
+    // print(uri.data); // null
+  }
+
+  void get_token() {
+    return setState(() {
+      var current_url = Uri.base.toString();
+      print(current_url);
+      if (current_url
+          .startsWith('https://taxai.co.kr/callback#access_token=')) {
+        // .* 모든 문자(\n 제외) 반복
+        RegExp regExp = RegExp("#access_token=(.*)");
+        token = regExp.firstMatch(current_url)?.group(1).toString();
+        MaterialPageRoute(
+            builder: (context) => MyHomePage(
+                  TabletHomepage: TabletHomepage(),
+                  DesktopHomepage: DesktopHomepage(),
+                  MobileHomepage: MobileHomepage(),
+                ));
+      }
+    });
   }
 
   @override
@@ -48,9 +98,12 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
       appBar: PreferredSize(
         preferredSize: Size(widgetSize.width, 200),
         child: Container(
-            color: _scrollPosition == 0
-                ? Colors.white
-                : Colors.transparent,
+            decoration: BoxDecoration(
+              color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
+              border: Border(
+                  bottom: BorderSide(
+                      width: .3, color: Colors.grey)),
+            ),
             padding: EdgeInsets.all(10),
             child: Padding(
               padding: EdgeInsets.only(
@@ -63,11 +116,34 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
               ),
               child: Row(
                 children: [
-                  Image.asset(
-                    'assets/images/logo_color_row.png',
-                    height: 30,
-                    width: 150,
-                    fit: BoxFit.fill,
+                  Row(
+                    children: [
+                      _scrollPosition == 0
+                          ? Image.asset(
+                              'assets/images/logo_color_col.png',
+                              height: 50,
+                              width: 70,
+                              fit: BoxFit.contain,
+                            )
+                          : Image.asset(
+                              'assets/images/white_logo_col.png',
+                              height: 50,
+                              width: 70,
+                              fit: BoxFit.contain,
+                            ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'TAXAI',
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: _scrollPosition == 0
+                                ? Colors.black
+                                : Colors.white,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
                   ),
                   Spacer(),
                   Row(
@@ -79,10 +155,12 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                               primary: Colors.grey,
                               padding: EdgeInsets.all(20)),
                           child: Text(
-                            'TAXIAI 소개',
+                            'TAXAI 소개',
                             style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: _scrollPosition == 0
+                                    ? Colors.black
+                                    : Colors.white,
                                 fontWeight: FontWeight.w700),
                           )),
                       Padding(
@@ -95,7 +173,9 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                             child: Text('공지사항',
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.black,
+                                    color: _scrollPosition == 0
+                                        ? Colors.black
+                                        : Colors.white,
                                     fontWeight: FontWeight.w700))),
                       ),
                       Padding(
@@ -110,11 +190,15 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                             child: Text('기술 문의',
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.black,
+                                    color: _scrollPosition == 0
+                                        ? Colors.black
+                                        : Colors.white,
                                     fontWeight: FontWeight.w700))),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 15, right: 20),
+                        padding: EdgeInsets.only(
+                          left: 15,
+                        ),
                         child: TextButton(
                             onPressed: () {
                               sendPartnerEmail();
@@ -125,15 +209,37 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                             child: Text('제휴 문의',
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.black,
+                                    color: _scrollPosition == 0
+                                        ? Colors.black
+                                        : Colors.white,
+                                    fontWeight: FontWeight.w700))),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 15, right: 20),
+                        child: TextButton(
+                            onPressed: () {
+                              showPatentDialog();
+                            },
+                            style: OutlinedButton.styleFrom(
+                                primary: Colors.grey,
+                                padding: EdgeInsets.all(20)),
+                            child: Text('특허 정보',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: _scrollPosition == 0
+                                        ? Colors.black
+                                        : Colors.white,
                                     fontWeight: FontWeight.w700))),
                       ),
                       OutlinedButton(
-                          onPressed: _launchUrl,
+                          onPressed: () {
+                            launchLoginUrl();
+                          },
                           style: OutlinedButton.styleFrom(
-                              primary: Colors.indigo,
-                              backgroundColor: Colors.black54,
-                              padding: EdgeInsets.all(20)),
+                              backgroundColor: _scrollPosition == 0
+                                  ? Colors.blueAccent
+                                  : Colors.black38,
+                              padding: EdgeInsets.all(15)),
                           child: Text('로그인',
                               style: TextStyle(
                                   fontSize: 16,
@@ -146,199 +252,210 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
             )),
       ),
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            colors: [Color(0xffe8e8e8), Color(0xff448aff)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )),
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: (widgetSize.width > 1400)
-                          ? widgetSize.width / 20
-                          : widgetSize.width / 100,
-                      right: (widgetSize.width > 1400)
-                          ? widgetSize.width / 20
-                          : widgetSize.width / 100,
-                    ),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 140,
-                        ),
-                        Text(
-                          'T A X A I',
-                          style: TextStyle(
-                              fontSize: 135,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.blueAccent,
-                          shadows: [
-                            Shadow(
-                              offset: Offset(5, 5),
-                              color: Colors.white.withOpacity(.7),
-                              blurRadius: 7
-                            )
-                          ]),
-                        ),
-                        SizedBox(
-                          height: 52,
-                          child: FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Text('혁신적인 양도소득세 계산기',
-                                  style: TextStyle(
-                                      fontSize: 35, color: Colors.black))),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Row(
-                          children: [
-                            Spacer(),
-                            RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                    text:
-                                        ' TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의  \n 수백 가지의 비과세 유형과 증과 주택수, 감면주택 등의  \n',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 22),
-                                    children: [
-                                      TextSpan(
-                                          text:
-                                              ' 세법 규정을 자동으로 판단해서 계산하는  \n 혁신적인 양도소득세 계산기',
-                                          style: TextStyle(
-                                            color: Colors.blueAccent,
-                                          )),
-                                      TextSpan(text: ' 입니다.  ')
-                                    ])),
-                            const Spacer(),
-                            Image.asset(
-                              'assets/images/homepage_image.png',
-                              height: 400,
-                              width: 600,
-                              fit: BoxFit.contain,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        AnimatedOpacity(
-                          duration: const Duration(microseconds: 20),
-                          opacity: _scrollPosition < 480 ? 0.5 : 1,
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/homepage_image2.png',
-                                height: 400,
-                                width: 500,
-                                fit: BoxFit.contain,
-                              ),
-                              Spacer(),
-                              RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                      text:
-                                          'TAXAI는 15년간 재산관련 세금컨설팅을 전문적으로 해온\n현직 세무사가 직접 설계한 프로그램으로서\n',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 22),
-                                      children: [
-                                        TextSpan(
-                                            text:
-                                                '최신 법령과 예규, 판례 등을 주기적으로 업데이트하여\n케이스별로 적용 가능한 수많은 절세 규정을 미리 검토',
-                                            style: TextStyle(
-                                              color: Colors.blueAccent,
-                                            )),
-                                        TextSpan(text: '할 수 있으며,\n'),
-                                        TextSpan(
-                                            text:
-                                                '조정대상지역 및 공동주택 가격 등을 자동 조회하는 기능을 갖추고 있어\n'),
-                                        TextSpan(
-                                            text:
-                                                '세금신고 관련 오류를 획기적으로 줄여줄 수 있습니다.',
-                                            style: TextStyle(
-                                              color: Colors.blueAccent,
-                                            ))
-                                      ])),
-                              Spacer()
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 100,
-                        ),
-                        Center(
-                          child: Text(
-                            'TAXAI는 추후 미래 세금을 컨설팅 하는 기능도 추가할 예정입니다.',
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 80,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Padding(
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                child: Padding(
                   padding: EdgeInsets.only(
-                      left: widgetSize.width / 15,
-                      right: widgetSize.width / 15,
-                      bottom: 60),
+                    left: (widgetSize.width > 1400)
+                        ? widgetSize.width / 20
+                        : widgetSize.width / 100,
+                    right: (widgetSize.width > 1400)
+                        ? widgetSize.width / 20
+                        : widgetSize.width / 100,
+                  ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      LargeText(
-                        text: 'AI 세금 계산',
-                        size: 35,
+                      const SizedBox(
+                        height: 140,
                       ),
-                      SizedBox(
-                        height: widgetSize.height / 25,
+                      Text(
+                        'T A X A I',
+                        style: TextStyle(
+                            fontSize: 135,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.blueAccent,
+                            shadows: [
+                              Shadow(
+                                  offset: Offset(5, 5),
+                                  color: Colors.blueAccent.withOpacity(.7),
+                                  blurRadius: 7)
+                            ]),
+                      ),
+                      Text('AI가 판단하는 세금 계산기',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 50,
+                              color: Colors.black)),
+                      const SizedBox(
+                        height: 50,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          NavigationBox(
-                              isCalculator: true,
-                              imagepath: 'assets/images/calculator_line.png',
-                              isMedium: false,
-                              pushNamed: '/capgain',
-                              title_1: '양도소득세',
-                              title_2: 'AI 판단 계산기'),
                           Spacer(),
-                          NavigationBox(
-                              isCalculator: true,
-                              imagepath: 'assets/images/calculator_line.png',
-                              isMedium: false,
-                              pushNamed: '/holding',
-                              title_1: '보유세(종부세, 재산세)',
-                              title_2: 'AI 판단 계산기'),
+                          RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  text: '세금 계산 시 고려사항은 왜 이렇게 복잡하고 어려울까?\n\n'
+                                      '전문가도 수많은 법령이나 예규 판례를 이해는 할 수 있지만\n'
+                                      '모두 기억하고 있을 순 없는데 프로그램은 기억하지 않을까?\n\n',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueAccent,
+                                      fontSize: 24),
+                                  children: [
+                                    TextSpan(
+                                        text: '라는 질문으로 이 프로그램을 기획하게 되었습니다.',
+                                        style: TextStyle(color: Colors.black)),
+                                  ])),
+                          const Spacer(),
+                          Image.asset(
+                            'assets/images/homepage_image.png',
+                            height: 400,
+                            fit: BoxFit.contain,
+                          ),
+                          Spacer()
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Row(
+                        children: [
                           Spacer(),
-                          Opacity(
-                              opacity: 0,
-                              child: NavigationBox(
-                                  isCalculator: true,
-                                  imagepath: '',
-                                  isMedium: false,
-                                  pushNamed: '',
-                                  title_1: '',
-                                  title_2: '')),
+                          Image.asset(
+                            'assets/images/homepage_image2.png',
+                            height: 400,
+                            fit: BoxFit.contain,
+                          ),
                           Spacer(),
-                          Opacity(
+                          RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                text: '수많은 세금관련 규정을 정리하고 도식화 하고 프로그래밍화\n'
+                                    '하는 과정을 거쳐 프로그램을 완성하게 되었습니다.\n\n'
+                                    '앞으로도 개정되는 법령과 예규, 판례를 주기적으로 업데이트하여\n'
+                                    '세금 관련 판단을 하는데 도움이 되도록 하겠습니다.',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 24),
+                              )),
+                          Spacer()
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 100,
+                      ),
+                      Center(
+                        child: Text(
+                          'TAXAI 는 미래 세금을 컨설팅을 지원하는 기능도 추가 할 예정입니다.',
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 80,
+                      ),
+                      Row(
+                        children: [
+                          Spacer(),
+                          Column(
+                            children: [
+                              Center(
+                                child: Text('김동현 세무사 (기술고문)',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  Text(
+                                      '- 세무사, USA EA\n'
+                                      '- (前) LH 토지보상(평택 고덕단지, 부산 명지 등) 세무 자문\n'
+                                      '- (前) 부산 수영세무서 국세 심사위원\n'
+                                      '- (前) 우리은행 TAX컨설팅팀 (상속, 증여, 양도 컨설팅 전문)\n'
+                                      '- (現) AI TAX CONSULTING 대표 세무사',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+                                        sendInquiryEmail();
+                                      },
+                                      child: Text('- 컨설팅 문의 : TECH@TAXAI.CO.KR',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          )))
+                                ],
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Container(
+                            height: 400,
+                            width: 600,
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Center(
+                              child: Text('이미지'),
+                            ),
+                          ),
+                          Spacer()
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: widgetSize.width / 15,
+                    right: widgetSize.width / 15,
+                    bottom: 60),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    LargeText(
+                      text: 'AI 세금 계산',
+                      size: 35,
+                    ),
+                    SizedBox(
+                      height: widgetSize.height / 25,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        NavigationBox(
+                            isCalculator: true,
+                            imagepath: 'assets/images/calculator_line.png',
+                            isMedium: false,
+                            pushNamed: '/capgain',
+                            title_1: '양도소득세',
+                            title_2: 'AI 판단 계산기'),
+                        Spacer(),
+                        NavigationBox(
+                            isCalculator: true,
+                            imagepath: 'assets/images/calculator_line.png',
+                            isMedium: false,
+                            pushNamed: '/holding',
+                            title_1: '보유세(종부세, 재산세)',
+                            title_2: 'AI 판단 계산기'),
+                        Spacer(),
+                        Opacity(
                             opacity: 0,
                             child: NavigationBox(
                                 isCalculator: true,
@@ -346,115 +463,124 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                                 isMedium: false,
                                 pushNamed: '',
                                 title_1: '',
-                                title_2: ''),
-                          ),
-                          Spacer()
-                        ],
-                      )
-                    ],
-                  ),
+                                title_2: '')),
+                        Spacer(),
+                        Opacity(
+                          opacity: 0,
+                          child: NavigationBox(
+                              isCalculator: true,
+                              imagepath: '',
+                              isMedium: false,
+                              pushNamed: '',
+                              title_1: '',
+                              title_2: ''),
+                        ),
+                        Spacer()
+                      ],
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: widgetSize.width / 15,
-                      right: widgetSize.width / 15,
-                      bottom: 60),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LargeText(
-                        text: 'TAXAI 컨설팅',
-                        size: 35,
-                      ),
-                      SizedBox(
-                        height: widgetSize.height / 25,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          NavigationBox(
-                              isCalculator: false,
-                              imagepath: 'assets/images/consultant_line.png',
-                              isMedium: false,
-                              pushNamed: '/',
-                              title_1: '양도소득세 AI',
-                              title_2: '컨설팅'),
-                          Spacer(),
-                          NavigationBox(
-                              isCalculator: false,
-                              imagepath: 'assets/images/consultant_line.png',
-                              isMedium: false,
-                              pushNamed: '/',
-                              title_1: '매도 관련',
-                              title_2: 'AI 컨설팅'),
-                          Spacer(),
-                          NavigationBox(
-                              isCalculator: false,
-                              imagepath: 'assets/images/consultant_line.png',
-                              isMedium: false,
-                              pushNamed: '/',
-                              title_1: '양도소득세 AI',
-                              title_2: '컨설팅'),
-                          Spacer(),
-                          NavigationBox(
-                              isCalculator: false,
-                              imagepath: 'assets/images/consultant_line.png',
-                              isMedium: false,
-                              pushNamed: '/',
-                              title_1: '매도 관련',
-                              title_2: 'AI 컨설팅'),
-                          Spacer()
-                        ],
-                      )
-                    ],
-                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: widgetSize.width / 15,
+                    right: widgetSize.width / 15,
+                    bottom: 60),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    LargeText(
+                      text: 'TAXAI 컨설팅',
+                      size: 35,
+                    ),
+                    SizedBox(
+                      height: widgetSize.height / 25,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        NavigationBox(
+                            isCalculator: false,
+                            imagepath: 'assets/images/consultant_line.png',
+                            isMedium: false,
+                            pushNamed: '/',
+                            title_1: '양도소득세 AI',
+                            title_2: '컨설팅'),
+                        Spacer(),
+                        NavigationBox(
+                            isCalculator: false,
+                            imagepath: 'assets/images/consultant_line.png',
+                            isMedium: false,
+                            pushNamed: '/',
+                            title_1: '매도 관련',
+                            title_2: 'AI 컨설팅'),
+                        Spacer(),
+                        NavigationBox(
+                            isCalculator: false,
+                            imagepath: 'assets/images/consultant_line.png',
+                            isMedium: false,
+                            pushNamed: '/',
+                            title_1: '양도소득세 AI',
+                            title_2: '컨설팅'),
+                        Spacer(),
+                        NavigationBox(
+                            isCalculator: false,
+                            imagepath: 'assets/images/consultant_line.png',
+                            isMedium: false,
+                            pushNamed: '/',
+                            title_1: '매도 관련',
+                            title_2: 'AI 컨설팅'),
+                        Spacer()
+                      ],
+                    )
+                  ],
                 ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.only(
-                      top: 60,
-                      left: (widgetSize.width > 1400)
-                          ? widgetSize.width / 20
-                          : widgetSize.width / 100,
-                      right: (widgetSize.width > 1400)
-                          ? widgetSize.width / 20
-                          : widgetSize.width / 100,
-                      bottom: 70),
-                  color: Colors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        'assets/images/logo_color_col.png',
-                        height: 70,
-                        width: 70,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                          '(주) NEW EYE CORPORATION | 주소 : 부산광역시 남구 수영로 295, 911호(대연동, 세웅빌딩)'),
-                      Row(
-                        children: [
-                          Text('대표자 김난이 | 사업자 등록번회: 457-86-02417 | 이메일'),
-                          TextButton(
-                              onPressed: () {
-                                sendTAXAIEmail();
-                              },
-                              child: Text(
-                                'admin@taxai.co.kr',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    decorationThickness: 2),
-                              ))
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.only(
+                    top: 60,
+                    left: (widgetSize.width > 1400)
+                        ? widgetSize.width / 20
+                        : widgetSize.width / 100,
+                    right: (widgetSize.width > 1400)
+                        ? widgetSize.width / 20
+                        : widgetSize.width / 100,
+                    bottom: 70),
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo_color_col.png',
+                      height: 70,
+                      width: 70,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                        '(주) NEW EYE CORPORATION | 주소 : 부산광역시 남구 수영로 295, 911호(대연동, 세웅빌딩)'),
+                    Row(
+                      children: [
+                        Text('대표자 김난이 | 사업자 등록번호: 457-86-02417 | 이메일'),
+                        TextButton(
+                            onPressed: () {
+                              sendTAXAIEmail();
+                            },
+                            child: Text(
+                              'admin@taxai.co.kr',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  decorationThickness: 2),
+                            ))
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -534,6 +660,24 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                   child:
                       Text('확인', style: TextStyle(fontWeight: FontWeight.bold)))
             ],
+          );
+        });
+  }
+
+  Future<void> showPatentDialog() {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Container(
+              width: 600,
+              height: 500,
+              child: Image.asset(
+                'assets/images/application_number.png',
+                fit: BoxFit.contain,
+              ),
+            ),
           );
         });
   }
