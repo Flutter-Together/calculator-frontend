@@ -334,14 +334,14 @@ class _MobileHomepageState extends State<MobileHomepage> {
                           text: TextSpan(
                               text: '세금 계산 시 고려사항은\n'
                                   '왜 이렇게 복잡하고 어려울까?\n\n'
-                                  '전문가도 수많은 법령이나 예규 판례를\n'
+                                  '전문가도 법령이나 예규 판례를\n'
                                   '이해는 할 수 있지만\n'
                                   '모두 기억하고 있을 순 없는데\n'
                                   '프로그램은 기억하지 않을까?\n\n',
                               style: TextStyle(
-                                  fontWeight: FontWeight.normal,
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.blueAccent,
-                                  fontSize: 18),
+                                  fontSize: 17),
                               children: [
                                 TextSpan(
                                     text: '라는 질문으로 이 프로그램을\n기획하게 되었습니다.',
@@ -362,16 +362,17 @@ class _MobileHomepageState extends State<MobileHomepage> {
                       RichText(
                           textAlign: TextAlign.center,
                           text: TextSpan(
-                            text: '수많은 세금관련 규정을 정리하고도식화 하고 \n'
+                            text: '수많은 세금관련 규정을\n'
+                                '정리하고 도식화 하고\n'
                                 '프로그래밍화 하는 과정을 거쳐\n'
                                 '프로그램을 완성하게 되었습니다.\n\n'
                                 '앞으로도 개정되는 법령과 예규, 판례를\n'
                                 '주기적으로 업데이트하여\n'
                                 '세금 관련 판단을 하는데\n도움이 되도록 하겠습니다.',
                             style: TextStyle(
-                                fontWeight: FontWeight.normal,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.black,
-                                fontSize: 15),
+                                fontSize: 17),
                           )),
                       const SizedBox(
                         height: 30,
@@ -413,7 +414,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                         child: Text('김동현 세무사 (기술고문)',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 27,
+                              fontSize: 25,
                               fontWeight: FontWeight.bold,
                             )),
                       ),
@@ -430,7 +431,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                                   '- (前) 우리은행 TAX컨설팅팀 (상속, 증여, 양도 컨설팅 전문)\n'
                                   '- (現) AI TAX CONSULTING 대표 세무사',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
                               )),
                           TextButton(
@@ -651,7 +652,7 @@ class _MobileHomepageState extends State<MobileHomepage> {
                         ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('대표자 김난이 | 사업자 등록번회: 457-86-02417'),
+                          Text('대표자 김난이 | 사업자 등록번호: 457-86-02417'),
                           Row(
                             children: [
                               Text('| 이메일 : '),
