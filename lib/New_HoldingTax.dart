@@ -677,20 +677,16 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
                     activeColor: mainColor,
                     value: _is_selected_holding_period[idx],
                     onChanged: (bool? value) async {
-                      if (stage1 != 2) {
-                        return _showDialog_stage();
-                      } else if (stage1 == 2) {
-                        setState(() {
-                          if (count_selected_holding_period == 0) {
-                            _is_selected_holding_period[idx] = value!;
-                          } else if (count_selected_holding_period == 1) {
-                            if (index_selected_holding_period == idx) {
-                              _is_selected_holding_period[idx] =
-                                  !_is_selected_holding_period[idx];
-                            }
+                      setState(() {
+                        if (count_selected_holding_period == 0) {
+                          _is_selected_holding_period[idx] = value!;
+                        } else if (count_selected_holding_period == 1) {
+                          if (index_selected_holding_period == idx) {
+                            _is_selected_holding_period[idx] =
+                            !_is_selected_holding_period[idx];
                           }
-                        });
-                      }
+                        }
+                      });
                     })),
           ),
           const SizedBox(
@@ -705,25 +701,25 @@ class _Resume_HoldingTaxPageState extends State<Resume_HoldingTaxPage> {
     );
   }
 
-  Future<void> _showDialog_stage() {
-    return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          Future.delayed(Duration(milliseconds: 750), () {
-            Navigator.of(context).pop(true);
-          });
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            title: Text('앞의 단계를 먼저 진행해주세요',
-                style: TextStyle(
-                  fontSize: 17,
-                ),
-                textAlign: TextAlign.center),
-          );
-        });
-  }
+  // Future<void> _showDialog_stage() {
+  //   return showDialog(
+  //       barrierDismissible: false,
+  //       context: context,
+  //       builder: (context) {
+  //         Future.delayed(Duration(milliseconds: 750), () {
+  //           Navigator.of(context).pop(true);
+  //         });
+  //         return AlertDialog(
+  //           shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(10.0)),
+  //           title: Text('앞의 단계를 먼저 진행해주세요',
+  //               style: TextStyle(
+  //                 fontSize: 17,
+  //               ),
+  //               textAlign: TextAlign.center),
+  //         );
+  //       });
+  // }
 
   SizedBox Label(String label) =>
       SizedBox(width: 120, child: MediumText(text: label));
