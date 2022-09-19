@@ -56,9 +56,7 @@ class _TabletHomepageState extends State<TabletHomepage> {
         child: Container(
             decoration: BoxDecoration(
               color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
-              border: Border(
-                  bottom: BorderSide(
-                      width: .3, color: Colors.grey)),
+              border: Border(bottom: BorderSide(width: .3, color: Colors.grey)),
             ),
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: Padding(
@@ -173,8 +171,14 @@ class _TabletHomepageState extends State<TabletHomepage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: Icon(Icons.cancel, color: Colors.white, size: 30,)),
-                  const SizedBox(width: 10,)
+                      icon: Icon(
+                        Icons.cancel,
+                        color: Colors.white,
+                        size: 30,
+                      )),
+                  const SizedBox(
+                    width: 10,
+                  )
                 ],
               ),
             ),
@@ -299,7 +303,9 @@ class _TabletHomepageState extends State<TabletHomepage> {
                                 '앞으로도 개정되는 법령과 예규, 판례를 주기적으로 업데이트하여\n'
                                 '세금 관련 판단을 하는데 도움이 되도록 하겠습니다.',
                             style: TextStyle(
-                                fontWeight: FontWeight.normal, fontSize: 24),
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 24),
                           )),
                       const SizedBox(
                         height: 30,
@@ -361,6 +367,10 @@ class _TabletHomepageState extends State<TabletHomepage> {
                                 fontWeight: FontWeight.bold,
                               )),
                           TextButton(
+                              style: ButtonStyle(
+                                  padding:
+                                  MaterialStateProperty.all<EdgeInsets>(
+                                      EdgeInsets.zero)),
                               onPressed: () {
                                 sendInquiryEmail();
                               },

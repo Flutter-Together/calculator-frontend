@@ -70,7 +70,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
 
   void get_token() {
     return setState(() {
-      var current_url = Uri.base.toString();
+      var current_url = Uri.base.queryParameters['login'].toString();
       print(current_url);
       if (current_url
           .startsWith('https://taxai.co.kr/callback#access_token=')) {
@@ -100,9 +100,7 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
         child: Container(
             decoration: BoxDecoration(
               color: _scrollPosition == 0 ? Colors.white : Colors.blueAccent,
-              border: Border(
-                  bottom: BorderSide(
-                      width: .3, color: Colors.grey)),
+              border: Border(bottom: BorderSide(width: .3, color: Colors.grey)),
             ),
             padding: EdgeInsets.all(10),
             child: Padding(
@@ -340,7 +338,9 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                                     '앞으로도 개정되는 법령과 예규, 판례를 주기적으로 업데이트하여\n'
                                     '세금 관련 판단을 하는데 도움이 되도록 하겠습니다.',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 24),
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24),
                               )),
                           Spacer()
                         ],
@@ -390,6 +390,9 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                                         fontWeight: FontWeight.bold,
                                       )),
                                   TextButton(
+                                      style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                              EdgeInsets>(EdgeInsets.zero)),
                                       onPressed: () {
                                         sendInquiryEmail();
                                       },

@@ -14,9 +14,11 @@ class Search_Address extends StatefulWidget {
   String? ho;
   int? isIndividualHouse;
   int stage;
+  double? width;
 
   Search_Address(
       {Key? key,
+        @required this.width,
       required this.stage,
       this.roadAddr,
       this.pnu,
@@ -55,8 +57,8 @@ class _Search_AddressState extends State<Search_Address> {
     return Row(
       children: [
         GestureDetector(
-          onTap: widget.stage >= 1
-              ? () async {
+          onTap:
+              () async {
                   var a = await Search_Address_Dialog(
                       _address_keywordEditingController);
                   setState(() {
@@ -65,25 +67,6 @@ class _Search_AddressState extends State<Search_Address> {
                     widget.stage = 2;
                     _address_keywordEditingController.clear();
                   });
-                }
-              : () async {
-                  return showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (context) {
-                        Future.delayed(Duration(milliseconds: 750), () {
-                          Navigator.of(context).pop(true);
-                        });
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          title: Text('앞의 단계를 먼저 진행해주세요',
-                              style: TextStyle(
-                                fontSize: 17,
-                              ),
-                              textAlign: TextAlign.center),
-                        );
-                      });
                 },
           child: address_Container_Desgin(),
         )
@@ -94,7 +77,7 @@ class _Search_AddressState extends State<Search_Address> {
   Container address_Container_Desgin() {
     return Container(
         height: 50,
-        width: 750,
+        width: widget.width == null ? 700 : widget.width,
         decoration: BoxDecoration(
             border: Border.all(
               color: mainColor,
