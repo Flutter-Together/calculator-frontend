@@ -5,7 +5,7 @@ const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "assets/AssetManifest.json": "eb5632c554dd4d54f6797809eb9e1752",
 "assets/assets/capgain/AcquisitionDate.CSV": "2b35ac25731e825d4d26d244347e3059",
-"assets/assets/capgain/firstFilter.CSV": "dbff27f512d3d9527c31ee887aa5407a",
+"assets/assets/capgain/firstFilter.CSV": "1fd3207e3f2c78cbc53d70183546b295",
 "assets/assets/images/application_number.png": "43225d9ce2728f6f77da82bb8cf86e82",
 "assets/assets/images/calculate.png": "42d165cbec3b5602318c9b0d4302e8b9",
 "assets/assets/images/calculator_line.png": "d254b0c49daaac82aa5635757a576b52",
@@ -19,8 +19,8 @@ const RESOURCES = {
 "assets/assets/images/psychology.png": "f9327401bc96e78ef18af3964c7fe4ea",
 "assets/assets/images/tax_consulting_illustration.jpg": "874d2f9eb503eda594a44ae5296505be",
 "assets/assets/images/white_logo_col.png": "677d4b48ebd90d6a960b8326983acdb8",
-"assets/assets/txt/HoldingTax_description.txt": "dd1f7922ffccd98480eed6e310ddb970",
-"assets/assets/txt/HoldingTax_precaution.txt": "3ae2978170febf9a110bf6c057e05c26",
+"assets/assets/txt/HoldingTax_description.txt": "a557d2134be63958310e25ffec3f07ac",
+"assets/assets/txt/HoldingTax_precaution.txt": "104ba2321b5ffd02f94066bdcd733d25",
 "assets/FontManifest.json": "9faf54ed3b766ac05b2fa0fbf59b372d",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
 "assets/fonts/SpoqaHanSansNeo-Bold.ttf": "4db68f99b1aa69d92a0366c31c384383",
@@ -28,23 +28,23 @@ const RESOURCES = {
 "assets/fonts/SpoqaHanSansNeo-Medium.ttf": "1c177bbda2f670a03abce8f15bbad484",
 "assets/fonts/SpoqaHanSansNeo-Regular.ttf": "2118fb0c3ef472cc03c7fd589c59ae05",
 "assets/fonts/SpoqaHanSansNeo-Thin.ttf": "4cb52f730d1f6281fac53066012c509c",
-"assets/NOTICES": "a8231428acc14a42aa0716f7b63260d9",
+"assets/NOTICES": "2627c15e6ad7a92425177bd1da29037b",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
 "assets/shaders/ink_sparkle.frag": "6333b551ea27fd9d8e1271e92def26a9",
-"canvaskit/canvaskit.js": "cf51f0145ed508c7203981a6297dfb6c",
+"canvaskit/canvaskit.js": "2bc454a691c631b07a9307ac4ca47797",
 "canvaskit/canvaskit.wasm": "bf50631470eb967688cca13ee181af62",
-"canvaskit/profiling/canvaskit.js": "e069e181424052299c5bffb1b300bb13",
+"canvaskit/profiling/canvaskit.js": "38164e5a72bdad0faa4ce740c9b8e564",
 "canvaskit/profiling/canvaskit.wasm": "95a45378b69e77af5ed2bc72b2209b94",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"flutter.js": "db931120412af26cc1511fa058afaf0a",
+"flutter.js": "f85e6fb278b0fd20c349186fb46ae36d",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "e1c02728ab3ac5f6464b1c6d0963077f",
-"/": "e1c02728ab3ac5f6464b1c6d0963077f",
-"main.dart.js": "2fb6b3c97759efe756be2cd82b376b07",
-"manifest.json": "1ed273c041fc2e55ec72a084aeeef615",
+"index.html": "06fc63179b818327897062ab6ae0b235",
+"/": "06fc63179b818327897062ab6ae0b235",
+"main.dart.js": "2237e321792c61046604665f58fc5a58",
+"manifest.json": "95661a1970efe399ed9952fc5ad2f7e3",
 "version.json": "12385392cb97fc7e83d60845948177b1"
 };
 
@@ -53,7 +53,6 @@ const RESOURCES = {
 const CORE = [
   "main.dart.js",
 "index.html",
-"assets/NOTICES",
 "assets/AssetManifest.json",
 "assets/FontManifest.json"];
 // During install, the TEMP cache is populated with the application shell files.
@@ -152,9 +151,11 @@ self.addEventListener("fetch", (event) => {
     .then((cache) =>  {
       return cache.match(event.request).then((response) => {
         // Either respond with the cached resource, or perform a fetch and
-        // lazily populate the cache.
+        // lazily populate the cache only if the resource was successfully fetched.
         return response || fetch(event.request).then((response) => {
-          cache.put(event.request, response.clone());
+          if (response && Boolean(response.ok)) {
+            cache.put(event.request, response.clone());
+          }
           return response;
         });
       })
