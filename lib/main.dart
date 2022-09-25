@@ -4,6 +4,10 @@ import 'package:calculator_frontend/New_HoldingTax.dart';
 import 'package:calculator_frontend/widgets/HomePage/Desktop_HomePage.dart';
 import 'package:calculator_frontend/widgets/HomePage/Mobile_HomePage.dart';
 import 'package:calculator_frontend/widgets/HomePage/Tablet_HomePage.dart';
+import 'package:calculator_frontend/widgets/LandingPage/Desktop_LandingPage.dart';
+import 'package:calculator_frontend/widgets/LandingPage/LandingPage.dart';
+import 'package:calculator_frontend/widgets/LandingPage/Mobile_LadingPage.dart';
+import 'package:calculator_frontend/widgets/LandingPage/Tablet_LandingPage.dart';
 import 'package:calculator_frontend/widgets/Mobile_HoldingTax.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +37,15 @@ class MyApp extends StatelessWidget {
           MobileHomepage: MobileHomepage()),
       routes: {
         '/capgain': (context) => const CapitalGainsTaxPage(),
-        '/holding': (context) => const HoldingTaxPage(DesktopTaxpage: Resume_HoldingTaxPage(), MobileTaxpage: Mobile_HoldingTaxPage()),
+        '/holding': (context) =>
+        const HoldingTaxPage(
+            DesktopTaxpage: Resume_HoldingTaxPage(),
+            MobileTaxpage: Mobile_HoldingTaxPage()),
+        '/landing': (context) =>
+        const LandingPage(
+            TabletLandingpage: TabletLandingpage(),
+            DesktopLandingpage: DesktopLandingpage(),
+            MobileLandingpage: MobileLandingpage())
       },
     );
   }
@@ -44,11 +56,10 @@ class MyHomePage extends StatelessWidget {
   final Widget DesktopHomepage;
   final Widget MobileHomepage;
 
-  const MyHomePage(
-      {Key? key,
-      required this.TabletHomepage,
-      required this.DesktopHomepage,
-      required this.MobileHomepage})
+  const MyHomePage({Key? key,
+    required this.TabletHomepage,
+    required this.DesktopHomepage,
+    required this.MobileHomepage})
       : super(key: key);
 
   @override

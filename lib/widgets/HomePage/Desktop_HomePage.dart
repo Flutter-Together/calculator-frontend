@@ -132,14 +132,20 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                       const SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        'TAXAI',
-                        style: TextStyle(
-                            fontSize: 25,
-                            color: _scrollPosition == 0
-                                ? Colors.black
-                                : Colors.white,
-                            fontWeight: FontWeight.bold),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => MyApp()));
+                        },
+                        child: Text(
+                          'TAXAI',
+                          style: TextStyle(
+                              fontSize: 25,
+                              color: _scrollPosition == 0
+                                  ? Colors.black
+                                  : Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
                       )
                     ],
                   ),
@@ -148,7 +154,9 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/landing');
+                          },
                           style: OutlinedButton.styleFrom(
                               primary: Colors.grey,
                               padding: EdgeInsets.all(20)),
@@ -297,17 +305,19 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                           RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                  text: '세금 계산 시 고려사항은 왜 이렇게 복잡하고 어려울까?\n\n'
-                                      '전문가도 수많은 법령이나 예규 판례를 이해는 할 수 있지만\n'
-                                      '모두 기억하고 있을 순 없는데 프로그램은 기억하지 않을까?\n\n',
+                                  text: 'TAXAI는 아파트, 주택, 조합원입주권, 분양권, 오피스텔의\n'
+                                      '수백 가지의 비과세 유형과 중과 주택수, 감면주택 등의\n',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blueAccent,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
                                       fontSize: 24),
                                   children: [
                                     TextSpan(
-                                        text: '라는 질문으로 이 프로그램을 기획하게 되었습니다.',
-                                        style: TextStyle(color: Colors.black)),
+                                        text: '세법 규정을 AI가 자동으로 판단해서 계산할 수 있는\n'
+                                            '혁신적인 세금계산기',
+                                        style: TextStyle(
+                                            color: Colors.blueAccent)),
+                                    TextSpan(text: '입니다.')
                                   ])),
                           const Spacer(),
                           Image.asset(
@@ -333,15 +343,31 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                           RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                text: '수많은 세금관련 규정을 정리하고 도식화 하고 프로그래밍화\n'
-                                    '하는 과정을 거쳐 프로그램을 완성하게 되었습니다.\n\n'
-                                    '앞으로도 개정되는 법령과 예규, 판례를 주기적으로 업데이트하여\n'
-                                    '세금 관련 판단을 하는데 도움이 되도록 하겠습니다.',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24),
-                              )),
+                                  text: 'TAXAI는 15년간 재산관련 세금컨설팅을 전문적으로 해온\n'
+                                      '현직 세무사가 직접 설계한 프로그램으로서\n',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 24),
+                                  children: [
+                                    TextSpan(
+                                      text: '최신 법령과 예규, 판례 등을 주기적으로 업데이트하여\n'
+                                          '케이스별로 적용 가능한 수많은 절세 규정을 미리 검토',
+                                      style:
+                                          TextStyle(color: Colors.blueAccent),
+                                    ),
+                                    TextSpan(
+                                      text: '할 수 있으며\n',
+                                    ),
+                                    TextSpan(
+                                        text:
+                                            '조정대상지역 및 공동주택 가격 등을 자동 조회하는 기능을 갖추고 있어\n'),
+                                    TextSpan(
+                                      text: '세금신고 관련 오류를 획기적으로 줄여줄 수 있습니다.',
+                                      style:
+                                          TextStyle(color: Colors.blueAccent),
+                                    )
+                                  ])),
                           Spacer()
                         ],
                       ),
@@ -360,69 +386,9 @@ class _DesktopHomepageState extends State<DesktopHomepage> {
                       const SizedBox(
                         height: 80,
                       ),
-                      Row(
-                        children: [
-                          Spacer(),
-                          Column(
-                            children: [
-                              Center(
-                                child: Text('김동현 세무사 (기술고문)',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 35,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    height: 30,
-                                  ),
-                                  Text(
-                                      '- 세무사, USA EA\n'
-                                      '- (前) LH 토지보상(평택 고덕단지, 부산 명지 등) 세무 자문\n'
-                                      '- (前) 부산 수영세무서 국세 심사위원\n'
-                                      '- (前) 우리은행 TAX컨설팅팀 (상속, 증여, 양도 컨설팅 전문)\n'
-                                      '- (現) AI TAX CONSULTING 대표 세무사',
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  TextButton(
-                                      style: ButtonStyle(
-                                          padding: MaterialStateProperty.all<
-                                              EdgeInsets>(EdgeInsets.zero)),
-                                      onPressed: () {
-                                        sendInquiryEmail();
-                                      },
-                                      child: Text('- 컨설팅 문의 : TECH@TAXAI.CO.KR',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
-                                          )))
-                                ],
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Container(
-                            height: 400,
-                            width: 600,
-                            decoration: BoxDecoration(border: Border.all()),
-                            child: Center(
-                              child: Text('이미지'),
-                            ),
-                          ),
-                          Spacer()
-                        ],
-                      ),
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 40,
               ),
               Padding(
                 padding: EdgeInsets.only(
