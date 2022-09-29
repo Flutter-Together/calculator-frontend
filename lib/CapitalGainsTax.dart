@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:async/async.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class CapitalGainsTaxPage extends StatefulWidget {
   const CapitalGainsTaxPage({Key? key}) : super(key: key);
@@ -31,6 +32,7 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
 
 
   final mainColor = 0xff80cfd5;
+  final Color _shadowTextColor = Colors.black38;
 
   String sampleAddress = '서울특별시 서초구 반포대로 4(서초동)';
   final backgroundColor = 0xfffafafa;
@@ -53,6 +55,8 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   List<List<dynamic>> firstFilterCSV = [];
   List<List<dynamic>> currentCSV = [];
   List<List<dynamic>> originCSV = [];
+
+  DateTime? _expectedTransferDate;
 
   Future getCSVonce() => asyncMemoizer.runOnce(()async{
     String _rawData1 = await rootBundle.loadString('assets/capgain/firstFilter.CSV');
@@ -126,68 +130,82 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
                   } else {
                     List<List<dynamic>> res = snapshot.data as List<List<dynamic>>;
                     return ListView(
+                      shrinkWrap: true,
                       children: <Widget>[
                         largeTitle(),
                         firstDivider(),
                         Row(
                           children: [
                             _smallTitle('주택 수 선택'),
-                            Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
-                              child: buildActionChip1(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
-                              child: buildActionChip2(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
-                              child: buildActionChip3(),
-                            ),
+                            Expanded(child: Container(
+                              height: 80,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+                                    child: buildActionChip1(),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+                                    child: buildActionChip2(),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+                                    child: buildActionChip3(),
+                                  ),
+                                ],
+
+                              ),
+                            ))
+
                           ],
                         ),//주택수
                         Row(
                           children: [
                             _smallTitle('양도예정일'),
-                            _expectedTransferDate(_transferDateTC, '20220725',((){
-                              if(_donthaveTransferDate == false){return true;} else {return false;}})()),
-                            SizedBox(
-                              width: 140,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Transform.scale(
-                                    scale: 1.1,
-                                    child: Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(35),
-                                      ),
-                                      side: BorderSide(width: 1, color: Color(mainColor)),
-                                      checkColor: Colors.white,
-                                      activeColor: Color(mainColor),
-                                      value: _donthaveTransferDate,
-                                      onChanged: (bool? value){
-                                        setState(() {
-                                          _donthaveTransferDate = value!;
-                                          _stage = 4;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 1,
-                                  ),
-                                  const Text(
-                                    '미정',
-                                    style: TextStyle(fontSize: 17),
-                                  )
-                                ],
+                            _getDateTime(),
+                            // SizedBox(
+                            //   width: 140,
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       Transform.scale(
+                            //         scale: 1.1,
+                            //         child: Checkbox(
+                            //           shape: RoundedRectangleBorder(
+                            //             borderRadius: BorderRadius.circular(35),
+                            //           ),
+                            //           side: BorderSide(width: 1, color: Color(mainColor)),
+                            //           checkColor: Colors.white,
+                            //           activeColor: Color(mainColor),
+                            //           value: _donthaveTransferDate,
+                            //           onChanged: (bool? value){
+                            //             setState(() {
+                            //               _donthaveTransferDate = value!;
+                            //               _stage = 4;
+                            //             });
+                            //           },
+                            //         ),
+                            //       ),
+                            //       const SizedBox(
+                            //         width: 1,
+                            //       ),
+                            //       const Text(
+                            //         '미정',
+                            //         style: TextStyle(fontSize: 17),
+                            //       )
+                            //     ],
+                            //   ),
+                            // ),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: Tooltip(
+                                child:Icon(Icons.build_circle, color: Color(mainColor),size: 30),
+                                message: '탭하여 양도예정일을 선택해 주세요',
+                                textStyle: TextStyle(fontSize: 15,color: Colors.white),
                               ),
-                            ),
-                            Tooltip(
-                              child:Icon(Icons.build_circle, color: Color(mainColor),size: 30),
-                              message: '연월일을 연속적으로 입력해주세요 (YYYYMMDD)',
-                              textStyle: TextStyle(fontSize: 15,color: Colors.white),
                             )
                           ],
                         ),//양도예정일
@@ -220,7 +238,48 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
     );
   }
 
-  Widget _expectedTransferDate(TextEditingController tc, String hintText,bool able) {
+  Widget _getDateTime(){
+    String example = "날짜를 입력해 주세요";
+    Color color = _shadowTextColor;
+    if(_expectedTransferDate != null){
+      example = '${_expectedTransferDate!.year}-${_expectedTransferDate!.month}-${_expectedTransferDate!.day}' ;
+      color = Colors.black;
+    }
+
+    return Expanded(
+        child: GestureDetector(
+          onTap: ()async{
+            _expectedTransferDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100)
+            );
+            setState(() {
+              _expectedTransferDate;
+            });
+          },
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+            height: 50,
+            decoration: BoxDecoration(
+                border: Border.all(color: Color(mainColor)),
+                borderRadius: const BorderRadius.all(Radius.circular(10))
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(example,style: TextStyle(fontSize: 17,color: color),)
+              ],
+            ),
+            ),
+          ),
+        );
+  }
+
+  Widget _expectedTransferDate2(TextEditingController tc, String hintText,bool able) {
     return Expanded(
         child: Container(
           margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -261,12 +320,18 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
   }
 
   Widget body(List<List<dynamic>> res){
+    String? _transferDate;
+
+    if(_expectedTransferDate != null){
+      _transferDate = _expectedTransferDate!.year.toString() +  _expectedTransferDate!.month.toString()+_expectedTransferDate!.day.toString();
+    }
+
     if(houseNum == null || houseNum == '1주택'){
-      body1 = CapGainBody(res: res,originCSV: originCSV);
+      body1 = CapGainBody(res: res,originCSV: originCSV,transferDate: _transferDate);
       return body1;
     }else if( houseNum == '2주택'){
-      body1 = CapGainBody(res: res,originCSV: originCSV);
-      body2 = CapGainBody(res: res,originCSV: originCSV);
+      body1 = CapGainBody(res: res,originCSV: originCSV,transferDate: _transferDate,);
+      body2 = CapGainBody(res: res,originCSV: originCSV,transferDate: _transferDate);
       return ListView(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -278,9 +343,9 @@ class _CapitalGainsTaxPageState extends State<CapitalGainsTaxPage> {
         ],
       );
     }else{
-      body1 = CapGainBody(res: res,originCSV: originCSV);
-      body2 = CapGainBody(res: res,originCSV: originCSV);
-      body3 = CapGainBody(res: res,originCSV: originCSV);
+      body1 = CapGainBody(res: res,originCSV: originCSV,transferDate: _transferDate);
+      body2 = CapGainBody(res: res,originCSV: originCSV,transferDate: _transferDate);
+      body3 = CapGainBody(res: res,originCSV: originCSV,transferDate: _transferDate);
       return ListView(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,

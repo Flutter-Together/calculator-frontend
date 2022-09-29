@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:calculator_frontend/CapGainWidgets/CustomDatePicker.dart';
 import 'package:calculator_frontend/CapGainWidgets/CustomDropDown.dart';
 import 'package:calculator_frontend/widgets/HomePage/Search%20Address%20Api.dart';
 import 'package:calculator_frontend/widgets/Address.dart';
@@ -32,7 +33,7 @@ class CapGainBodyState extends State<CapGainBody> {
 
   String? _dropDownMenuPriorInheritanceHouse;
   final TextEditingController _address_keywordEditingController = TextEditingController();
-  final _asyncMemorizer = AsyncMemoizer();
+
 
 
   TempAddr _tempAddr = TempAddr();
@@ -620,9 +621,9 @@ class CapGainBodyState extends State<CapGainBody> {
             _toolTip('공동명의는 50%로 자동계산 됩니다.')
           ],
         ),
-        preReconstructionHouse(),
-        _priorInheritanceHouse(),
-        residentialOfficetel(),
+        preReconstructionHouse(),//취득시 종류가 재건축전 주택일 경우
+        _priorInheritanceHouse(),//취득시 종류가 상속일경우
+        residentialOfficetel(),//양도시 종류가 주택(주거용오피스택 포함)일경우, 임대주택, 농어촌주택, 조특법상 감면주택 dialog
       ],
     );
   }
@@ -655,6 +656,7 @@ class CapGainBodyState extends State<CapGainBody> {
   }
 
   Widget residentialOfficetel(){
+    final _asyncMemorizer = AsyncMemoizer();
 
     Future condition1() => _asyncMemorizer.runOnce(()async{
       if(buyDate != null && contractDate != null && buyDate!.length > 7 && contractDate!.length > 7 && _tempAddr.pnu != null){
@@ -1476,13 +1478,13 @@ class CapGainBodyState extends State<CapGainBody> {
           Row(
             children: [
               _smallTitle('관리처분계획인가일'),
-              _textField2(_manageDateTC, '20160304', true)
+              CustomDatePicker(widgetName: '관리처분계획인가일')
             ],
           ),
           Row(
             children: [
               _smallTitle('사업시행인가일'),
-              _textField2(_businessStartDateTC, '19980218', true)
+              CustomDatePicker(widgetName: '사업시행인가일')
             ],
           ),
           Row(
@@ -1582,7 +1584,6 @@ class CapGainBodyState extends State<CapGainBody> {
         return FutureBuilder(
             future: Future.wait([isConflict(_tempAddr.pnu!, buyDate!),isConflict(_tempAddr.pnu!, contractDate!)]),
             builder: (BuildContext context, AsyncSnapshot snapshot){
-              print('call 조정지역 api');
               if (snapshot.hasData == false) {
                 return const Center(child:  CircularProgressIndicator(),);
               }
@@ -1736,18 +1737,25 @@ class CapGainBodyState extends State<CapGainBody> {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: csv.length,
           itemBuilder: (context, index){
-            print((csv[index][7].toString()));
             if(csv[index][7].toString() == '취득일'){
-              buyDate = acquisitionETCTCList[index].text;
+              print(csv[index][4]);
+              if(selectedDropDownTable.containsKey(csv[index][4].toString())){
+                buyDate = selectedDropDownTable[csv[index][4].toString()];
+              }
               print('취득일은 : $buyDate');
             }
             if(csv[index][7].toString() == '계약일'){
-              contractDate = acquisitionETCTCList[index].text;
+              if(selectedDropDownTable.containsKey(csv[index][4])){
+                contractDate = selectedDropDownTable[csv[index][4]];
+              }
               print('계약일은 : $contractDate');
             }
             if(csv[index][7].toString() =='취득일&계약일'){
-              buyDate = acquisitionETCTCList[index].text;
-              contractDate = acquisitionETCTCList[index].text;
+              if(selectedDropDownTable.containsKey(csv[index][4])){
+                buyDate = selectedDropDownTable[csv[index][4]];
+                contractDate = selectedDropDownTable[csv[index][4]];
+              }
+
               print('취득일은 : $buyDate');
               print('계약일은 : $contractDate');
             }
@@ -1784,8 +1792,8 @@ class CapGainBodyState extends State<CapGainBody> {
               if(diff <= 731){
                 return Row(
                   children: [
-                    _smallTitle(csv[index][4].toString().replaceAll('"', '')),
-                    _textField2(acquisitionETCTCList[index],'',true)
+                    _smallTitle(csv[index][4].toString()),
+                    CustomDatePicker(widgetName: csv[index][4].toString())
                   ],
                 );
               }else {return Container();}
@@ -1793,8 +1801,8 @@ class CapGainBodyState extends State<CapGainBody> {
             else {
               return Row(
                 children: [
-                  _smallTitle(csv[index][4].toString().replaceAll('"', '')),
-                  _textField2(acquisitionETCTCList[index],'',true)
+                  _smallTitle(csv[index][4].toString()),
+                  CustomDatePicker(widgetName: csv[index][4].toString())
                 ],
               );
             }
@@ -1813,6 +1821,8 @@ class CapGainBodyState extends State<CapGainBody> {
       final jsonResponse = jsonDecode(utf8.decode(response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
 
       final res = jsonResponse['results']['field']['isRegulated'] as bool;
+
+      print('pnu = $pnu, date = $date, 조정지역여부 = ,$res');
 
       return res;
     } else {
