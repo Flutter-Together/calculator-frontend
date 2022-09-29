@@ -100,6 +100,13 @@
             </list>
           </value>
         </entry>
+        <entry key="flutter_localizations">
+          <value>
+            <list>
+              <option value="C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/packages/flutter_localizations/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter_test">
           <value>
             <list>
@@ -139,6 +146,13 @@
           <value>
             <list>
               <option value="C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="intl">
+          <value>
+            <list>
+              <option value="C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib" />
             </list>
           </value>
         </entry>
@@ -379,6 +393,7 @@
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.5/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/http_client_helper-2.0.3/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
+      <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
@@ -411,6 +426,7 @@
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/.pub-cache/hosted/pub.dartlang.org/webview_flutter_wkwebview-2.9.3/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/packages/flutter/lib" />
+      <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/packages/flutter_localizations/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/packages/flutter_test/lib" />
       <root url="file://C:/IDE/flutter/flutter_windows_2.0.4-stable/flutter/packages/flutter_web_plugins/lib" />
     </CLASSES>

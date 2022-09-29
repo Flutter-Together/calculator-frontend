@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:calculator_frontend/CapGainWidgets/CustomDatePicker.dart';
 import 'package:calculator_frontend/CapGainWidgets/CustomDropDown.dart';
 import 'package:calculator_frontend/widgets/HomePage/Search%20Address%20Api.dart';
 import 'package:calculator_frontend/widgets/Address.dart';
@@ -1582,7 +1583,6 @@ class CapGainBodyState extends State<CapGainBody> {
         return FutureBuilder(
             future: Future.wait([isConflict(_tempAddr.pnu!, buyDate!),isConflict(_tempAddr.pnu!, contractDate!)]),
             builder: (BuildContext context, AsyncSnapshot snapshot){
-              print('call 조정지역 api');
               if (snapshot.hasData == false) {
                 return const Center(child:  CircularProgressIndicator(),);
               }
@@ -1598,6 +1598,8 @@ class CapGainBodyState extends State<CapGainBody> {
               }
               // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
               else {
+                print(snapshot.data[0]);
+                print(snapshot.data[1]);
                 if(snapshot.data[0] && !snapshot.data[1]){
                   return whetherHavingHomeBody();
                 }else {return Container();}
@@ -1736,18 +1738,25 @@ class CapGainBodyState extends State<CapGainBody> {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: csv.length,
           itemBuilder: (context, index){
-            print((csv[index][7].toString()));
             if(csv[index][7].toString() == '취득일'){
-              buyDate = acquisitionETCTCList[index].text;
+              print(csv[index][4]);
+              if(selectedDropDownTable.containsKey(csv[index][4].toString())){
+                buyDate = selectedDropDownTable[csv[index][4].toString()];
+              }
               print('취득일은 : $buyDate');
             }
             if(csv[index][7].toString() == '계약일'){
-              contractDate = acquisitionETCTCList[index].text;
+              if(selectedDropDownTable.containsKey(csv[index][4])){
+                contractDate = selectedDropDownTable[csv[index][4]];
+              }
               print('계약일은 : $contractDate');
             }
             if(csv[index][7].toString() =='취득일&계약일'){
-              buyDate = acquisitionETCTCList[index].text;
-              contractDate = acquisitionETCTCList[index].text;
+              if(selectedDropDownTable.containsKey(csv[index][4])){
+                buyDate = selectedDropDownTable[csv[index][4]];
+                contractDate = selectedDropDownTable[csv[index][4]];
+              }
+
               print('취득일은 : $buyDate');
               print('계약일은 : $contractDate');
             }
@@ -1784,8 +1793,8 @@ class CapGainBodyState extends State<CapGainBody> {
               if(diff <= 731){
                 return Row(
                   children: [
-                    _smallTitle(csv[index][4].toString().replaceAll('"', '')),
-                    _textField2(acquisitionETCTCList[index],'',true)
+                    _smallTitle(csv[index][4].toString()),
+                    CustomDatePicker(widgetName: csv[index][4].toString())
                   ],
                 );
               }else {return Container();}
@@ -1793,8 +1802,8 @@ class CapGainBodyState extends State<CapGainBody> {
             else {
               return Row(
                 children: [
-                  _smallTitle(csv[index][4].toString().replaceAll('"', '')),
-                  _textField2(acquisitionETCTCList[index],'',true)
+                  _smallTitle(csv[index][4].toString()),
+                  CustomDatePicker(widgetName: csv[index][4].toString())
                 ],
               );
             }
@@ -1813,6 +1822,8 @@ class CapGainBodyState extends State<CapGainBody> {
       final jsonResponse = jsonDecode(utf8.decode(response.bodyBytes)); //한글 깨짐 방지를 위해 json.decode(response.body) 대신
 
       final res = jsonResponse['results']['field']['isRegulated'] as bool;
+
+      print('pnu = $pnu, date = $date, 조정지역여부 = ,$res');
 
       return res;
     } else {
