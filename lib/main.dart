@@ -4,6 +4,7 @@ import 'package:calculator_frontend/widgets/HomePage/Desktop_HomePage.dart';
 import 'package:calculator_frontend/widgets/HomePage/Mobile_HomePage.dart';
 import 'package:calculator_frontend/widgets/HomePage/Tablet_HomePage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 //2022월 08월 16일 22시 22분
 void main() {
@@ -17,6 +18,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko', 'KR'),
+      ],
       title: 'TAXAI',
       debugShowCheckedModeBanner: false,
       color: Colors.transparent,
