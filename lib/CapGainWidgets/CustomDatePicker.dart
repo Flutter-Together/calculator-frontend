@@ -30,7 +30,8 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 
     if(capGainBodyState!.selectedDropDownTable.containsKey(widget.widgetName)){
       color = Colors.black;
-      example = capGainBodyState!.selectedDropDownTable[widget.widgetName];
+      DateTime a = DateTime.parse(capGainBodyState!.selectedDropDownTable[widget.widgetName]);
+      example = '${a.year}-${a.month}-${a.day}';
     }else {
       color = shadowTextColor;
     }

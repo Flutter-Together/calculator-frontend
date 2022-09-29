@@ -33,7 +33,7 @@ class CapGainBodyState extends State<CapGainBody> {
 
   String? _dropDownMenuPriorInheritanceHouse;
   final TextEditingController _address_keywordEditingController = TextEditingController();
-  final _asyncMemorizer = AsyncMemoizer();
+
 
 
   TempAddr _tempAddr = TempAddr();
@@ -621,9 +621,9 @@ class CapGainBodyState extends State<CapGainBody> {
             _toolTip('공동명의는 50%로 자동계산 됩니다.')
           ],
         ),
-        preReconstructionHouse(),
-        _priorInheritanceHouse(),
-        residentialOfficetel(),
+        preReconstructionHouse(),//취득시 종류가 재건축전 주택일 경우
+        _priorInheritanceHouse(),//취득시 종류가 상속일경우
+        residentialOfficetel(),//양도시 종류가 주택(주거용오피스택 포함)일경우, 임대주택, 농어촌주택, 조특법상 감면주택 dialog
       ],
     );
   }
@@ -656,6 +656,7 @@ class CapGainBodyState extends State<CapGainBody> {
   }
 
   Widget residentialOfficetel(){
+    final _asyncMemorizer = AsyncMemoizer();
 
     Future condition1() => _asyncMemorizer.runOnce(()async{
       if(buyDate != null && contractDate != null && buyDate!.length > 7 && contractDate!.length > 7 && _tempAddr.pnu != null){
@@ -1477,13 +1478,13 @@ class CapGainBodyState extends State<CapGainBody> {
           Row(
             children: [
               _smallTitle('관리처분계획인가일'),
-              _textField2(_manageDateTC, '20160304', true)
+              CustomDatePicker(widgetName: '관리처분계획인가일')
             ],
           ),
           Row(
             children: [
               _smallTitle('사업시행인가일'),
-              _textField2(_businessStartDateTC, '19980218', true)
+              CustomDatePicker(widgetName: '사업시행인가일')
             ],
           ),
           Row(
@@ -1598,8 +1599,6 @@ class CapGainBodyState extends State<CapGainBody> {
               }
               // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
               else {
-                print(snapshot.data[0]);
-                print(snapshot.data[1]);
                 if(snapshot.data[0] && !snapshot.data[1]){
                   return whetherHavingHomeBody();
                 }else {return Container();}
