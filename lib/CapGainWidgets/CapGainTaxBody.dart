@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:calculator_frontend/CapGainWidgets/CustomDatePicker.dart';
 import 'package:calculator_frontend/CapGainWidgets/CustomDropDown.dart';
+import 'package:calculator_frontend/CapGainWidgets/CustomOXDropDown.dart';
+import 'package:calculator_frontend/CapGainWidgets/CustomPercent.dart';
+import 'package:calculator_frontend/CapGainWidgets/CustomPrice.dart';
 import 'package:calculator_frontend/widgets/HomePage/Search%20Address%20Api.dart';
 import 'package:calculator_frontend/widgets/Address.dart';
 import 'package:calculator_frontend/widgets/LargeText.dart';
@@ -62,17 +65,8 @@ class CapGainBodyState extends State<CapGainBody> {
   String? buyDate;
   String? contractDate;
 
-  final TextEditingController _transferDateTC = TextEditingController();
   final TextEditingController _findingAddressTC = TextEditingController();
-  final TextEditingController _transferPriceTC = TextEditingController();
-  final TextEditingController _acquisitionPriceTC = TextEditingController();
-  final TextEditingController _manageDateTC = TextEditingController();
-  final TextEditingController _businessStartDateTC = TextEditingController();
-  final TextEditingController _evaluatedPriceTC = TextEditingController();
   final TextEditingController _rentalHouseRegistrationDateTC = TextEditingController();
-  final TextEditingController _payedMoneyTC = TextEditingController();
-  final TextEditingController _getMoneyTC = TextEditingController();
-  final TextEditingController _rentalPriceTC = TextEditingController();
 
   List acquisitionETCTCList = List.generate(5, (index) => TextEditingController());
 
@@ -106,7 +100,7 @@ class CapGainBodyState extends State<CapGainBody> {
   };
 
   String? _dropDownMenuForResidencePeriod;
-  String? _dropDownMenuForHouseShare;
+
 
   List<String> _typeOfTransfer = [];
   String? _dropDownMenuForTypeOfTransfer;
@@ -120,7 +114,7 @@ class CapGainBodyState extends State<CapGainBody> {
 
   bool? _shortRent;
   bool? _under85;
-  bool _donthaveTransferDate = false;
+
   late int _stage;
 
 
@@ -532,93 +526,45 @@ class CapGainBodyState extends State<CapGainBody> {
         Row(
           children: [
             _smallTitle('양도가액'),
-            _transferPrice(_transferPriceTC, '700000000',_stage >= 7)
+            CustomPriceTextBox(activated: _stage>=7, widgetName: '양도가액'),
           ],
         ),//양도가액
         Row(
           children: [
             _smallTitle('취득가액 및 필요경비'),
-            _acquisitionPrice(_acquisitionPriceTC, '10000000',_stage >= 8),
+            CustomPriceTextBox(activated: _stage>=7, widgetName: '취득가액 및 필요경비'),
             _toolTip('취득가액과 필요경비 합산액을 입력해주세요.\n필요경비 : 설비비, 계량비, 자본적지출액, 양도비(취득세, 법무사 수수료등)')
           ],
         ),//취득가액 및 필요경비
         Row(
           children: [
             _smallTitle('주택지분'),
-            Expanded(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints){
-                      return DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isExpanded: true,
-                          items:((){
-                            if(_stage >= 9){
-                              return ["단독명의","공동명의"];
-                            }else {
-                              return [];
-                            }})().map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: const TextStyle(
-                                fontSize: 17,
-                                //color: Colors.white,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )).toList(),
-                          value: _dropDownMenuForHouseShare,
-                          onChanged: (value) {
-                            setState(() {
-                              _dropDownMenuForHouseShare = value as String;
-                              _stage = 10;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.keyboard_arrow_down,
-                          ),
-                          iconSize: 30,
-                          buttonHeight: 50,
-                          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-                          buttonDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            border: ((){
-                              if(_stage >= 9){
-                                return Border.all(color: Color(mainColor));
-                              }
-                              else {return Border.all(color: Colors.black12);
-                              }})(),
-                            color: ((){
-                              if(_stage >= 9){
-                                return Color(backgroundColor);
-                              }
-                              else {return Colors.black12;
-                              }})(),
-                          ),
-                          buttonElevation: 2,
-                          itemHeight: 40,
-                          itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                          dropdownMaxHeight: 200,
-                          dropdownWidth: constraints.maxWidth,
-                          dropdownPadding: null,
-                          dropdownDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            // color: Colors.redAccent,
-                          ),
-                          dropdownElevation: 8,
-                          scrollbarRadius: const Radius.circular(40),
-                          scrollbarThickness: 6,
-                          scrollbarAlwaysShow: true,
-                          offset: const Offset(0, 0),
-                        ),
-                      );
-                    },
-                  ),
-                )
-            ),
-            _toolTip('공동명의는 50%로 자동계산 됩니다.')
+            CustomPercentTextBox(activated: _stage>=7, widgetName: '주택지분'),
+            _toolTip('단독명의인 경우 100%를 입력하고 공동명의인 경우 지분을 입력하세요.')
+          ],
+        ),//주택지분
+        Row(
+          children: [
+            _smallTitle('양도예정일 공시가격'),
+
+          ],
+        ),
+        Row(
+          children: [
+            _smallTitle('취득일 공시가격'),
+
+          ],
+        ),
+        Row(
+          children: [
+            _smallTitle('양도예정일 조정지역 여부'),
+
+          ],
+        ),
+        Row(
+          children: [
+            _smallTitle('취득일 조정지역 여부'),
+
           ],
         ),
         preReconstructionHouse(),//취득시 종류가 재건축전 주택일 경우
@@ -649,6 +595,15 @@ class CapGainBodyState extends State<CapGainBody> {
               _toolTip('상속 당시 피상속인과 주택을 소유한 상속인과 동일세대원인지 여부')
             ],
           ),
+          Row(
+            children: [
+              _smallTitle('소수지분 상속주택'),
+              CustomOXDropDown(activated: true, widgetName: '소수지분 상속주택'),
+              _toolTip('공동으로 상속받은 주택 중 지분이 가장 큰 상속인이 아닌경우 o를 입력하고,\n'
+                  '단독명의나 지분이 가장 큰 상속인 인경우 x를 입력하세요.\n\n'
+                  '지분이 큰 상속인이 2명이상인 경우 다음 순서에 따라 지분이 가장 큰 상속인으로 봅니다\n1. 당해 주택에 거주하는 자\n2. 최연장자')
+            ],
+          )
         ],
       );
     }
@@ -1217,7 +1172,7 @@ class CapGainBodyState extends State<CapGainBody> {
       return Row(
         children: [
           _smallTitle('분양가액'),
-          _textField2(_rentalPriceTC, '',true)
+          CustomPriceTextBox(activated: true, widgetName: '분양가액')
         ],
       );
     }
@@ -1490,20 +1445,20 @@ class CapGainBodyState extends State<CapGainBody> {
           Row(
             children: [
               _smallTitle('종전 주택의 평가액'),
-              _textField2(_evaluatedPriceTC, '17000000', true)
+              CustomPriceTextBox(activated: true, widgetName: '종전 주택의 평가액')
             ],
           ),
           Row(
             children: [
               _smallTitle('납부한 분담금'),
-              _textField2(_payedMoneyTC, '17000000', true),
+              CustomPriceTextBox(activated: true, widgetName: '납부한 분담금'),
               _toolTip('납부한 분담금과 지급받은 청산금 중 하나만 입력해 주세요.')
             ],
           ),
           Row(
             children: [
               _smallTitle('지원받은 청산금'),
-              _textField2(_getMoneyTC, '17000000', true),
+              CustomPriceTextBox(activated: true, widgetName: '지원받은 청산금'),
               _toolTip('납부한 분담금과 지급받은 청산금 중 하나만 입력해 주세요.')
             ],
           ),
@@ -1871,16 +1826,16 @@ class CapGainBodyState extends State<CapGainBody> {
           margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: TextField(
             onChanged: (text){
-              if(tc.text.isNotEmpty){
-                setState(() {
-                  _stage = 9;
-                });
-              }
-              else {
-                setState(() {
-                  _stage = 8;
-                });
-              }
+              // if(tc.text.isNotEmpty){
+              //   setState(() {
+              //     _stage = 9;
+              //   });
+              // }
+              // else {
+              //   setState(() {
+              //     _stage = 8;
+              //   });
+              // }
             },
             enabled: able,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
